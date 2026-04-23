@@ -68,7 +68,7 @@ function DotIndicatorMessage({messages = {}, style, type, textStyles}: DotIndica
                             key={i}
                             style={styles.offlineFeedback.text}
                         >
-                            <Text style={[StyleUtils.getDotIndicatorTextStyles(isErrorMessage)]}>{Localize.translateLocal('iou.error.receiptFailureMessage')}</Text>
+                            <Text style={[StyleUtils.getDotIndicatorTextStyles(isErrorMessage), styles.userSelectText]}>{Localize.translateLocal('iou.error.receiptFailureMessage')}</Text>
                             <TextLink
                                 style={[StyleUtils.getDotIndicatorTextStyles(), styles.link]}
                                 onPress={() => {
@@ -78,13 +78,13 @@ function DotIndicatorMessage({messages = {}, style, type, textStyles}: DotIndica
                                 {Localize.translateLocal('iou.error.saveFileMessage')}
                             </TextLink>
 
-                            <Text style={[StyleUtils.getDotIndicatorTextStyles(isErrorMessage)]}>{Localize.translateLocal('iou.error.loseFileMessage')}</Text>
+                            <Text style={[StyleUtils.getDotIndicatorTextStyles(isErrorMessage), styles.userSelectText]}>{Localize.translateLocal('iou.error.loseFileMessage')}</Text>
                         </Text>
                     ) : (
                         <Text
                             // eslint-disable-next-line react/no-array-index-key
                             key={i}
-                            style={[StyleUtils.getDotIndicatorTextStyles(isErrorMessage), textStyles]}
+                            style={[StyleUtils.getDotIndicatorTextStyles(isErrorMessage), styles.userSelectText, textStyles]}
                         >
                             {message}
                         </Text>
