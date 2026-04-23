@@ -40,6 +40,10 @@ function AddressFormFields({shouldSaveDraft = false, defaultValues, values, erro
     const {translate} = useLocalize();
     const styles = useThemeStyles();
 
+    // Since AddressFormFields is limited to USA, use US zip code format
+    const zipSampleFormat = CONST.COUNTRY_ZIP_REGEX_DATA[CONST.COUNTRY.US].samples ?? '';
+    const zipFormat = translate('common.zipCodeExampleFormat', {zipSampleFormat});
+
     return (
         <>
             <View>
@@ -96,7 +100,7 @@ function AddressFormFields({shouldSaveDraft = false, defaultValues, values, erro
                 onChangeText={(value) => onFieldChange?.({zipCode: value})}
                 errorText={errors?.zipCode ? translate('bankAccount.error.zipCode') : ''}
                 maxLength={CONST.BANK_ACCOUNT.MAX_LENGTH.ZIP_CODE}
-                hint={translate('common.zipCodeExample')}
+                hint={zipFormat}
                 containerStyles={styles.mt3}
             />
         </>
