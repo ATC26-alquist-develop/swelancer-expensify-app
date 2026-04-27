@@ -46,6 +46,7 @@ function StatusPage({draftStatus, currentUserPersonalDetails}: StatusPageProps) 
     const StyleUtils = useStyleUtils();
     const {translate} = useLocalize();
     const formRef = useRef<FormRef>(null);
+    const interactionTask = useRef<ReturnType<typeof InteractionManager.runAfterInteractions> | null>(null);
     const [brickRoadIndicator, setBrickRoadIndicator] = useState<ValueOf<typeof CONST.BRICK_ROAD_INDICATOR_STATUS>>();
     const currentUserEmojiCode = currentUserPersonalDetails?.status?.emojiCode ?? '';
     const currentUserStatusText = currentUserPersonalDetails?.status?.text ?? '';
@@ -90,7 +91,7 @@ function StatusPage({draftStatus, currentUserPersonalDetails}: StatusPageProps) 
                 clearAfter: clearAfterTime !== CONST.CUSTOM_STATUS_TYPES.NEVER ? clearAfterTime : '',
             });
             User.clearDraftCustomStatus();
-            InteractionManager.runAfterInteractions(() => {
+            interactionTask.current = InteractionManager.runAfterInteractions(() => {
                 navigateBackToPreviousScreen();
             });
         },
@@ -106,7 +107,7 @@ function StatusPage({draftStatus, currentUserPersonalDetails}: StatusPageProps) 
         });
         formRef.current?.resetForm({[INPUT_IDS.EMOJI_CODE]: ''});
 
-        InteractionManager.runAfterInteractions(() => {
+        interactionTask.current = InteractionManager.runAfterInteractions(() => {
             navigateBackToPreviousScreen();
         });
     };
@@ -120,7 +121,12 @@ function StatusPage({draftStatus, currentUserPersonalDetails}: StatusPageProps) 
             User.updateDraftCustomStatus({clearAfter: currentUserClearAfter});
         }
 
-        return () => User.clearDraftCustomStatus();
+        return () => {
+            User.clearDraftCustomStatus();
+            if (interactionTask.current) {
+                interactionTask.current.cancel();
+            }
+        };
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, []);
 
