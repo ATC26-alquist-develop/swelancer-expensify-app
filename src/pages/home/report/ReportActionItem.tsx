@@ -613,8 +613,8 @@ function ReportActionItem({
                         )}
                         {missingPaymentMethod === 'wallet' && (
                             <KYCWall
-                                onSuccessfulKYC={() => Navigation.navigate(ROUTES.ENABLE_PAYMENTS)}
-                                enablePaymentsRoute={ROUTES.ENABLE_PAYMENTS}
+                                onSuccessfulKYC={() => Navigation.navigate(ROUTES.IOU_SEND_ENABLE_PAYMENTS)}
+                                enablePaymentsRoute={ROUTES.IOU_SEND_ENABLE_PAYMENTS}
                                 addBankAccountRoute={ROUTES.BANK_ACCOUNT_PERSONAL}
                                 addDebitCardRoute={ROUTES.SETTINGS_ADD_DEBIT_CARD}
                                 chatReportID={linkedReport?.reportID}

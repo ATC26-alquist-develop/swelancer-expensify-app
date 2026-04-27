@@ -541,7 +541,7 @@ function ReportPreview({
                                         onPaymentOptionsShow={onPaymentOptionsShow}
                                         onPaymentOptionsHide={onPaymentOptionsHide}
                                         confirmApproval={confirmApproval}
-                                        enablePaymentsRoute={ROUTES.ENABLE_PAYMENTS}
+                                        enablePaymentsRoute={ROUTES.IOU_SEND_ENABLE_PAYMENTS}
                                         addBankAccountRoute={bankAccountRoute}
                                         shouldHidePaymentOptions={!shouldShowPayButton}
                                         shouldShowApproveButton={shouldShowApproveButton}
