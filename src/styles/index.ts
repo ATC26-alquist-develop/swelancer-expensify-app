@@ -3485,6 +3485,8 @@ const styles = (theme: ThemeColors) =>
                 color: theme.textSupporting,
                 verticalAlign: 'middle',
                 fontSize: variables.fontSizeLabel,
+                ...cursor.cursorText,
+                ...userSelect.userSelectText,
             },
             errorDot: {
                 marginRight: 12,
