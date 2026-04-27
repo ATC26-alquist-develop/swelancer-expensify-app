@@ -384,6 +384,7 @@ function MoneyRequestPreviewContent({
                                                     <MultipleAvatars
                                                         icons={sortedParticipantAvatars}
                                                         size="small"
+                                                        shouldStackHorizontally
                                                         shouldUseCardBackground
                                                     />
                                                 </View>
