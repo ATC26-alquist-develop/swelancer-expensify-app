@@ -582,7 +582,7 @@ function MoneyRequestConfirmationList(props) {
                     isAuthTokenRequired={!_.isEmpty(receiptThumbnail)}
                 />
             )}
-            {props.shouldShowSmartScanFields && (
+            {(props.shouldShowSmartScanFields || props.iouAmount > 0) && (
                 <MenuItemWithTopDescription
                     shouldShowRightIcon={!props.isReadOnly && !props.isDistanceRequest}
                     title={formattedAmount}
