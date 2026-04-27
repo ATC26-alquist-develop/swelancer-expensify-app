@@ -367,7 +367,7 @@ function MoneyReportHeader({policy, report: moneyRequestReport, transactionThrea
                             chatReportID={chatReport?.reportID}
                             iouReport={moneyRequestReport}
                             onPress={confirmPayment}
-                            enablePaymentsRoute={ROUTES.ENABLE_PAYMENTS}
+                            enablePaymentsRoute={ROUTES.IOU_SEND_ENABLE_PAYMENTS}
                             addBankAccountRoute={bankAccountRoute}
                             shouldHidePaymentOptions={!shouldShowPayButton}
                             shouldShowApproveButton={shouldShowApproveButton}
@@ -433,7 +433,7 @@ function MoneyReportHeader({policy, report: moneyRequestReport, transactionThrea
                                 chatReportID={moneyRequestReport?.chatReportID}
                                 iouReport={moneyRequestReport}
                                 onPress={confirmPayment}
-                                enablePaymentsRoute={ROUTES.ENABLE_PAYMENTS}
+                                enablePaymentsRoute={ROUTES.IOU_SEND_ENABLE_PAYMENTS}
                                 addBankAccountRoute={bankAccountRoute}
                                 shouldHidePaymentOptions={!shouldShowPayButton}
                                 shouldShowApproveButton={shouldShowApproveButton}
