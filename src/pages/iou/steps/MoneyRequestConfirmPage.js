@@ -389,7 +389,6 @@ function MoneyRequestConfirmPage(props) {
                         iouCreated={props.iou.created}
                         isScanRequest={isScanRequest}
                         isDistanceRequest={isDistanceRequest}
-                        shouldShowSmartScanFields={_.isEmpty(props.iou.receiptPath)}
                     />
                 </View>
             )}
