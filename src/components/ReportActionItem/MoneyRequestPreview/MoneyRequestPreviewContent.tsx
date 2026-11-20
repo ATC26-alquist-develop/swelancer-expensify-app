@@ -95,6 +95,11 @@ function MoneyRequestPreviewContent({
     if (isPolicyExpenseChat && isBillSplit) {
         sortedParticipantAvatars.push(ReportUtils.getWorkspaceIcon(chatReport));
     }
+    // Show up to MAX_BILL_SPLIT_AVATARS avatars; if there are more participants, reserve one slot for the "+N" overflow indicator.
+    const maxBillSplitAvatarsInRow =
+        sortedParticipantAvatars.length > CONST.REQUEST_PREVIEW.MAX_BILL_SPLIT_AVATARS
+            ? CONST.REQUEST_PREVIEW.MAX_BILL_SPLIT_AVATARS_WITH_OVERFLOW
+            : CONST.REQUEST_PREVIEW.MAX_BILL_SPLIT_AVATARS;
 
     // Pay button should only be visible to the manager of the report.
     const isCurrentUserManager = managerID === sessionAccountID;
@@ -384,7 +389,9 @@ function MoneyRequestPreviewContent({
                                                     <MultipleAvatars
                                                         icons={sortedParticipantAvatars}
                                                         size="small"
+                                                        shouldStackHorizontally
                                                         shouldUseCardBackground
+                                                        maxAvatarsInRow={maxBillSplitAvatarsInRow}
                                                     />
                                                 </View>
                                             )}
