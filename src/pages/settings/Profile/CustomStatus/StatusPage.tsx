@@ -106,9 +106,9 @@ function StatusPage({draftStatus, currentUserPersonalDetails}: StatusPageProps) 
         });
         formRef.current?.resetForm({[INPUT_IDS.EMOJI_CODE]: ''});
 
-        InteractionManager.runAfterInteractions(() => {
-            navigateBackToPreviousScreen();
-        });
+        // Navigate back synchronously so that only a single back action is dispatched.
+        // Deferring it with InteractionManager allowed a quick subsequent tap/dismiss to pop an extra screen (profile -> report).
+        navigateBackToPreviousScreen();
     };
 
     useEffect(() => setBrickRoadIndicator(isValidClearAfterDate() ? undefined : CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR), [isValidClearAfterDate]);
