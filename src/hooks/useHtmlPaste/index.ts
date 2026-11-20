@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native';
 import {useCallback, useEffect} from 'react';
-import Parser from '@libs/Parser';
 import type UseHtmlPaste from './types';
+
+type TextSegment = {text: string; bold: boolean};
 
 const insertByCommand = (text: string) => {
     document.execCommand('insertText', false, text);
@@ -24,6 +25,131 @@ const insertAtCaret = (target: HTMLElement, text: string) => {
         target.dispatchEvent(new Event('input', {bubbles: true}));
     } else {
         insertByCommand(text);
+    }
+};
+
+// Elements whose contents are never meant to be pasted as visible text
+const IGNORED_PASTE_TAGS = new Set(['STYLE', 'SCRIPT', 'META', 'TITLE', 'HEAD']);
+
+/**
+ * Determines whether a CSS font-weight value means bold.
+ * Google Docs wraps copied content in <b style="font-weight:normal">, so the tag alone is not a reliable signal.
+ */
+const isBoldFontWeight = (fontWeight: string): boolean => {
+    const weight = fontWeight.trim().toLowerCase();
+    if (weight === 'bold' || weight === 'bolder') {
+        return true;
+    }
+    const numericWeight = Number(weight);
+    return !Number.isNaN(numericWeight) && numericWeight >= 600;
+};
+
+/**
+ * Reads an explicit font-weight from an element's inline style attribute, or undefined if none is set.
+ */
+const getInlineFontWeight = (element: Element): string | undefined => {
+    const styleAttribute = element.getAttribute('style');
+    if (!styleAttribute) {
+        return undefined;
+    }
+    const match = styleAttribute.match(/(?:^|;)\s*font-weight\s*:\s*([^;]+)/i);
+    const value = match?.[1]?.trim().toLowerCase();
+    // inherit/unset/initial mean "no explicit override", so the parent's boldness should carry through
+    if (!value || value === 'inherit' || value === 'unset' || value === 'initial') {
+        return undefined;
+    }
+    return value;
+};
+
+/**
+ * Recursively walks parsed HTML and collects text segments tagged with whether they are bold.
+ * An explicit inline font-weight takes precedence over the B/STRONG tag; bold is inherited by children.
+ */
+const collectPastedSegments = (node: Node, isParentBold: boolean, segments: TextSegment[]) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent ?? '';
+        if (text) {
+            segments.push({text, bold: isParentBold});
+        }
+        return;
+    }
+
+    if (node.nodeType !== Node.ELEMENT_NODE) {
+        return;
+    }
+
+    const element = node as Element;
+    if (IGNORED_PASTE_TAGS.has(element.tagName)) {
+        return;
+    }
+
+    let isBold = isParentBold;
+    const explicitFontWeight = getInlineFontWeight(element);
+    if (explicitFontWeight !== undefined) {
+        isBold = isBoldFontWeight(explicitFontWeight);
+    } else if (element.tagName === 'B' || element.tagName === 'STRONG') {
+        isBold = true;
+    }
+
+    element.childNodes.forEach((child) => collectPastedSegments(child, isBold, segments));
+};
+
+/**
+ * Wraps a bold run in markdown asterisks. Leading/trailing whitespace stays outside the markers,
+ * because markdown bold delimiters must not be adjacent to whitespace.
+ */
+const wrapBoldRun = (text: string): string => {
+    const core = text.trim();
+    if (!core) {
+        return text;
+    }
+    // core starts at the first non-whitespace character, so the first occurrence is its true position
+    const start = text.indexOf(core);
+    const leading = text.slice(0, start);
+    const trailing = text.slice(start + core.length);
+    return `${leading}**${core}**${trailing}`;
+};
+
+/**
+ * Converts pasted HTML into text where only genuinely bold runs are marked up with markdown bold.
+ * The HTML is parsed with DOMParser (inert document: no scripts run and no resources load) and only text content is used.
+ */
+const convertPastedHtmlToMarkdown = (html: string): string => {
+    const parsed = new DOMParser().parseFromString(html, 'text/html');
+
+    const segments: TextSegment[] = [];
+    collectPastedSegments(parsed.body, false, segments);
+
+    // Merge adjacent segments with the same boldness so a bold run split across nodes becomes one **...** pair
+    const merged: TextSegment[] = [];
+    segments.forEach((segment) => {
+        const last = merged.length > 0 ? merged[merged.length - 1] : undefined;
+        if (last && last.bold === segment.bold) {
+            last.text += segment.text;
+        } else {
+            merged.push({...segment});
+        }
+    });
+
+    return merged.map((segment) => (segment.bold ? wrapBoldRun(segment.text) : segment.text)).join('');
+};
+
+const insertIntoTextInput = (textInputHTMLElement: HTMLElement, text: string) => {
+    const selection = window.getSelection();
+    if (selection?.rangeCount) {
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+        const textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+
+        // Move cursor to end of inserted text
+        range.setStartAfter(textNode);
+        range.setEndAfter(textNode);
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        // Dispatch input event
+        textInputHTMLElement.dispatchEvent(new Event('input', {bubbles: true}));
     }
 };
 
@@ -58,58 +184,16 @@ const useHtmlPaste: UseHtmlPaste = (textInputRef, preHtmlPasteCallback, removeLi
     }, []);
 
     /**
-     * Manually place the pasted HTML into Composer
+     * Manually place the pasted HTML into Composer, keeping only genuinely bold text as markdown bold
      *
      * @param {String} html - pasted HTML
      */
     const handlePastedHTML = useCallback(
         (html: string) => {
-            // Create a temporary div to parse the HTML
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = html;
-
-            // Function to convert bold elements to markdown
-            const convertBoldToMarkdown = (element: Element): string => {
-                if (element.tagName === 'B' || element.tagName === 'STRONG') {
-                    return `**${element.textContent}**`;
-                }
-                
-                // For elements with children, recursively convert
-                let result = '';
-                element.childNodes.forEach(child => {
-                    if (child.nodeType === Node.ELEMENT_NODE) {
-                        result += convertBoldToMarkdown(child as Element);
-                    } else if (child.nodeType === Node.TEXT_NODE) {
-                        result += child.textContent || '';
-                    }
-                });
-                
-                return result;
-            };
-
-            // Convert the HTML to markdown-like text with bold preservation
-            const markdownText = convertBoldToMarkdown(tempDiv);
-            
-            // Force paste with asterisks and trigger input
+            const markdownText = convertPastedHtmlToMarkdown(html);
             const textInputHTMLElement = textInputRef.current as HTMLElement;
             if (textInputHTMLElement) {
-                // Directly insert text with asterisks
-                const selection = window.getSelection();
-                if (selection?.rangeCount) {
-                    const range = selection.getRangeAt(0);
-                    range.deleteContents();
-                    const boldNode = document.createTextNode(`**${markdownText}**`);
-                    range.insertNode(boldNode);
-
-                    // Move cursor to end of inserted text
-                    range.setStartAfter(boldNode);
-                    range.setEndAfter(boldNode);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-
-                    // Dispatch input event
-                    textInputHTMLElement.dispatchEvent(new Event('input', {bubbles: true}));
-                }
+                insertIntoTextInput(textInputHTMLElement, markdownText);
             }
         },
         [textInputRef],
@@ -194,6 +278,12 @@ const useHtmlPaste: UseHtmlPaste = (textInputRef, preHtmlPasteCallback, removeLi
             }
             document.removeEventListener('paste', handlePaste, true);
         };
+        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
+    }, []);
+};
+
+export default useHtmlPaste;
+      };
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, []);
 };
