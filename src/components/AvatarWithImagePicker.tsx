@@ -440,6 +440,8 @@ function AvatarWithImagePicker({
                     // eslint-disable-next-line @typescript-eslint/naming-convention
                     messages={{0: translate(errorData.validationError, errorData.phraseParam as never)}}
                     type="error"
+                    // Make the error text selectable with an I-beam cursor, like other form errors in the app
+                    textStyles={[styles.cursorText, styles.userSelectText]}
                 />
             )}
             <AvatarCropModal
