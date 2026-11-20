@@ -4322,12 +4322,14 @@ function navigateToPrivateNotes(report: Report, session: Session) {
  * - The action is listed in the thread-disabled list
  * - The action is a split bill action
  * - The action is deleted and is not threaded
+ * - The action is deleted (or its deletion is still pending) and is not threaded
  * - The action is a whisper action and it's neither a report preview nor IOU action
  * - The action is the thread's first chat
  */
 function shouldDisableThread(reportAction: ReportAction, reportID: string) {
     const isSplitBillAction = ReportActionsUtils.isSplitBillAction(reportAction);
     const isDeletedAction = ReportActionsUtils.isDeletedAction(reportAction);
+    const isPendingDelete = reportAction.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE;
     const isReportPreviewAction = ReportActionsUtils.isReportPreviewAction(reportAction);
     const isIOUAction = ReportActionsUtils.isMoneyRequestAction(reportAction);
     const isWhisperAction = ReportActionsUtils.isWhisperAction(reportAction);
@@ -4336,6 +4338,7 @@ function shouldDisableThread(reportAction: ReportAction, reportID: string) {
         CONST.REPORT.ACTIONS.THREAD_DISABLED.some((action: string) => action === reportAction.actionName) ||
         isSplitBillAction ||
         (isDeletedAction && !reportAction.childVisibleActionCount) ||
+        (isPendingDelete && !reportAction.childVisibleActionCount) ||
         (isWhisperAction && !isReportPreviewAction && !isIOUAction) ||
         isThreadFirstChat(reportAction, reportID)
     );
