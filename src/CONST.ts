@@ -285,6 +285,12 @@ const CONST = {
 
     REQUEST_PREVIEW: {
         MAX_LENGTH: 83,
+
+        // Maximum number of participant avatars shown in a bill split preview
+        MAX_BILL_SPLIT_AVATARS: 4,
+
+        // When a bill split has more participants than MAX_BILL_SPLIT_AVATARS, one slot is used by the "+N" overflow indicator
+        MAX_BILL_SPLIT_AVATARS_WITH_OVERFLOW: 3,
     },
 
     CALENDAR_PICKER: {
