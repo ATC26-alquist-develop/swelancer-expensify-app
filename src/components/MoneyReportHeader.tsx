@@ -153,7 +153,7 @@ function MoneyReportHeader({policy, report: moneyRequestReport, transactionThrea
             setRequestType(CONST.IOU.REPORT_ACTION_TYPE.PAY);
             if (isDelegateAccessRestricted) {
                 setIsNoDelegateAccessMenuVisible(true);
-            } else if (isAnyTransactionOnHold) {
+            } else if (isAnyTransactionOnHold && !hasOnlyHeldExpenses) {
                 setIsHoldMenuVisible(true);
             } else if (ReportUtils.isInvoiceReport(moneyRequestReport)) {
                 IOU.payInvoice(type, chatReport, moneyRequestReport, payAsBusiness);
@@ -161,14 +161,14 @@ function MoneyReportHeader({policy, report: moneyRequestReport, transactionThrea
                 IOU.payMoneyRequest(type, chatReport, moneyRequestReport, true);
             }
         },
-        [chatReport, isAnyTransactionOnHold, isDelegateAccessRestricted, moneyRequestReport],
+        [chatReport, isAnyTransactionOnHold, hasOnlyHeldExpenses, isDelegateAccessRestricted, moneyRequestReport],
     );
 
     const confirmApproval = () => {
         setRequestType(CONST.IOU.REPORT_ACTION_TYPE.APPROVE);
         if (isDelegateAccessRestricted) {
             setIsNoDelegateAccessMenuVisible(true);
-        } else if (isAnyTransactionOnHold) {
+        } else if (isAnyTransactionOnHold && !hasOnlyHeldExpenses) {
             setIsHoldMenuVisible(true);
         } else {
             IOU.approveMoneyRequest(moneyRequestReport, true);
