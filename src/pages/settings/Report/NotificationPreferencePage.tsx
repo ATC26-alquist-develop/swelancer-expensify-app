@@ -7,7 +7,7 @@ import type {ValueOf} from 'type-fest';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import ScreenWrapper from '@components/ScreenWrapper';
-import SelectionList from '@components/SelectionList';
+import OptionsList from '@components/OptionsList';
 import RadioListItem from '@components/SelectionList/RadioListItem';
 import useLocalize from '@hooks/useLocalize';
 import * as ReportUtils from '@libs/ReportUtils';
@@ -18,8 +18,12 @@ import * as ReportActions from '@userActions/Report';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type SCREENS from '@src/SCREENS';
+import * as Expensicons from '@src/components/Icon/Expensicons';
+import defaultTheme from '@src/styles/theme';
 
 type NotificationPreferencePageProps = WithReportOrNotFoundProps & StackScreenProps<ReportSettingsNavigatorParamList, typeof SCREENS.REPORT_SETTINGS.NOTIFICATION_PREFERENCES>;
+
+const greenCheckmark = {src: Expensicons.Checkmark, color: defaultTheme.light.success};
 
 function NotificationPreferencePage({report}: NotificationPreferencePageProps) {
     const route = useRoute<RouteProp<ReportSettingsNavigatorParamList, typeof SCREENS.REPORT_SETTINGS.NOTIFICATION_PREFERENCES>>();
@@ -38,6 +42,8 @@ function NotificationPreferencePage({report}: NotificationPreferencePageProps) {
             text: translate(`notificationPreferencesPage.notificationPreferences.${preference}`),
             keyForList: preference,
             isSelected: preference === currentNotificationPreference,
+            // Include the green checkmark icon to indicate the currently selected value
+            customIcon: preference === currentNotificationPreference ? greenCheckmark : null,
         }));
 
     const goBack = useCallback(() => {
@@ -62,7 +68,7 @@ function NotificationPreferencePage({report}: NotificationPreferencePageProps) {
                     title={translate('notificationPreferencesPage.header')}
                     onBackButtonPress={goBack}
                 />
-                <SelectionList
+                <OptionsList
                     sections={[{data: notificationPreferenceOptions}]}
                     ListItem={RadioListItem}
                     onSelectRow={(option) => updateNotificationPreference(option.value)}

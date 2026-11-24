@@ -8,7 +8,7 @@ import type {ValueOf} from 'type-fest';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import HeaderWithBackButton from '@components/HeaderWithBackButton';
 import ScreenWrapper from '@components/ScreenWrapper';
-import SelectionList from '@components/SelectionList';
+import OptionsList from '@components/OptionsList';
 import RadioListItem from '@components/SelectionList/RadioListItem';
 import useLocalize from '@hooks/useLocalize';
 import Navigation from '@libs/Navigation/Navigation';
@@ -22,6 +22,10 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type SCREENS from '@src/SCREENS';
 import type {Policy} from '@src/types/onyx';
+import * as Expensicons from '@src/components/Icon/Expensicons';
+import defaultTheme from '@src/styles/theme';
+
+const greenCheckmark = {src: Expensicons.Checkmark, color: defaultTheme.light.success};
 
 type WriteCapabilityPageOnyxProps = {
     /** The policy object for the current route */
@@ -40,6 +44,8 @@ function WriteCapabilityPage({report, policy}: WriteCapabilityPageProps) {
         text: translate(`writeCapabilityPage.writeCapability.${value}`),
         keyForList: value,
         isSelected: value === (report?.writeCapability ?? CONST.REPORT.WRITE_CAPABILITIES.ALL),
+        // Include the green checkmark icon to indicate the currently selected value
+        customIcon: value === (report?.writeCapability ?? CONST.REPORT.WRITE_CAPABILITIES.ALL) ? greenCheckmark : null,
     }));
 
     const isAbleToEdit = ReportUtils.canEditWriteCapability(report, policy);
@@ -67,7 +73,7 @@ function WriteCapabilityPage({report, policy}: WriteCapabilityPageProps) {
                     shouldShowBackButton
                     onBackButtonPress={goBack}
                 />
-                <SelectionList
+                <OptionsList
                     sections={[{data: writeCapabilityOptions}]}
                     ListItem={RadioListItem}
                     onSelectRow={(option) => updateWriteCapability(option.value)}
