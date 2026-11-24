@@ -222,15 +222,10 @@ function ReportDetailsPage({policies, report, route}: ReportDetailsPageProps) {
     }, [report?.reportID, isOffline, isPrivateNotesFetchTriggered, isSelfDM]);
 
     const leaveChat = useCallback(() => {
-        Navigation.dismissModal();
-        Navigation.isNavigationReady().then(() => {
-            if (isRootGroupChat) {
-                Report.leaveGroupChat(report.reportID);
-                return;
-            }
+        if (isChatRoom) {
             const isWorkspaceMemberLeavingWorkspaceRoom = (report.visibility === CONST.REPORT.VISIBILITY.RESTRICTED || isPolicyExpenseChat) && isPolicyEmployee;
             Report.leaveRoom(report.reportID, isWorkspaceMemberLeavingWorkspaceRoom);
-        });
+        }
     }, [isPolicyEmployee, isPolicyExpenseChat, isRootGroupChat, report.reportID, report.visibility]);
 
     const [moneyRequestReportActions] = useOnyx(`${ONYXKEYS.COLLECTION.REPORT_ACTIONS}${moneyRequestReport?.reportID}`);
@@ -802,7 +797,7 @@ function ReportDetailsPage({policies, report, route}: ReportDetailsPageProps) {
                     isVisible={isLastMemberLeavingGroupModalVisible}
                     onConfirm={() => {
                         setIsLastMemberLeavingGroupModalVisible(false);
-                        leaveChat();
+                        Report.leaveGroupChat(report.reportID);
                     }}
                     onCancel={() => setIsLastMemberLeavingGroupModalVisible(false)}
                     prompt={translate('groupChat.lastMemberWarning')}
