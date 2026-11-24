@@ -16,7 +16,7 @@ type OnPressProps = {
     address: string;
     lat: number;
     lng: number;
-    name: string;
+    // name: string;
 };
 
 type StreetValue = {

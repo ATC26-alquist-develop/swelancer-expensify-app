@@ -117,7 +117,6 @@ function AddressSearch(
                     address: autocompleteData.description ?? '',
                     lat: details.geometry.location.lat ?? 0,
                     lng: details.geometry.location.lng ?? 0,
-                    name: details.name,
                 });
             }
             return;
@@ -175,7 +174,6 @@ function AddressSearch(
 
         const values = {
             street: `${streetNumber} ${streetName}`.trim(),
-            name: details.name ?? '',
             // Autocomplete returns any additional valid address fragments (e.g. Apt #) as subpremise.
             street2: subpremise,
             // Make sure country is updated first, since city and state will be reset if the country changes
@@ -380,16 +378,6 @@ function AddressSearch(
                         listEmptyComponent={listEmptyComponent}
                         listLoaderComponent={listLoader}
                         renderHeaderComponent={renderHeaderComponent}
-                        renderRow={(data) => {
-                            const title = data.isPredefinedPlace ? data.name : data.structured_formatting.main_text;
-                            const subtitle = data.isPredefinedPlace ? data.description : data.structured_formatting.secondary_text;
-                            return (
-                                <View>
-                                    {!!title && <Text style={styles.googleSearchText}>{title}</Text>}
-                                    <Text style={[title ? styles.textLabelSupporting : styles.googleSearchText]}>{subtitle}</Text>
-                                </View>
-                            );
-                        }}
                         onPress={(data, details) => {
                             saveLocationDetails(data, details);
                             setIsTyping(false);
