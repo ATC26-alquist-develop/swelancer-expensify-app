@@ -103,7 +103,7 @@ function KYCWall({
             onSelectPaymentMethod(paymentMethod);
 
             if (paymentMethod === CONST.PAYMENT_METHODS.PERSONAL_BANK_ACCOUNT) {
-                BankAccounts.openPersonalBankAccountSetupView();
+                BankAccounts.openPersonalBankAccountSetupView(undefined, undefined, addBankAccountRoute);
             } else if (paymentMethod === CONST.PAYMENT_METHODS.DEBIT_CARD) {
                 Navigation.navigate(addDebitCardRoute);
             } else if (paymentMethod === CONST.PAYMENT_METHODS.BUSINESS_BANK_ACCOUNT) {

@@ -653,7 +653,7 @@ function IOURequestStepConfirmation({
                         reportID={reportID}
                         isPolicyExpenseChat={isPolicyExpenseChat}
                         policyID={IOU.getIOURequestPolicyID(transaction, report)}
-                        bankAccountRoute={ReportUtils.getBankAccountRoute(report)}
+                        bankAccountRoute={ROUTES.IOU_SEND_ADD_BANK_ACCOUNT}
                         iouMerchant={transaction?.merchant}
                         iouCreated={transaction?.created}
                         isDistanceRequest={isDistanceRequest}
