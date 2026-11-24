@@ -689,9 +689,6 @@ const translations = {
     reportAction: {
         asCopilot: 'as copilot for',
     },
-    mentionSuggestions: {
-        hereAlternateText: 'Notify everyone in this conversation',
-    },
     newMessages: 'New messages',
     youHaveBeenBanned: "Note: You've been banned from chatting in this channel.",
     reportTypingIndicator: {

@@ -1,11 +1,11 @@
 import {Str} from 'expensify-common';
+import _ from 'underscore';
 import lodashMapValues from 'lodash/mapValues';
 import lodashSortBy from 'lodash/sortBy';
 import type {ForwardedRef} from 'react';
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import type {OnyxCollection} from 'react-native-onyx';
 import {useOnyx} from 'react-native-onyx';
-import * as Expensicons from '@components/Icon/Expensicons';
 import type {Mention} from '@components/MentionSuggestions';
 import MentionSuggestions from '@components/MentionSuggestions';
 import {usePersonalDetails} from '@components/OnyxProvider';
@@ -16,7 +16,6 @@ import useDebounce from '@hooks/useDebounce';
 import useLocalize from '@hooks/useLocalize';
 import localeCompare from '@libs/LocaleCompare';
 import * as LoginUtils from '@libs/LoginUtils';
-import * as PersonalDetailsUtils from '@libs/PersonalDetailsUtils';
 import getPolicyEmployeeAccountIDs from '@libs/PolicyEmployeeListUtils';
 import * as ReportUtils from '@libs/ReportUtils';
 import * as SuggestionsUtils from '@libs/SuggestionUtils';
@@ -27,6 +26,7 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import type {PersonalDetails, PersonalDetailsList, Report} from '@src/types/onyx';
 import type {SuggestionsRef} from './ReportActionCompose';
 import type {SuggestionProps} from './Suggestions';
+import * as OptionsListUtils from '@libs/OptionsListUtils';
 
 type SuggestionValues = {
     suggestedMentions: Mention[];
@@ -194,7 +194,7 @@ function SuggestionMention(
         (highlightedMentionIndexInner: number) => {
             const commentBeforeAtSign = value.slice(0, suggestionValues.atSignIndex);
             const mentionObject = suggestionValues.suggestedMentions[highlightedMentionIndexInner];
-            const mentionCode = getMentionCode(mentionObject, suggestionValues.prefixType);
+            const mentionCode = `@${mentionObject.alternateText}`;
             const commentAfterMention = value.slice(suggestionValues.atSignIndex + suggestionValues.mentionPrefix.length + 1);
 
             updateComment(`${commentBeforeAtSign}${mentionCode} ${SuggestionsUtils.trimLeadingSpace(commentAfterMention)}`, true);
@@ -255,73 +255,6 @@ function SuggestionMention(
             }
         },
         [highlightedMentionIndex, insertSelectedMention, resetSuggestions, suggestionValues.suggestedMentions.length],
-    );
-
-    const getUserMentionOptions = useCallback(
-        (personalDetailsParam: PersonalDetailsList | SuggestionPersonalDetailsList, searchValue = ''): Mention[] => {
-            const suggestions = [];
-
-            if (CONST.AUTO_COMPLETE_SUGGESTER.HERE_TEXT.includes(searchValue.toLowerCase())) {
-                suggestions.push({
-                    text: CONST.AUTO_COMPLETE_SUGGESTER.HERE_TEXT,
-                    alternateText: translate('mentionSuggestions.hereAlternateText'),
-                    icons: [
-                        {
-                            source: Expensicons.Megaphone,
-                            type: CONST.ICON_TYPE_AVATAR,
-                        },
-                    ],
-                });
-            }
-
-            const filteredPersonalDetails = Object.values(personalDetailsParam ?? {}).filter((detail) => {
-                // If we don't have user's primary login, that member is not known to the current user and hence we do not allow them to be mentioned
-                if (!detail?.login || detail.isOptimisticPersonalDetail) {
-                    return false;
-                }
-                // We don't want to mention system emails like notifications@expensify.com
-                if (CONST.RESTRICTED_EMAILS.includes(detail.login) || CONST.RESTRICTED_ACCOUNT_IDS.includes(detail.accountID)) {
-                    return false;
-                }
-                const displayName = PersonalDetailsUtils.getDisplayNameOrDefault(detail);
-                const displayText = displayName === formatPhoneNumber(detail.login) ? displayName : `${displayName} ${detail.login}`;
-                if (searchValue && !displayText.toLowerCase().includes(searchValue.toLowerCase())) {
-                    return false;
-                }
-
-                // Given the mention is inserted by user, we don't want to show the mention options unless the
-                // selection index changes. In that case, suggestionInsertionIndexRef.current will be null.
-                // See https://github.com/Expensify/App/issues/38358 for more context
-                if (suggestionInsertionIndexRef.current) {
-                    return false;
-                }
-
-                return true;
-            }) as Array<PersonalDetails & {weight: number}>;
-
-            // At this point we are sure that the details are not null, since empty user details have been filtered in the previous step
-            const sortedPersonalDetails = filteredPersonalDetails.sort(compareUserInList);
-
-            sortedPersonalDetails.slice(0, CONST.AUTO_COMPLETE_SUGGESTER.MAX_AMOUNT_OF_SUGGESTIONS - suggestions.length).forEach((detail) => {
-                suggestions.push({
-                    text: formatLoginPrivateDomain(PersonalDetailsUtils.getDisplayNameOrDefault(detail), detail?.login),
-                    alternateText: `@${formatLoginPrivateDomain(detail?.login, detail?.login)}`,
-                    handle: detail?.login,
-                    icons: [
-                        {
-                            name: detail?.login,
-                            source: detail?.avatar ?? Expensicons.FallbackAvatar,
-                            type: CONST.ICON_TYPE_AVATAR,
-                            fallbackIcon: detail?.fallbackIcon,
-                            id: detail?.accountID,
-                        },
-                    ],
-                });
-            });
-
-            return suggestions;
-        },
-        [translate, formatPhoneNumber, formatLoginPrivateDomain],
     );
 
     const getRoomMentionOptions = useCallback(
@@ -389,9 +322,10 @@ function SuggestionMention(
             };
 
             if (isMentionCode(suggestionWord) && prefixType === '@') {
-                const suggestions = getUserMentionOptions(weightedPersonalDetails, prefix);
-                nextState.suggestedMentions = suggestions;
-                nextState.shouldShowSuggestionMenu = !!suggestions.length;
+                // const options = OptionsListUtils.getShareDestinationOptions(reports, personalDetails, [], prefix);
+                // const suggestions = _.filter([...options.recentReports, options.userToInvite], (x) => !!x);
+                // nextState.suggestedMentions = suggestions;
+                // nextState.shouldShowSuggestionMenu = !!suggestions.length;
             }
 
             const shouldDisplayRoomMentionsSuggestions = isGroupPolicyReport && (isValidRoomName(suggestionWord.toLowerCase()) || prefix === '');
@@ -415,7 +349,7 @@ function SuggestionMention(
             }));
             setHighlightedMentionIndex(0);
         },
-        [isComposerFocused, isGroupPolicyReport, setHighlightedMentionIndex, resetSuggestions, getUserMentionOptions, weightedPersonalDetails, getRoomMentionOptions, reports],
+        [isComposerFocused, isGroupPolicyReport, setHighlightedMentionIndex, resetSuggestions, weightedPersonalDetails, getRoomMentionOptions, reports],
     );
 
     useEffect(() => {
