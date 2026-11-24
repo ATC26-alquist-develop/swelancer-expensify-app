@@ -140,23 +140,13 @@ type ButtonProps = Partial<ChildrenProps> & {
     /** Whether button's content should be centered */
     isContentCentered?: boolean;
 
-    /** Whether the Enter keyboard listening is active whether or not the screen that contains the button is focused */
-    isPressOnEnterActive?: boolean;
 };
 
-type KeyboardShortcutComponentProps = Pick<ButtonProps, 'isDisabled' | 'isLoading' | 'onPress' | 'pressOnEnter' | 'allowBubble' | 'enterKeyEventListenerPriority' | 'isPressOnEnterActive'>;
+type KeyboardShortcutComponentProps = Pick<ButtonProps, 'isDisabled' | 'isLoading' | 'onPress' | 'pressOnEnter' | 'allowBubble' | 'enterKeyEventListenerPriority'>;
 
 const accessibilityRoles: string[] = Object.values(CONST.ROLE);
 
-function KeyboardShortcutComponent({
-    isDisabled = false,
-    isLoading = false,
-    onPress = () => {},
-    pressOnEnter,
-    allowBubble,
-    enterKeyEventListenerPriority,
-    isPressOnEnterActive = false,
-}: KeyboardShortcutComponentProps) {
+function KeyboardShortcutComponent({isDisabled = false, isLoading = false, onPress = () => {}, pressOnEnter, allowBubble, enterKeyEventListenerPriority}: KeyboardShortcutComponentProps) {
     const isFocused = useIsFocused();
     const activeElementRole = useActiveElementRole();
 
@@ -174,7 +164,7 @@ function KeyboardShortcutComponent({
 
     const config = useMemo(
         () => ({
-            isActive: pressOnEnter && !shouldDisableEnterShortcut && (isFocused || isPressOnEnterActive),
+            isActive: pressOnEnter && !shouldDisableEnterShortcut && (isFocused),
             shouldBubble: allowBubble,
             priority: enterKeyEventListenerPriority,
             shouldPreventDefault: false,
@@ -241,7 +231,6 @@ function Button(
         isSplitButton = false,
         link = false,
         isContentCentered = false,
-        isPressOnEnterActive,
         ...rest
     }: ButtonProps,
     ref: ForwardedRef<View>,
@@ -341,7 +330,6 @@ function Button(
                     onPress={onPress}
                     pressOnEnter={pressOnEnter}
                     enterKeyEventListenerPriority={enterKeyEventListenerPriority}
-                    isPressOnEnterActive={isPressOnEnterActive}
                 />
             )}
             <PressableWithFeedback
