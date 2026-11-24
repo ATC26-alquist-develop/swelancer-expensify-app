@@ -82,7 +82,7 @@ function WorkspaceInviteMessagePage({policy, route, currentUserPersonalDetails}:
         if (isEmptyObject(policy)) {
             return;
         }
-        Navigation.goBack(ROUTES.WORKSPACE_INVITE.getRoute(route.params.policyID), true);
+        Navigation.goBack(ROUTES.WORKSPACE_INITIAL.getRoute(route.params.policyID), true);
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
     }, []);
 
