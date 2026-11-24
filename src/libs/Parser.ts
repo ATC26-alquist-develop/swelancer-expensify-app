@@ -37,7 +37,19 @@ class ExpensiMarkWithContext extends ExpensiMark {
     }
 
     htmlToText(htmlString: string, extras?: Extras): string {
-        return super.htmlToText(htmlString, {
+        // Remove all HTML tags, decode HTML entities, and leave only plain text
+        const strippedHtml = htmlString
+            .replace(/&lt;[^&]*&gt;/g, '')   // Remove encoded HTML tags
+            .replace(/<[^>]*>/g, '')        // Remove regular HTML tags
+            .replace(/&amp;/g, '&')         // Decode HTML entities
+            .replace(/&quot;/g, '"')
+            .replace(/&apos;/g, "'")
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/\s*--\s*/g, ' ')      // Replace " -- " with a single space
+            .trim();
+        
+        return super.htmlToText(strippedHtml, {
             reportIDToName: extras?.reportIDToName ?? ReportConnection.getAllReportsNameMap(),
             accountIDToName: extras?.accountIDToName ?? accountIDToNameMap,
             cacheVideoAttributes: extras?.cacheVideoAttributes,

@@ -64,7 +64,18 @@ const useHtmlPaste: UseHtmlPaste = (textInputRef, preHtmlPasteCallback, removeLi
      */
     const handlePastedHTML = useCallback(
         (html: string) => {
-            paste(Parser.htmlToMarkdown(html));
+            // Remove all HTML tags, decode HTML entities, and leave only plain text
+            const strippedHtml = html
+                .replace(/&lt;[^&]*&gt;/g, '')   // Remove encoded HTML tags
+                .replace(/<[^>]*>/g, '')        // Remove regular HTML tags
+                .replace(/&amp;/g, '&')         // Decode HTML entities
+                .replace(/&quot;/g, '"')
+                .replace(/&apos;/g, "'")
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/\s*--\s*/g, ' ')      // Replace " -- " with a single space
+                .trim();
+            paste(strippedHtml);
         },
         [paste],
     );
