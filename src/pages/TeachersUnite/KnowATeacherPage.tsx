@@ -1,4 +1,3 @@
-import {Str} from 'expensify-common';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
@@ -70,7 +69,7 @@ function KnowATeacherPage(props: KnowATeacherPageProps) {
             if (values.partnerUserID && props.loginList?.[validateIfNumber || values.partnerUserID.toLowerCase()]) {
                 ErrorUtils.addErrorMessage(errors, 'partnerUserID', translate('teachersUnitePage.error.tryDifferentEmail'));
             }
-            if (values.partnerUserID && !(validateIfNumber || Str.isValidEmail(values.partnerUserID))) {
+            if (values.partnerUserID && !(validateIfNumber || ValidationUtils.isValidEmail(values.partnerUserID))) {
                 ErrorUtils.addErrorMessage(errors, 'partnerUserID', translate('contacts.genericFailureMessages.invalidContactMethod'));
             }
 

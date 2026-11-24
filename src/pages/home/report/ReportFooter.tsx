@@ -1,4 +1,3 @@
-import {Str} from 'expensify-common';
 import lodashIsEqual from 'lodash/isEqual';
 import React, {memo, useCallback} from 'react';
 import {Keyboard, View} from 'react-native';
@@ -22,6 +21,7 @@ import Log from '@libs/Log';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import * as ReportUtils from '@libs/ReportUtils';
 import * as UserUtils from '@libs/UserUtils';
+import * as ValidationUtils from '@libs/ValidationUtils';
 import variables from '@styles/variables';
 import * as Report from '@userActions/Report';
 import * as Task from '@userActions/Task';
@@ -135,7 +135,7 @@ function ReportFooter({
 
             const mention = match[1] ? match[1].trim() : '';
             const mentionWithDomain = ReportUtils.addDomainToShortMention(mention) ?? mention;
-            const isValidMention = Str.isValidEmail(mentionWithDomain);
+            const isValidMention = ValidationUtils.isValidEmail(mentionWithDomain);
 
             let assignee: OnyxEntry<OnyxTypes.PersonalDetails>;
             let assigneeChatReport;

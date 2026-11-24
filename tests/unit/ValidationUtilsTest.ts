@@ -337,4 +337,53 @@ describe('ValidationUtils', () => {
             expect(ValidationUtils.isValidLegalName('άλφα')).toBe(false);
         });
     });
+
+    describe('isValidEmail', () => {
+        test('Valid emails', () => {
+            expect(ValidationUtils.isValidEmail('test@example.com')).toBe(true);
+            expect(ValidationUtils.isValidEmail('user.name@example.com')).toBe(true);
+            expect(ValidationUtils.isValidEmail('user+tag@example.com')).toBe(true);
+            expect(ValidationUtils.isValidEmail('user_name@example.co')).toBe(true);
+        });
+
+        test('Invalid emails', () => {
+            expect(ValidationUtils.isValidEmail('')).toBe(false);
+            expect(ValidationUtils.isValidEmail('not-an-email')).toBe(false);
+            expect(ValidationUtils.isValidEmail('@example.com')).toBe(false);
+            expect(ValidationUtils.isValidEmail('user@')).toBe(false);
+            expect(ValidationUtils.isValidEmail('user@.com')).toBe(false);
+        });
+
+        test('Email exceeding total max length (254 chars) should be invalid', () => {
+            // Create an email that exceeds the 254 character limit
+            const longEmail = `user${'a'.repeat(200)}@example${'.'.repeat(10)}com`;
+            expect(ValidationUtils.isValidEmail(longEmail)).toBe(false);
+        });
+
+        test('Email with local part exceeding 64 chars should be invalid', () => {
+            // Local part exceeding 64 chars
+            const emailWithLongLocalPart = `${'a'.repeat(65)}@example.com`;
+            expect(ValidationUtils.isValidEmail(emailWithLongLocalPart)).toBe(false);
+        });
+
+        test('Email with exactly 64 char local part should be valid', () => {
+            // Local part exactly at 64 chars
+            const emailWithExactLocalPart = `${'a'.repeat(64)}@example.com`;
+            expect(ValidationUtils.isValidEmail(emailWithExactLocalPart)).toBe(true);
+        });
+
+        test('Email with exactly 254 chars should be valid', () => {
+            // Construct an email at exactly the max length with valid local part and domain
+            const domain = 'example.com';
+            const separator = '@';
+            const localPartMax = CONST.EMAIL.MAX_LOCAL_PART_LENGTH;
+            const domainPartMax = CONST.EMAIL.MAX_DOMAIN_LENGTH;
+            const totalEmailMax = CONST.EMAIL.MAX_LENGTH;
+            const separatorAndDomain = separator + domain;
+            const localPartLength = totalEmailMax - separatorAndDomain.length;
+            const email = `${'a'.repeat(localPartLength)}${separatorAndDomain}`;
+            expect(email.length).toBe(totalEmailMax);
+            expect(ValidationUtils.isValidEmail(email)).toBe(true);
+        });
+    });
 });

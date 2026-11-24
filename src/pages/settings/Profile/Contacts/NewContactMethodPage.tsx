@@ -1,4 +1,3 @@
-import {Str} from 'expensify-common';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -23,6 +22,7 @@ import type {PlatformStackScreenProps} from '@libs/Navigation/PlatformStackNavig
 import type {SettingsNavigatorParamList} from '@libs/Navigation/types';
 import {addSMSDomainIfPhoneNumber} from '@libs/PhoneNumber';
 import * as UserUtils from '@libs/UserUtils';
+import * as ValidationUtils from '@libs/ValidationUtils';
 import * as User from '@userActions/User';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -85,7 +85,10 @@ function NewContactMethodPage({route}: NewContactMethodPageProps) {
                 ErrorUtils.addErrorMessage(errors, 'phoneOrEmail', translate('contacts.genericFailureMessages.contactMethodRequired'));
             }
 
-            if (!!values.phoneOrEmail && !(validateIfnumber || Str.isValidEmail(values.phoneOrEmail))) {
+            if (
+                !!values.phoneOrEmail &&
+                !(validateIfnumber || ValidationUtils.isValidEmail(values.phoneOrEmail.trim()))
+            ) {
                 ErrorUtils.addErrorMessage(errors, 'phoneOrEmail', translate('contacts.genericFailureMessages.invalidContactMethod'));
             }
 

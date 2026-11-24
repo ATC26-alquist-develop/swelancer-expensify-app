@@ -44,6 +44,7 @@ import * as ReportActionUtils from './ReportActionsUtils';
 import * as ReportUtils from './ReportUtils';
 import * as TaskUtils from './TaskUtils';
 import * as UserUtils from './UserUtils';
+import * as ValidationUtils from './ValidationUtils';
 
 type SearchOption<T> = ReportUtils.OptionData & {
     item: T;
@@ -1051,7 +1052,7 @@ function getUserToInviteOption({
     const parsedPhoneNumber = PhoneNumber.parsePhoneNumber(LoginUtils.appendCountryCode(Str.removeSMSDomain(searchValue)));
     const isCurrentUserLogin = isCurrentUser({login: searchValue} as PersonalDetails);
     const isInSelectedOption = selectedOptions.some((option) => 'login' in option && option.login === searchValue);
-    const isValidEmail = Str.isValidEmail(searchValue) && !Str.isDomainEmail(searchValue) && !Str.endsWith(searchValue, CONST.SMS.DOMAIN);
+    const isValidEmail = ValidationUtils.isValidEmail(searchValue) && !Str.isDomainEmail(searchValue) && !Str.endsWith(searchValue, CONST.SMS.DOMAIN);
     const isValidPhoneNumber = parsedPhoneNumber.possible && Str.isValidE164Phone(LoginUtils.getPhoneNumberWithoutSpecialChars(parsedPhoneNumber.number?.input ?? ''));
     const isInOptionToExclude =
         optionsToExclude.findIndex((optionToExclude) => 'login' in optionToExclude && optionToExclude.login === PhoneNumber.addSMSDomainIfPhoneNumber(searchValue).toLowerCase()) !== -1;
@@ -1500,7 +1501,7 @@ function getMemberInviteOptions(
 function getHeaderMessage(hasSelectableOptions: boolean, hasUserToInvite: boolean, searchValue: string, hasMatchedParticipant = false): string {
     const isValidPhone = PhoneNumber.parsePhoneNumber(LoginUtils.appendCountryCode(searchValue)).possible;
 
-    const isValidEmail = Str.isValidEmail(searchValue);
+    const isValidEmail = ValidationUtils.isValidEmail(searchValue);
 
     if (searchValue && CONST.REGEX.DIGITS_AND_PLUS.test(searchValue) && !isValidPhone && !hasSelectableOptions) {
         return Localize.translate(preferredLocale, 'messages.errorMessageInvalidPhone');

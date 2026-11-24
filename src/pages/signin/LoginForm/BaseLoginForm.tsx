@@ -1,5 +1,4 @@
 import {useIsFocused} from '@react-navigation/native';
-import {Str} from 'expensify-common';
 import type {ForwardedRef} from 'react';
 import React, {forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react';
 import {InteractionManager, View} from 'react-native';
@@ -69,7 +68,7 @@ function BaseLoginForm({login, onLoginChanged, blurOnSubmit = false, isVisible}:
             const phoneLogin = LoginUtils.appendCountryCode(LoginUtils.getPhoneNumberWithoutSpecialChars(loginTrim));
             const parsedPhoneNumber = parsePhoneNumber(phoneLogin);
 
-            if (!Str.isValidEmail(loginTrim) && !parsedPhoneNumber.possible) {
+            if (ValidationUtils.isValidEmail(loginTrim) && !parsedPhoneNumber.possible) {
                 if (ValidationUtils.isNumericWithSpecialChars(loginTrim)) {
                     setFormError('common.error.phoneNumber');
                 } else {

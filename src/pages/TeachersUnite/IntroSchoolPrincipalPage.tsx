@@ -1,4 +1,3 @@
-import {Str} from 'expensify-common';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {withOnyx} from 'react-native-onyx';
@@ -61,7 +60,7 @@ function IntroSchoolPrincipalPage(props: IntroSchoolPrincipalPageProps) {
             if (values.partnerUserID && props.loginList?.[values.partnerUserID.toLowerCase()]) {
                 ErrorUtils.addErrorMessage(errors, 'partnerUserID', translate('teachersUnitePage.error.tryDifferentEmail'));
             }
-            if (values.partnerUserID && !Str.isValidEmail(values.partnerUserID)) {
+            if (values.partnerUserID && !ValidationUtils.isValidEmail(values.partnerUserID)) {
                 ErrorUtils.addErrorMessage(errors, 'partnerUserID', translate('teachersUnitePage.error.enterValidEmail'));
             }
             if (values.partnerUserID && LoginUtils.isEmailPublicDomain(values.partnerUserID)) {

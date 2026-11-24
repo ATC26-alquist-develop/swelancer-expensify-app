@@ -1689,6 +1689,13 @@ const CONST = {
         STUDENT_AMBASSADOR: 'studentambassadors@expensify.com',
         SVFG: 'svfg@expensify.com',
         EXPENSIFY_EMAIL_DOMAIN: '@expensify.com',
+
+        /** Maximum total email length per RFC 5321 */
+        MAX_LENGTH: 254,
+        /** Maximum local-part length per RFC 5321 */
+        MAX_LOCAL_PART_LENGTH: 64,
+        /** Maximum domain part length per RFC 5321 */
+        MAX_DOMAIN_LENGTH: 253,
     },
 
     CONCIERGE_DISPLAY_NAME: 'Concierge',

@@ -504,10 +504,30 @@ function isValidSubscriptionSize(subscriptionSize: string): boolean {
 
 /**
  * Validates the given value if it is correct email address.
+ * Checks both format (via Str.isValidEmail) and length constraints per RFC 5321.
  * @param email
  */
 function isValidEmail(email: string): boolean {
-    return Str.isValidEmail(email);
+    if (!Str.isValidEmail(email)) {
+        return false;
+    }
+
+    // RFC 5321 limits: total max 254, local-part max 64
+    if (email.length > CONST.EMAIL.MAX_LENGTH) {
+        return false;
+    }
+
+    const atIndex = email.lastIndexOf('@');
+    if (atIndex === -1) {
+        return false;
+    }
+
+    const localPart = email.slice(0, atIndex);
+    if (localPart.length > CONST.EMAIL.MAX_LOCAL_PART_LENGTH) {
+        return false;
+    }
+
+    return true;
 }
 
 /**
