@@ -134,7 +134,7 @@ function TabSelector({state, navigation, onTabPress = () => {}, position, onFocu
                             activeOpacity={activeOpacity}
                             inactiveOpacity={inactiveOpacity}
                             backgroundColor={backgroundColor}
-                            isActive={isActive}
+                            // isActive={isActive}
                         />
                     );
                 })}

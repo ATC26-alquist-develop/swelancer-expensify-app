@@ -29,33 +29,33 @@ type TabSelectorItemProps = {
     activeOpacity?: number | Animated.AnimatedInterpolation<number>;
 
     /** Whether this tab is active */
-    isActive?: boolean;
+    // isActive?: boolean;
 };
 
-function TabSelectorItem({icon, title = '', onPress = () => {}, backgroundColor = '', activeOpacity = 0, inactiveOpacity = 1, isActive = false}: TabSelectorItemProps) {
+function TabSelectorItem({icon, title = '', onPress = () => {}, backgroundColor = '', activeOpacity = 0, inactiveOpacity = 1}: TabSelectorItemProps) {
     const styles = useThemeStyles();
     const [isHovered, setIsHovered] = useState(false);
 
     return (
         <AnimatedPressableWithFeedback
             accessibilityLabel={title}
-            style={[styles.tabSelectorButton, styles.tabBackground(isHovered, isActive, backgroundColor), styles.userSelectNone]}
+            style={[styles.tabSelectorButton, {backgroundColor}]}
             wrapperStyle={[styles.flex1]}
             onPress={onPress}
-            onHoverIn={() => setIsHovered(true)}
-            onHoverOut={() => setIsHovered(false)}
+            // onHoverIn={() => setIsHovered(true)}
+            // onHoverOut={() => setIsHovered(false)}
             role={CONST.ROLE.BUTTON}
             dataSet={{[CONST.SELECTION_SCRAPER_HIDDEN_ELEMENT]: true}}
         >
             <TabIcon
                 icon={icon}
-                activeOpacity={styles.tabOpacity(isHovered, isActive, activeOpacity, inactiveOpacity).opacity}
-                inactiveOpacity={styles.tabOpacity(isHovered, isActive, inactiveOpacity, activeOpacity).opacity}
+                activeOpacity={activeOpacity}
+                inactiveOpacity={inactiveOpacity}
             />
             <TabLabel
                 title={title}
-                activeOpacity={styles.tabOpacity(isHovered, isActive, activeOpacity, inactiveOpacity).opacity}
-                inactiveOpacity={styles.tabOpacity(isHovered, isActive, inactiveOpacity, activeOpacity).opacity}
+                activeOpacity={activeOpacity}
+                inactiveOpacity={inactiveOpacity}
             />
         </AnimatedPressableWithFeedback>
     );
