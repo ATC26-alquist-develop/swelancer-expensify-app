@@ -883,6 +883,7 @@ const translations = {
         }),
         settledExpensify: 'Pagado',
         settledElsewhere: 'Pagado de otra forma',
+        paymentComplete: 'Pago completado',
         individual: 'Individual',
         business: 'Empresa',
         settleExpensify: ({formattedAmount}: SettleExpensifyCardParams) => (formattedAmount ? `Pagar ${formattedAmount} con Expensify` : `Pagar con Expensify`),
