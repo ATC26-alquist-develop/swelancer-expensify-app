@@ -41,7 +41,7 @@ const lightTheme = {
     darkSupportingText: colors.productDark800,
 
     // Additional keys
-    overlay: colors.productLight400,
+    overlay: colors.darkHighlightBackground,
     inverse: colors.productLight900,
     shadow: colors.black,
     componentBG: colors.productLight100,

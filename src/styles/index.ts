@@ -1951,7 +1951,7 @@ const styles = (theme: ThemeColors) =>
                 top: 0,
                 bottom: 0,
                 right: isModalOnTheLeft ? -2 * variables.sideBarWidth : 0,
-                backgroundColor: theme.overlay,
+                backgroundColor: theme.shadow,
                 opacity: current.progress.interpolate({
                     inputRange: [0, 1],
                     outputRange: [0, variables.overlayOpacity],
