@@ -241,7 +241,7 @@ function PolicyAccountingPage({policy}: PolicyAccountingPageProps) {
                         <Button
                             onPress={() => startIntegrationFlow({name: integration})}
                             text={translate('workspace.accounting.setup')}
-                            style={styles.justifyContentCenter}
+                            style={integration === CONST.POLICY.CONNECTIONS.NAME.QBO ? {} : styles.justifyContentCenter}
                             small
                             isDisabled={isOffline}
                             ref={(ref) => {
