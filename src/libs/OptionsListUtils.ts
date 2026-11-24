@@ -2120,8 +2120,6 @@ function getShareLogOptions(options: OptionList, searchValue = '', betas: Beta[]
         includeP2P: true,
         forcePolicyNamePreview: true,
         includeOwnedWorkspaceChats: true,
-        includeSelfDM: true,
-        includeThreads: true,
     });
 }
 
