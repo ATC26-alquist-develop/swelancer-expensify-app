@@ -1990,14 +1990,7 @@ function getOptions(
             reportOption.isSelected = isReportSelected(reportOption, selectedOptions);
             reportOption.isBold = shouldBoldTitleByDefault || shouldUseBoldText(reportOption);
 
-            if (action === CONST.IOU.ACTION.CATEGORIZE) {
-                const policyCategories = allPolicyCategories?.[`${ONYXKEYS.COLLECTION.POLICY_CATEGORIES}${reportOption.policyID}`] ?? {};
-                if (getEnabledCategoriesCount(policyCategories) !== 0) {
-                    recentReportOptions.push(reportOption);
-                }
-            } else {
-                recentReportOptions.push(reportOption);
-            }
+            recentReportOptions.push(reportOption);
 
             // Add a field to sort the recent reports by the time of last IOU request for create actions
             if (preferRecentExpenseReports) {
