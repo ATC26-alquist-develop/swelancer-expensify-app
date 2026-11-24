@@ -198,8 +198,6 @@ function OptionRowLHN({reportID, isFocused = false, onSelectRow = () => {}, opti
                                     Performance.markStart(CONST.TIMING.OPEN_REPORT);
 
                                     event?.preventDefault();
-                                    // Enable Composer to focus on clicking the same chat after opening the context menu.
-                                    ReportActionComposeFocusManager.focus();
                                     onSelectRow(optionItem, popoverAnchor);
                                 }}
                                 onMouseDown={(event) => {
@@ -212,13 +210,7 @@ function OptionRowLHN({reportID, isFocused = false, onSelectRow = () => {}, opti
                                     event.preventDefault();
                                 }}
                                 testID={optionItem.reportID}
-                                onSecondaryInteraction={(event) => {
-                                    showPopover(event);
-                                    // Ensure that we blur the composer when opening context menu, so that only one component is focused at a time
-                                    if (DomUtils.getActiveElement()) {
-                                        (DomUtils.getActiveElement() as HTMLElement | null)?.blur();
-                                    }
-                                }}
+                                onSecondaryInteraction={(event) => showPopover(event)}
                                 withoutFocusOnSecondaryInteraction
                                 activeOpacity={variables.pressDimValue}
                                 opacityAnimationDuration={0}

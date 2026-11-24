@@ -181,7 +181,7 @@ function BaseReportActionContextMenu({
 
     const originalReportID = useMemo(() => ReportUtils.getOriginalReportID(reportID, reportAction), [reportID, reportAction]);
 
-    const shouldEnableArrowNavigation = !isMini && (isVisible || shouldKeepOpen);
+    const shouldEnableArrowNavigation = !isMini && shouldKeepOpen;
     let filteredContextMenuActions = ContextMenuActions.filter(
         (contextAction) =>
             !disabledActions.includes(contextAction) &&
