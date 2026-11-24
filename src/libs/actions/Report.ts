@@ -2886,11 +2886,20 @@ function leaveRoom(reportID: string, isWorkspaceMemberLeavingWorkspaceRoom = fal
 
     // If this is the leave action from a workspace room, simply dismiss the modal, i.e., allow the user to view the room and join again immediately.
     // If this is the leave action from a chat thread (even if the chat thread is in a room), do not allow the user to stay in the thread after leaving.
-    if (isWorkspaceMemberLeavingWorkspaceRoom && !isChatThread) {
+    Navigation.dismissModal();
+    if (Navigation.getTopmostReportId() === reportID) {
+        Navigation.goBack(ROUTES.HOME);
+    }
+    if (report.parentReportID) {
+        Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(report.parentReportID), CONST.NAVIGATION.TYPE.UP);
         return;
     }
-    // In other cases, the report is deleted and we should move the user to another report.
-    navigateToMostRecentReport(report);
+    navigateToConciergeChat();
+    // if (isWorkspaceMemberLeavingWorkspaceRoom && !isChatThread) {
+    //     return;
+    // }
+    // // In other cases, the report is deleted and we should move the user to another report.
+    // navigateToMostRecentReport(report);
 }
 
 /** Invites people to a room */

@@ -554,22 +554,23 @@ function ReportScreen({route, currentReportID = '', navigation}: ReportScreenPro
         ) {
             // Early return if the report we're passing isn't in a focused state. We only want to navigate to Concierge if the user leaves the room from another device or gets removed from the room while the report is in a focused state.
             // Prevent auto navigation for report in RHP
-            if (!isFocused || isInNarrowPaneModal) {
-                return;
-            }
-            Navigation.dismissModal();
-            if (Navigation.getTopmostReportId() === prevOnyxReportID) {
-                Navigation.setShouldPopAllStateOnUP(true);
-                Navigation.goBack(undefined, false, true);
-            }
-            if (prevReport?.parentReportID) {
-                // Prevent navigation to the IOU/Expense Report if it is pending deletion.
-                if (ReportUtils.isMoneyRequestReportPendingDeletion(prevReport.parentReportID)) {
-                    return;
-                }
-                Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(prevReport.parentReportID));
-                return;
-            }
+            // if (!isFocused || isInNarrowPaneModal) {
+            //     return;
+            // }
+            // Navigation.dismissModal();
+            // if (Navigation.getTopmostReportId() === prevOnyxReportID) {
+            //     Navigation.setShouldPopAllStateOnUP(true);
+            //     Navigation.goBack(undefined, false, true);
+            // }
+            // if (prevReport?.parentReportID) {
+            //     // Prevent navigation to the IOU/Expense Report if it is pending deletion.
+            //     if (ReportUtils.isMoneyRequestReportPendingDeletion(prevReport.parentReportID)) {
+            //         return;
+            //     }
+            //     Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(prevReport.parentReportID));
+            //     return;
+            // }
+            Navigation.goBack();
 
             Report.navigateToConciergeChat();
             return;
@@ -595,7 +596,7 @@ function ReportScreen({route, currentReportID = '', navigation}: ReportScreenPro
         prevUserLeavingStatus,
         userLeavingStatus,
         prevReport?.statusNum,
-        prevReport?.parentReportID,
+        // prevReport?.parentReportID,
         prevReport?.chatType,
         prevReport,
         reportIDFromRoute,
