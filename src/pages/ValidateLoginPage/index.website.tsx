@@ -66,18 +66,21 @@ function ValidateLoginPage({
         });
     }, [login, cachedAccountID, is2FARequired, exitTo]);
 
+    const isAutoAuthenticating =
+        autoAuthState === CONST.AUTO_AUTH_STATE.NOT_STARTED && accountID && validateCode;
+
     return (
         <>
             {autoAuthState === CONST.AUTO_AUTH_STATE.FAILED && <ExpiredValidateCodeModal />}
             {autoAuthState === CONST.AUTO_AUTH_STATE.JUST_SIGNED_IN && is2FARequired && !isSignedIn && <JustSignedInModal is2FARequired />}
             {autoAuthState === CONST.AUTO_AUTH_STATE.JUST_SIGNED_IN && isSignedIn && !exitTo && <JustSignedInModal is2FARequired={false} />}
-            {autoAuthState === CONST.AUTO_AUTH_STATE.NOT_STARTED && !exitTo && (
+            {autoAuthState === CONST.AUTO_AUTH_STATE.NOT_STARTED && !isAutoAuthenticating && !exitTo && (
                 <ValidateCodeModal
                     accountID={Number(accountID)}
                     code={validateCode}
                 />
             )}
-            {autoAuthState === CONST.AUTO_AUTH_STATE.SIGNING_IN && <FullScreenLoadingIndicator />}
+            {(autoAuthState === CONST.AUTO_AUTH_STATE.SIGNING_IN || isAutoAuthenticating) && <FullScreenLoadingIndicator />}
         </>
     );
 }
