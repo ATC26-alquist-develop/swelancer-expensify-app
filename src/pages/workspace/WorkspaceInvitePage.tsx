@@ -97,7 +97,7 @@ function WorkspaceInvitePage({route, betas, invitedEmailsToAccountIDsDraft, poli
             return {recentReports: [], personalDetails: [], userToInvite: null, currentUserOption: null, categoryOptions: [], tagOptions: [], taxRatesOptions: []};
         }
 
-        const inviteOptions = OptionsListUtils.getMemberInviteOptions(options.personalDetails, betas ?? [], '', excludedUsers, true);
+        const inviteOptions = OptionsListUtils.getMemberInviteOptions(options.personalDetails, betas ?? [], '', excludedUsers);
 
         return {...inviteOptions, recentReports: [], currentUserOption: null, categoryOptions: [], tagOptions: [], taxRatesOptions: []};
     }, [areOptionsInitialized, betas, excludedUsers, options.personalDetails]);
@@ -179,23 +179,8 @@ function WorkspaceInvitePage({route, betas, invitedEmailsToAccountIDsDraft, poli
             return [];
         }
 
-        // Filter all options that is a part of the search term or in the personal details
-        let filterSelectedOptions = selectedOptions;
-        if (debouncedSearchTerm !== '') {
-            filterSelectedOptions = selectedOptions.filter((option) => {
-                const accountID = option.accountID;
-                const isOptionInPersonalDetails = Object.values(personalDetails).some((personalDetail) => personalDetail.accountID === accountID);
-
-                const searchValue = OptionsListUtils.getSearchValueForPhoneOrEmail(debouncedSearchTerm);
-
-                const isPartOfSearchTerm = !!option.text?.toLowerCase().includes(searchValue) || !!option.login?.toLowerCase().includes(searchValue);
-                return isPartOfSearchTerm || isOptionInPersonalDetails;
-            });
-        }
-
         sectionsArr.push({
             title: undefined,
-            data: filterSelectedOptions,
             shouldShow: true,
         });
 

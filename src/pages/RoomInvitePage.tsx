@@ -118,23 +118,9 @@ function RoomInvitePage({
             return [];
         }
 
-        // Filter all options that is a part of the search term or in the personal details
-        let filterSelectedOptions = selectedOptions;
-        if (debouncedSearchTerm !== '') {
-            filterSelectedOptions = selectedOptions.filter((option) => {
-                const accountID = option?.accountID;
-                const isOptionInPersonalDetails = personalDetails ? personalDetails.some((personalDetail) => accountID && personalDetail?.accountID === accountID) : false;
-                const parsedPhoneNumber = PhoneNumber.parsePhoneNumber(LoginUtils.appendCountryCode(Str.removeSMSDomain(debouncedSearchTerm)));
-                const searchValue = parsedPhoneNumber.possible && parsedPhoneNumber.number ? parsedPhoneNumber.number.e164 : debouncedSearchTerm.toLowerCase();
-                const isPartOfSearchTerm = (option.text?.toLowerCase() ?? '').includes(searchValue) || (option.login?.toLowerCase() ?? '').includes(searchValue);
-                return isPartOfSearchTerm || isOptionInPersonalDetails;
-            });
-        }
-        const filterSelectedOptionsFormatted = filterSelectedOptions.map((selectedOption) => OptionsListUtils.formatMemberForList(selectedOption));
 
         sectionsArr.push({
             title: undefined,
-            data: filterSelectedOptionsFormatted,
         });
 
         // Filtering out selected users from the search results

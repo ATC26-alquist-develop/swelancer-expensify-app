@@ -2281,7 +2281,6 @@ function getMemberInviteOptions(
     betas: Beta[] = [],
     searchValue = '',
     excludeLogins: string[] = [],
-    includeSelectedOptions = false,
     reports: Array<SearchOption<Report>> = [],
     includeRecentReports = false,
 ): Options {
@@ -2293,7 +2292,6 @@ function getMemberInviteOptions(
             includeP2P: true,
             excludeLogins,
             sortPersonalDetailsByAlphaAsc: true,
-            includeSelectedOptions,
             includeRecentReports,
         },
     );
