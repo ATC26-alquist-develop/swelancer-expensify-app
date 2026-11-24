@@ -86,7 +86,7 @@ function FormAlertWithSubmitButton({
     enterKeyEventListenerPriority = 0,
 }: FormAlertWithSubmitButtonProps) {
     const styles = useThemeStyles();
-    const style = [!footerContent ? {} : styles.mb3, buttonStyles];
+    const style = [styles.mb3];
     const safePaddingBottomStyle = useSafePaddingBottomStyle();
 
     // Disable pressOnEnter for Android Native to avoid issues with the Samsung keyboard,
@@ -123,7 +123,6 @@ function FormAlertWithSubmitButton({
                             pressOnEnter={pressOnEnter}
                             enterKeyEventListenerPriority={enterKeyEventListenerPriority}
                             text={buttonText}
-                            style={style}
                             onPress={onSubmit}
                             isDisabled={isDisabled}
                             isLoading={isLoading}
