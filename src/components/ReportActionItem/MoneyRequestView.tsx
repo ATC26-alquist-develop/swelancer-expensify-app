@@ -614,10 +614,8 @@ function MoneyRequestView({report, shouldShowAnimatedBackground, readonly = fals
                                     ),
                                 )
                             }
-                            wrapperStyle={[styles.taskDescriptionMenuItem]}
                             brickRoadIndicator={getErrorForField('merchant') ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR : undefined}
                             errorText={getErrorForField('merchant')}
-                            numberOfLinesTitle={0}
                         />
                     </OfflineWithFeedback>
                 )}
