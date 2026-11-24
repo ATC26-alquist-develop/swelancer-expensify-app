@@ -184,7 +184,7 @@ export default function linkTo(navigation: NavigationContainerRef<RootStackParam
         }
     }
 
-    if (action && 'payload' in action && action.payload && 'name' in action.payload && isSideModalNavigator(action.payload.name)) {
+    if (action && 'payload' in action && action.payload && 'name' in action.payload && (isSideModalNavigator(action.payload.name) || action.payload.name === NAVIGATORS.ONBOARDING_MODAL_NAVIGATOR)) {
         // Information about the state may be in the params.
         const currentFocusedRoute = findFocusedRoute(extrapolateStateFromParams(rootState));
         const targetFocusedRoute = findFocusedRoute(stateFromPath);
