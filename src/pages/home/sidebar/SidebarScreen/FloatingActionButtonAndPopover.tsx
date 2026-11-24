@@ -490,7 +490,7 @@ export default withOnyx<FloatingActionButtonAndPopoverProps & RefAttributes<Floa
         selector: policySelector,
     },
     isLoading: {
-        key: ONYXKEYS.IS_LOADING_APP,
+        key: ONYXKEYS.IS_LOADING_REPORT_DATA,
     },
     quickAction: {
         key: ONYXKEYS.NVP_QUICK_ACTION_GLOBAL_CREATE,
