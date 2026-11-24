@@ -368,7 +368,6 @@ function WorkspaceMembersPage({personalDetails, route, policy, currentUserPerson
                         source: details.avatar ?? Expensicons.FallbackAvatar,
                         name: formatPhoneNumber(details?.login ?? ''),
                         type: CONST.ICON_TYPE_AVATAR,
-                        id: accountID,
                     },
                 ],
                 errors: policyEmployee.errors,
