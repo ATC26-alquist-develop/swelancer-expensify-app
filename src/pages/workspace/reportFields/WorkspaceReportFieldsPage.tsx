@@ -31,7 +31,6 @@ import useTheme from '@hooks/useTheme';
 import useThemeStyles from '@hooks/useThemeStyles';
 import {turnOffMobileSelectionMode} from '@libs/actions/MobileSelectionMode';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
-import localeCompare from '@libs/LocaleCompare';
 import Navigation from '@libs/Navigation/Navigation';
 import type {FullScreenNavigatorParamList} from '@libs/Navigation/types';
 import * as PolicyUtils from '@libs/PolicyUtils';
@@ -106,7 +105,6 @@ function WorkspaceReportFieldsPage({
         return [
             {
                 data: Object.values(filteredPolicyFieldList)
-                    .sort((a, b) => localeCompare(a.name, b.name))
                     .map((reportField) => ({
                         value: reportField.name,
                         fieldID: reportField.fieldID,

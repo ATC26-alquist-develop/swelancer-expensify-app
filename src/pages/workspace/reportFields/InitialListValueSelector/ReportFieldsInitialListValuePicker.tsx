@@ -1,7 +1,6 @@
 import React, {useMemo} from 'react';
 import SelectionList from '@components/SelectionList';
 import RadioListItem from '@components/SelectionList/RadioListItem';
-import localeCompare from '@libs/LocaleCompare';
 
 type ReportFieldsInitialListValuePickerProps = {
     /** Options to select from if field is of type list */
@@ -23,7 +22,6 @@ function ReportFieldsInitialListValuePicker({listValues, disabledOptions, value,
             {
                 data: Object.values(listValues ?? {})
                     .filter((listValue, index) => !disabledOptions[index])
-                    .sort(localeCompare)
                     .map((listValue) => ({
                         keyForList: listValue,
                         value: listValue,

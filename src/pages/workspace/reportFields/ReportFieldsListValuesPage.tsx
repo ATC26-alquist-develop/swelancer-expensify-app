@@ -24,7 +24,6 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import {turnOffMobileSelectionMode} from '@libs/actions/MobileSelectionMode';
 import * as ReportField from '@libs/actions/Policy/ReportField';
 import * as DeviceCapabilities from '@libs/DeviceCapabilities';
-import localeCompare from '@libs/LocaleCompare';
 import Navigation from '@libs/Navigation/Navigation';
 import * as PolicyUtils from '@libs/PolicyUtils';
 import * as ReportUtils from '@libs/ReportUtils';
@@ -104,7 +103,6 @@ function ReportFieldsListValuesPage({
                     />
                 ),
             }))
-            .sort((a, b) => localeCompare(a.value, b.value));
         return [{data, isDisabled: false}];
     }, [canSelectMultiple, disabledListValues, listValues, selectedValues, translate]);
 
