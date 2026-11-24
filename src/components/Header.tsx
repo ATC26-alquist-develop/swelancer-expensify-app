@@ -49,7 +49,7 @@ function Header({title = '', subtitle = '', textStyles = [], containerStyles = [
                 {typeof title === 'string'
                     ? !!title && (
                           <Text
-                              numberOfLines={2}
+                              numberOfLines={1}
                               style={[styles.headerText, styles.textLarge, textStyles]}
                           >
                               {title}
