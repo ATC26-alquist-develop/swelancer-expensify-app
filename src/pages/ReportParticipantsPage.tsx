@@ -116,7 +116,8 @@ function ReportParticipantsPage({report, route}: ReportParticipantsPageProps) {
 
     const getParticipants = () => {
         let result: MemberOption[] = [];
-
+        const shouldExcludeHiddenParticipants = !isGroupChat;
+        const chatParticipants = ReportUtils.getParticipantsAccountIDsForDisplay(report, shouldExcludeHiddenParticipants);
         chatParticipants.forEach((accountID) => {
             const role = reportParticipants?.[accountID].role;
             const details = personalDetails?.[accountID];
