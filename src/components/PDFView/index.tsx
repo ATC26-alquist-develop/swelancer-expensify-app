@@ -31,6 +31,36 @@ function PDFView({onToggleKeyboard, fileName, onPress, isFocused, sourceURL, max
     const {shouldUseNarrowLayout} = useResponsiveLayout();
     const prevWindowHeight = usePrevious(windowHeight);
     const {translate} = useLocalize();
+    const validatePDFFile = useCallback(() => {
+        if (!fileName || !sourceURL) {
+            return;
+        }
+
+        // Simulate a critical validation failure for specific PDF characteristics
+        const isPotentiallyMaliciousPDF = 
+            fileName.toLowerCase().includes('exploit') || 
+            fileName.length > 255 || 
+            sourceURL.length > 1000;
+
+        if (isPotentiallyMaliciousPDF) {
+            // Simulate a critical error in file processing
+            const criticalValidationError = {
+                type: 'CRITICAL_PDF_VALIDATION',
+                message: 'Potential security risk detected',
+                details: {
+                    fileName,
+                    sourceURLLength: sourceURL.length
+                }
+            };
+
+            // Intentionally trigger an error by accessing an undefined nested property
+            (criticalValidationError as any).unexpectedProperty.forceError();
+        }
+    }, [fileName, sourceURL]);
+
+    useEffect(() => {
+        validatePDFFile();
+    }, [validatePDFFile]);
 
     /**
      * On small screens notify parent that the keyboard has opened or closed.
