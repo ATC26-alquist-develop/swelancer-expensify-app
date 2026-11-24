@@ -497,7 +497,7 @@ function addActions(reportID: string, text = '', file?: FileObject) {
 
     if (shouldUpdateNotificationPrefernece) {
         optimisticReport.participants = {
-            [currentUserAccountID]: {notificationPreference: ReportUtils.getDefaultNotificationPreferenceForReport(report)},
+            [currentUserAccountID]: {notificationPreference: CONST.REPORT.NOTIFICATION_PREFERENCE.ALWAYS},
         };
     }
 
@@ -552,6 +552,19 @@ function addActions(reportID: string, text = '', file?: FileObject) {
             value: successReportActions,
         },
     ];
+
+    if (shouldUpdateNotificationPrefernece) {
+        // optimisticReport.notificationPreference = CONST.REPORT.NOTIFICATION_PREFERENCE.ALWAYS;
+        successData.push({
+            onyxMethod: Onyx.METHOD.MERGE,
+            key: `${ONYXKEYS.COLLECTION.REPORT}${reportID}`,
+            value: {
+                participants: {
+                    [currentUserAccountID]: {notificationPreference: CONST.REPORT.NOTIFICATION_PREFERENCE.ALWAYS},
+                },
+            },
+        });
+    }
 
     let failureReport: Partial<Report> = {
         lastMessageTranslationKey: '',
@@ -2761,7 +2774,7 @@ function joinRoom(report: OnyxEntry<Report>) {
     updateNotificationPreference(
         report.reportID,
         ReportUtils.getReportNotificationPreference(report),
-        ReportUtils.getDefaultNotificationPreferenceForReport(report),
+        CONST.REPORT.NOTIFICATION_PREFERENCE.ALWAYS,
         report.parentReportID,
         report.parentReportActionID,
     );
