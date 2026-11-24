@@ -175,7 +175,7 @@ function WorkspacePageWithSections({
             <FullPageNotFoundView
                 onBackButtonPress={Navigation.dismissModal}
                 onLinkPress={Navigation.resetToHome}
-                shouldShow={shouldShow}
+                shouldShow={false}
                 subtitleKey={isEmptyObject(policy) ? undefined : 'workspace.common.notAuthorized'}
                 shouldForceFullScreen
             >

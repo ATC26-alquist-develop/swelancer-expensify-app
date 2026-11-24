@@ -289,7 +289,7 @@ function WorkspaceInitialPage({policyDraft, policy: policyProp, route}: Workspac
             brickRoadIndicator: hasMembersError ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR : undefined,
             routeName: SCREENS.WORKSPACE.MEMBERS,
         },
-        ...(isPaidGroupPolicy && shouldShowProtectedItems ? protectedCollectPolicyMenuItems : []),
+        ...protectedCollectPolicyMenuItems,
     ];
 
     const prevPolicy = usePrevious(policy);
@@ -349,7 +349,7 @@ function WorkspaceInitialPage({policyDraft, policy: policyProp, route}: Workspac
             <FullPageNotFoundView
                 onBackButtonPress={Navigation.dismissModal}
                 onLinkPress={Navigation.resetToHome}
-                shouldShow={shouldShowNotFoundPage}
+                shouldShow={false}
                 subtitleKey={isEmptyObject(policy) ? undefined : 'workspace.common.notAuthorized'}
             >
                 <HeaderWithBackButton
