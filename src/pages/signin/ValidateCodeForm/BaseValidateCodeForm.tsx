@@ -154,7 +154,6 @@ function BaseValidateCodeForm({autoComplete, isUsingRecoveryCode, setIsUsingReco
      */
     const resendValidateCode = () => {
         User.resendValidateCode(credentials?.login ?? '');
-        inputValidateCodeRef.current?.clear();
         // Give feedback to the user to let them know the email was sent so that they don't spam the button.
         setTimeRemaining(CONST.REQUEST_CODE_DELAY);
     };

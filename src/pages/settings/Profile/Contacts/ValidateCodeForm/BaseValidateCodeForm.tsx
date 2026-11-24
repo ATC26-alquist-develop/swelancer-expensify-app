@@ -142,6 +142,7 @@ function BaseValidateCodeForm({
         if (!hasMagicCodeBeenSent) {
             return;
         }
+        setValidateCode('');
         inputValidateCodeRef.current?.clear();
     }, [hasMagicCodeBeenSent]);
 
@@ -167,8 +168,9 @@ function BaseValidateCodeForm({
             User.requestContactMethodValidateCode(contactMethod);
         }
 
-        inputValidateCodeRef.current?.clear();
         validateCodeSentIsPressedRef.current = true;
+        setValidateCode('');
+        inputValidateCodeRef.current?.focus();
     };
     /**
      * Handle text input and clear formError upon text change
