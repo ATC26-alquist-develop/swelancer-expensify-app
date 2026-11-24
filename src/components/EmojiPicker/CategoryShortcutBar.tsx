@@ -15,7 +15,7 @@ type CategoryShortcutBarProps = {
 function CategoryShortcutBar({onPress, headerEmojis}: CategoryShortcutBarProps) {
     const styles = useThemeStyles();
     return (
-        <View style={[styles.ph4, styles.flexRow]}>
+        <View style={[styles.pt2, styles.ph4, styles.flexRow]}>
             {headerEmojis.map((headerEmoji) => (
                 <CategoryShortcutButton
                     icon={headerEmoji.icon}

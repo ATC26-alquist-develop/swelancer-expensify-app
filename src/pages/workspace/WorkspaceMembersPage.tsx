@@ -662,7 +662,7 @@ function WorkspaceMembersPage({personalDetails, route, policy, currentUserPerson
                         isVisible={isDownloadFailureModalVisible}
                         onClose={() => setIsDownloadFailureModalVisible(false)}
                     />
-                    <View style={[styles.w100, styles.flex1]}>
+                    <View style={[styles.w100, styles.pv4, styles.flex1]}>
                         <SelectionListWithModal
                             ref={selectionListRef}
                             canSelectMultiple={canSelectMultiple}

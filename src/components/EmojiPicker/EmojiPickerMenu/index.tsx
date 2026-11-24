@@ -322,7 +322,7 @@ function EmojiPickerMenu({onEmojiSelected, activeEmoji}: EmojiPickerMenuProps, r
                 arePointerEventsDisabled ? styles.pointerEventsNone : styles.pointerEventsAuto,
             ]}
         >
-            <View style={[styles.ph4, styles.pb3, styles.pt2]}>
+            <View style={[styles.ph4, styles.pb2, styles.pt2]}>
                 <TextInput
                     label={translate('common.search')}
                     accessibilityLabel={translate('common.search')}
