@@ -396,10 +396,8 @@ function ReportDetailsPage({policies, report, route}: ReportDetailsPageProps) {
                 icon: Expensicons.Exit,
                 isAnonymousAction: true,
                 action: () => {
-                    if (ReportUtils.getParticipantsAccountIDsForDisplay(report, false, true).length === 1 && isRootGroupChat) {
-                        setIsLastMemberLeavingGroupModalVisible(true);
-                        return;
-                    }
+                    // NOTE: This is the only way to disable the modal since deleted members are removed
+                    // immediately, consequently, we cannot filter out pending deletions
 
                     leaveChat();
                 },

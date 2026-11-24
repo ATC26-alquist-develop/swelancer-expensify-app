@@ -2942,18 +2942,12 @@ function inviteToRoom(reportID: string, inviteeEmailsToAccountIDs: InvitedEmails
     ];
     optimisticData.push(...newPersonalDetailsOnyxData.optimisticData);
 
-    const successPendingChatMembers = report?.pendingChatMembers
-        ? report?.pendingChatMembers?.filter(
-              (pendingMember) => !(inviteeAccountIDs.includes(Number(pendingMember.accountID)) && pendingMember.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE),
-          )
-        : null;
     const successData: OnyxUpdate[] = [
         {
             onyxMethod: Onyx.METHOD.MERGE,
             key: `${ONYXKEYS.COLLECTION.REPORT}${reportID}`,
             value: {
-                pendingChatMembers: successPendingChatMembers,
-                participants: newParticipantAccountCleanUp,
+                pendingChatMembers: report?.pendingChatMembers ?? null,
             },
         },
     ];

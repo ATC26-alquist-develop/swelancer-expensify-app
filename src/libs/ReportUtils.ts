@@ -2108,7 +2108,7 @@ function getDisplayNameForParticipant(
 }
 
 function getParticipantsAccountIDsForDisplay(report: OnyxEntry<Report>, shouldExcludeHidden = false, shouldExcludeDeleted = false): number[] {
-    const reportParticipants = report?.participants ?? {};
+    const reportParticipants = report?.participants ?? {}; // NOTE: This reveals that there are no members pending deletion, they are removed immediately
     let participantsEntries = Object.entries(reportParticipants);
 
     // We should not show participants that have an optimistic entry with the same login in the personal details
@@ -2143,13 +2143,6 @@ function getParticipantsAccountIDsForDisplay(report: OnyxEntry<Report>, shouldEx
             }
 
             if (shouldExcludeHidden && reportParticipants[accountID]?.notificationPreference === CONST.REPORT.NOTIFICATION_PREFERENCE.HIDDEN) {
-                return false;
-            }
-
-            if (
-                shouldExcludeDeleted &&
-                report?.pendingChatMembers?.findLast((member) => Number(member.accountID) === accountID)?.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE
-            ) {
                 return false;
             }
 
