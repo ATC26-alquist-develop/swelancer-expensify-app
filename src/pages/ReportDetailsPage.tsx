@@ -875,15 +875,10 @@ function ReportDetailsPage({policies, report, route}: ReportDetailsPageProps) {
                     onCancel={() => setIsDeleteModalVisible(false)}
                     onModalHide={() => {
                         // We use isTransactionDeleted to know if the modal hides because the user deletes the transaction.
-                        if (!isTransactionDeleted.current) {
-                            if (caseID === CASES.DEFAULT) {
-                                if (navigateBackToAfterDelete.current) {
-                                    Navigation.goBack(navigateBackToAfterDelete.current);
-                                } else {
-                                    Navigation.dismissModal();
-                                }
+                        if (!isTransactionDeleted.current && navigateBackToAfterDelete.current) {
+                            if (caseID !== CASES.DEFAULT) {
+                                return;
                             }
-                            return;
                         }
 
                         if (!navigateBackToAfterDelete.current) {
