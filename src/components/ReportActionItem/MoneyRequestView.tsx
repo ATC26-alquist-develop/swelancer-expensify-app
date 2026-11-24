@@ -1,3 +1,4 @@
+import {Str} from 'expensify-common';
 import React, {useCallback, useMemo} from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
@@ -43,6 +44,7 @@ import * as Report from '@src/libs/actions/Report';
 import * as ReportActions from '@src/libs/actions/ReportActions';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
+import type {PolicyReportField} from '@src/types/onyx';
 import type * as OnyxTypes from '@src/types/onyx';
 import type {TransactionPendingFieldsKey} from '@src/types/onyx/Transaction';
 import ReportActionItemImage from './ReportActionItemImage';
@@ -111,6 +113,7 @@ function MoneyRequestView({report, shouldShowAnimatedBackground, readonly = fals
         selector: () => DistanceRequestUtils.getMileageRates(policy, true),
     });
     const [transactionViolations] = useOnyx(`${ONYXKEYS.COLLECTION.TRANSACTION_VIOLATIONS}${getTransactionID(report, parentReportActions)}`);
+    const [reportViolations] = useOnyx(`${ONYXKEYS.COLLECTION.REPORT_VIOLATIONS}${parentReportID}`);
 
     const parentReportAction = parentReportActions?.[report?.parentReportActionID ?? '-1'];
     const isTrackExpense = ReportUtils.isTrackExpenseReport(report);
@@ -185,6 +188,16 @@ function MoneyRequestView({report, shouldShowAnimatedBackground, readonly = fals
     const isPolicyExpenseChat = ReportUtils.isReportInGroupPolicy(report);
 
     const policyTagLists = useMemo(() => PolicyUtils.getTagLists(policyTagList), [policyTagList]);
+
+    const sortedPolicyReportFields = useMemo<PolicyReportField[]>((): PolicyReportField[] => {
+        if (!parentReport || !policy?.fieldList) {
+            return [];
+        }
+        const fields = ReportUtils.getAvailableReportFields(parentReport, Object.values(policy.fieldList));
+        return fields.filter((field) => field.target === parentReport?.type).sort(({orderWeight: firstOrderWeight}, {orderWeight: secondOrderWeight}) => firstOrderWeight - secondOrderWeight);
+    }, [parentReport, policy]);
+
+    const shouldShowReportFields = ReportUtils.isPaidGroupPolicyExpenseReport(parentReport) && !!policy?.areReportFieldsEnabled;
 
     const iouType = isTrackExpense ? CONST.IOU.TYPE.TRACK : CONST.IOU.TYPE.SUBMIT;
 
@@ -471,6 +484,46 @@ function MoneyRequestView({report, shouldShowAnimatedBackground, readonly = fals
         <View style={styles.pRelative}>
             {shouldShowAnimatedBackground && <AnimatedEmptyStateBackground />}
             <>
+                {shouldShowReportFields &&
+                    sortedPolicyReportFields.map((reportField) => {
+                        if (ReportUtils.isReportFieldOfTypeTitle(reportField)) {
+                            return null;
+                        }
+
+                        const fieldValue = reportField.value ?? reportField.defaultValue;
+                        const isFieldDisabled = ReportUtils.isReportFieldDisabled(parentReport, reportField, policy);
+                        const fieldKey = ReportUtils.getReportFieldKey(reportField.fieldID);
+                        const violation = ReportUtils.getFieldViolation(reportViolations, reportField);
+                        const violationTranslation = ReportUtils.getFieldViolationTranslation(reportField, violation);
+
+                        return (
+                            <OfflineWithFeedback
+                                pendingAction={parentReport?.pendingFields?.[fieldKey]}
+                                errors={parentReport?.errorFields?.[fieldKey]}
+                                errorRowStyles={styles.ph5}
+                                key={`menuItem-${fieldKey}`}
+                                onClose={() => Report.clearReportFieldKeyErrors(parentReportID, fieldKey)}
+                            >
+                                <MenuItemWithTopDescription
+                                    description={Str.UCFirst(reportField.name)}
+                                    title={fieldValue}
+                                    onPress={() => Navigation.navigate(ROUTES.EDIT_REPORT_FIELD_REQUEST.getRoute(parentReportID, policyID, reportField.fieldID))}
+                                    shouldShowRightIcon
+                                    disabled={isFieldDisabled}
+                                    wrapperStyle={[styles.pv2, styles.taskDescriptionMenuItem]}
+                                    shouldGreyOutWhenDisabled={false}
+                                    numberOfLinesTitle={0}
+                                    interactive
+                                    shouldStackHorizontally={false}
+                                    onSecondaryInteraction={() => {}}
+                                    hoverAndPressStyle={false}
+                                    titleWithTooltips={[]}
+                                    brickRoadIndicator={violation ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR : undefined}
+                                    errorText={violationTranslation}
+                                />
+                            </OfflineWithFeedback>
+                        );
+                    })}
                 {shouldShowReceiptAudit && (
                     <ReceiptAudit
                         notes={receiptViolations}
