@@ -1,5 +1,5 @@
 import type {ForwardedRef} from 'react';
-import React, {forwardRef, useContext, useEffect, useMemo} from 'react';
+import React, {forwardRef, useContext, useRef, useEffect, useMemo} from 'react';
 import {View} from 'react-native';
 import ColorSchemeWrapper from '@components/ColorSchemeWrapper';
 import {PopoverContext} from '@components/PopoverProvider';
@@ -7,6 +7,7 @@ import useSafeAreaInsets from '@hooks/useSafeAreaInsets';
 import useStyleUtils from '@hooks/useStyleUtils';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWindowDimensions from '@hooks/useWindowDimensions';
+import usePrevious from '@hooks/usePrevious';
 import variables from '@styles/variables';
 import * as Modal from '@userActions/Modal';
 import viewRef from '@src/types/utils/viewRef';
@@ -44,9 +45,10 @@ function PopoverWithoutOverlay(
             innerContainerStyle,
             outerStyle,
         );
+    const firstRenderRef = useRef(true);
+    const prevIsVisible = usePrevious(isVisible);
 
     useEffect(() => {
-        let removeOnClose: () => void;
         if (isVisible) {
             onModalShow();
             onOpen?.({
@@ -54,23 +56,25 @@ function PopoverWithoutOverlay(
                 close: onClose,
                 anchorRef,
             });
-            removeOnClose = Modal.setCloseModal(onClose);
         } else {
             onModalHide();
             close(anchorRef);
             Modal.onModalDidClose();
         }
-        Modal.willAlertModalBecomeVisible(isVisible, true);
+        Modal.willAlertModalBecomeVisible(isVisible);
 
-        return () => {
-            if (!removeOnClose) {
-                return;
-            }
-            removeOnClose();
-        };
+        // We prevent setting closeModal function to null when the component is invisible the first time it is rendered
+        if (prevIsVisible === isVisible && (!firstRenderRef.current || !isVisible)) {
+            firstRenderRef.current = false;
+            return;
+        }
+        firstRenderRef.current = false;
+        Modal.setCloseModal(isVisible ? () => onClose(anchorRef) : null);
+
+
         // We want this effect to run strictly ONLY when isVisible prop changes
         // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
-    }, [isVisible]);
+    }, [isVisible, prevIsVisible]);
 
     const {
         paddingTop: safeAreaPaddingTop,

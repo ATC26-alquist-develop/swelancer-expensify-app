@@ -278,7 +278,6 @@ function PopoverReportActionContextMenu(_props: unknown, ref: ForwardedRef<Repor
         }
 
         DeviceEventEmitter.emit(`deletedReportAction_${reportIDRef.current}`, reportAction?.reportActionID);
-        setIsDeleteCommentConfirmModalVisible(false);
     }, []);
 
     const hideDeleteModal = () => {
