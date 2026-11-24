@@ -7,7 +7,6 @@ import useThemeStyles from '@hooks/useThemeStyles';
 import Navigation from '@libs/Navigation/Navigation';
 import * as OptionsListUtils from '@libs/OptionsListUtils';
 import * as ReportUtils from '@libs/ReportUtils';
-import SidebarUtils from '@libs/SidebarUtils';
 import CONST from '@src/CONST';
 import type {IOUType} from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
@@ -43,7 +42,7 @@ function ReportWelcomeText({report, policy, personalDetails}: ReportWelcomeTextP
     const participantAccountIDs = ReportUtils.getParticipantsAccountIDsForDisplay(report);
     const isMultipleParticipant = participantAccountIDs.length > 1;
     const displayNamesWithTooltips = ReportUtils.getDisplayNamesWithTooltips(OptionsListUtils.getPersonalDetailsForAccountIDs(participantAccountIDs, personalDetails), isMultipleParticipant);
-    const welcomeMessage = SidebarUtils.getWelcomeMessage(report, policy);
+    const roomWelcomeMessage = ReportUtils.getRoomWelcomeMessage(report);
     const moneyRequestOptions = ReportUtils.temporary_getMoneyRequestOptions(report, policy, participantAccountIDs);
     const additionalText = moneyRequestOptions
         .filter((item): item is Exclude<IOUType, typeof CONST.IOU.TYPE.REQUEST | typeof CONST.IOU.TYPE.SEND | typeof CONST.IOU.TYPE.INVOICE> => item !== CONST.IOU.TYPE.INVOICE)
@@ -87,48 +86,48 @@ function ReportWelcomeText({report, policy, personalDetails}: ReportWelcomeTextP
             </View>
             <View style={[styles.mt3, styles.mw100]}>
                 {isPolicyExpenseChat &&
-                    (welcomeMessage?.messageHtml ? (
+                    (policy?.description ? (
                         <PressableWithoutFeedback
                             onPress={() => {
                                 if (!canEditPolicyDescription) {
                                     return;
                                 }
-                                Navigation.navigate(ROUTES.WORKSPACE_PROFILE_DESCRIPTION.getRoute(policy?.id ?? '-1'));
+                                Navigation.navigate(ROUTES.WORKSPACE_PROFILE_DESCRIPTION.getRoute(policy.id));
                             }}
                             style={[styles.renderHTML, canEditPolicyDescription ? styles.cursorPointer : styles.cursorText]}
                             accessibilityLabel={translate('reportDescriptionPage.roomDescription')}
                         >
-                            <RenderHTML html={welcomeMessage.messageHtml} />
+                            <RenderHTML html={policy.description} />
                         </PressableWithoutFeedback>
                     ) : (
                         <Text>
-                            <Text>{welcomeMessage.phrase1}</Text>
+                            <Text>{translate('reportActionsView.beginningOfChatHistoryPolicyExpenseChatPartOne')}</Text>
                             <Text style={[styles.textStrong]}>{ReportUtils.getDisplayNameForParticipant(report?.ownerAccountID)}</Text>
-                            <Text>{welcomeMessage.phrase2}</Text>
+                            <Text>{translate('reportActionsView.beginningOfChatHistoryPolicyExpenseChatPartTwo')}</Text>
                             <Text style={[styles.textStrong]}>{ReportUtils.getPolicyName(report)}</Text>
-                            <Text>{welcomeMessage.phrase3}</Text>
+                            <Text>{translate('reportActionsView.beginningOfChatHistoryPolicyExpenseChatPartThree')}</Text>
                         </Text>
                     ))}
                 {isChatRoom &&
-                    (welcomeMessage?.messageHtml ? (
+                    (report?.description ? (
                         <PressableWithoutFeedback
                             onPress={() => {
                                 const activeRoute = Navigation.getReportRHPActiveRoute();
                                 if (ReportUtils.canEditReportDescription(report, policy)) {
-                                    Navigation.navigate(ROUTES.REPORT_DESCRIPTION.getRoute(report?.reportID ?? '-1', activeRoute));
+                                    Navigation.navigate(ROUTES.REPORT_DESCRIPTION.getRoute(report.reportID));
                                     return;
                                 }
-                                Navigation.navigate(ROUTES.REPORT_WITH_ID_DETAILS.getRoute(report?.reportID ?? '-1', activeRoute));
+                                Navigation.navigate(ROUTES.REPORT_WITH_ID_DETAILS.getRoute(report.reportID));
                             }}
                             style={styles.renderHTML}
                             accessibilityLabel={translate('reportDescriptionPage.roomDescription')}
                         >
-                            <RenderHTML html={welcomeMessage.messageHtml} />
+                            <RenderHTML html={report.description} />
                         </PressableWithoutFeedback>
                     ) : (
                         <Text>
-                            <Text>{welcomeMessage.phrase1}</Text>
-                            {welcomeMessage.showReportName && (
+                            <Text>{roomWelcomeMessage.phrase1}</Text>
+                            {roomWelcomeMessage.showReportName && (
                                 <Text
                                     style={[styles.textStrong]}
                                     onPress={navigateToReport}
@@ -137,22 +136,22 @@ function ReportWelcomeText({report, policy, personalDetails}: ReportWelcomeTextP
                                     {ReportUtils.getReportName(report)}
                                 </Text>
                             )}
-                            {welcomeMessage.phrase2 !== undefined && <Text>{welcomeMessage.phrase2}</Text>}
+                            {roomWelcomeMessage.phrase2 !== undefined && <Text>{roomWelcomeMessage.phrase2}</Text>}
                         </Text>
                     ))}
                 {isSelfDM && (
                     <Text>
-                        <Text>{welcomeMessage.phrase1}</Text>
+                        <Text>{translate('reportActionsView.beginningOfChatHistorySelfDM')}</Text>
                     </Text>
                 )}
                 {isSystemChat && (
                     <Text>
-                        <Text>{welcomeMessage.phrase1}</Text>
+                        <Text>{translate('reportActionsView.beginningOfChatHistorySystemDM')}</Text>
                     </Text>
                 )}
                 {isDefault && (
                     <Text>
-                        <Text>{welcomeMessage.phrase1}</Text>
+                        <Text>{translate('reportActionsView.beginningOfChatHistory')}</Text>
                         {displayNamesWithTooltips.map(({displayName, accountID}, index) => (
                             // eslint-disable-next-line react/no-array-index-key
                             <Text key={`${displayName}${index}`}>
