@@ -547,6 +547,10 @@ const ROUTES = {
         route: 'new/task',
         getRoute: (backTo?: string) => getUrlWithBackToParam('new/task', backTo),
     },
+    NEW_TASK_WITH_REPORT_ID: {
+        route: 'new/task/:reportID?',
+        getRoute: (backTo?: string) => getUrlWithBackToParam('new/task', backTo),
+    },
     NEW_TASK_ASSIGNEE: {
         route: 'new/task/assignee',
         getRoute: (backTo?: string) => getUrlWithBackToParam('new/task/assignee', backTo),
