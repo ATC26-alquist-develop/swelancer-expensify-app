@@ -80,7 +80,6 @@ function BaseMiniContextMenuItem(
                 style={({hovered, pressed}) => [
                     styles.reportActionContextMenuMiniButton,
                     StyleUtils.getButtonBackgroundColorStyle(getButtonState(hovered, pressed, isDelayButtonStateComplete), true),
-                    isDelayButtonStateComplete && styles.cursorDefault,
                 ]}
             >
                 {(pressableState) => (

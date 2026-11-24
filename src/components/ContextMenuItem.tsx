@@ -140,7 +140,6 @@ function ContextMenuItem(
             style={shouldLimitWidth && StyleUtils.getContextMenuItemStyles(windowWidth)}
             isAnonymousAction={isAnonymousAction}
             focused={isFocused}
-            interactive={isThrottledButtonActive}
             onFocus={onFocus}
             onBlur={onBlur}
             disabled={disabled}
