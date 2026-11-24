@@ -143,16 +143,6 @@ function CreateReportFieldsPage({
                                 onTypeSelected={(type) => formRef.current?.resetForm({...inputValues, type, initialValue: type === CONST.REPORT_FIELD_TYPES.DATE ? defaultDate : ''})}
                             />
 
-                            {inputValues[INPUT_IDS.TYPE] === CONST.REPORT_FIELD_TYPES.LIST && (
-                                <MenuItemWithTopDescription
-                                    description={translate('workspace.reportFields.listValues')}
-                                    shouldShowRightIcon
-                                    onPress={() => Navigation.navigate(ROUTES.WORKSPACE_REPORT_FIELDS_LIST_VALUES.getRoute(policyID))}
-                                    title={formDraft?.[INPUT_IDS.LIST_VALUES]?.sort(localeCompare)?.join(', ')}
-                                    numberOfLinesTitle={5}
-                                />
-                            )}
-
                             {inputValues[INPUT_IDS.TYPE] === CONST.REPORT_FIELD_TYPES.TEXT && (
                                 <InputWrapper
                                     InputComponent={TextPicker}
@@ -182,6 +172,23 @@ function CreateReportFieldsPage({
                                     inputID={INPUT_IDS.INITIAL_VALUE}
                                     label={translate('common.initialValue')}
                                     subtitle={translate('workspace.reportFields.listValuesInputSubtitle')}
+                                    rightLabel={translate('common.required')}
+                                />
+                            )}
+
+                            {inputValues[INPUT_IDS.TYPE] === CONST.REPORT_FIELD_TYPES.LIST && (
+                                <MenuItemWithTopDescription
+                                    description={translate('workspace.reportFields.listValues')}
+                                    shouldShowRightIcon
+                                    onPress={() => Navigation.navigate(ROUTES.WORKSPACE_REPORT_FIELDS_LIST_VALUES.getRoute(policyID))}
+                                />
+                            )}
+
+                            {inputValues[INPUT_IDS.TYPE] === CONST.REPORT_FIELD_TYPES.LIST && (
+                                <MenuItemWithTopDescription
+                                    description={translate('workspace.reportFields.listValues')}
+                                    shouldShowRightIcon
+                                    onPress={() => Navigation.navigate(ROUTES.WORKSPACE_REPORT_FIELDS_LIST_VALUES.getRoute(policyID))}
                                 />
                             )}
                         </View>
