@@ -79,7 +79,7 @@ function NewTaskDescriptionPage({task, route}: NewTaskDescriptionPageProps) {
                             InputComponent={TextInput}
                             defaultValue={Parser.htmlToMarkdown(Parser.replace(task?.description ?? ''))}
                             inputID={INPUT_IDS.TASK_DESCRIPTION}
-                            label={translate('newTaskPage.descriptionOptional')}
+                            label={translate('newTaskPage.description')}
                             accessibilityLabel={translate('newTaskPage.descriptionOptional')}
                             role={CONST.ROLE.PRESENTATION}
                             ref={(el) => {

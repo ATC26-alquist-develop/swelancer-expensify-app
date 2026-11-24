@@ -29,6 +29,7 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import type SCREENS from '@src/SCREENS';
 import INPUT_IDS from '@src/types/form/EditTaskForm';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
+import _ from 'underscore';
 
 type TaskDescriptionPageProps = WithReportOrNotFoundProps & WithCurrentUserPersonalDetailsProps;
 
@@ -37,18 +38,22 @@ function TaskDescriptionPage({report, currentUserPersonalDetails}: TaskDescripti
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
+    /**
+     * @param {Object} values
+     * @param {String} values.description
+     * @returns {Object} - An object containing the errors for each inputID
+     */
     const validate = useCallback(
-        (values: FormOnyxValues<typeof ONYXKEYS.FORMS.EDIT_TASK_FORM>): FormInputErrors<typeof ONYXKEYS.FORMS.EDIT_TASK_FORM> => {
+        (values) => {
             const errors = {};
-            const parsedDescription = ReportUtils.getParsedComment(values?.description);
-            const taskDescriptionLength = ReportUtils.getCommentLength(parsedDescription);
-            if (values?.description && taskDescriptionLength > CONST.DESCRIPTION_LIMIT) {
-                ErrorUtils.addErrorMessage(errors, 'description', translate('common.error.characterLimitExceedCounter', {length: taskDescriptionLength, limit: CONST.DESCRIPTION_LIMIT}));
+
+            if (_.isEmpty(values.description)) {
+                errors.description = translate('common.error.fieldRequired');
             }
 
             return errors;
         },
-        [translate],
+        [],
     );
 
     const submit = useCallback(
