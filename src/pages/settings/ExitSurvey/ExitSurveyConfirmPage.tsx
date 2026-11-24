@@ -83,9 +83,15 @@ function ExitSurveyConfirmPage({exitReason, route, navigation}: ExitSurveyConfir
                     large
                     text={translate('exitSurvey.goToExpensifyClassic')}
                     onPress={() => {
-                        ExitSurvey.switchToOldDot();
-                        Navigation.dismissModal();
-                        Link.openOldDotLink(CONST.OLDDOT_URLS.INBOX);
+                        ExitSurvey.switchToOldDot().then(() => {
+                            if (NativeModules.HybridAppModule) {
+                                Navigation.resetToHome();
+                                NativeModules.HybridAppModule.closeReactNativeApp();
+                                return;
+                            }
+                            Link.openOldDotLink(CONST.OLDDOT_URLS.INBOX);
+                            Navigation.dismissModal();
+                        });
                     }}
                     isDisabled={isOffline}
                 />
