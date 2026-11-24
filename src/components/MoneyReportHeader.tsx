@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
-import {useOnyx} from 'react-native-onyx';
+import {withOnyx} from 'react-native-onyx';
 import useLocalize from '@hooks/useLocalize';
 import useNetwork from '@hooks/useNetwork';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
@@ -40,7 +40,21 @@ import ProcessMoneyRequestHoldMenu from './ProcessMoneyRequestHoldMenu';
 import ExportWithDropdownMenu from './ReportActionItem/ExportWithDropdownMenu';
 import SettlementButton from './SettlementButton';
 
-type MoneyReportHeaderProps = {
+type MoneyReportHeaderOnyxProps = {
+    /** The chat report this report is linked to */
+    chatReport: OnyxEntry<OnyxTypes.Report>;
+
+    /** The next step for the report */
+    nextStep: OnyxEntry<OnyxTypes.ReportNextStep>;
+
+    /** Session info for the currently logged in user. */
+    session: OnyxEntry<OnyxTypes.Session>;
+
+    /** The transaction thread report associated with the current report, if any */
+    transactionThreadReport: OnyxEntry<OnyxTypes.Report>;
+};
+
+type MoneyReportHeaderProps = MoneyReportHeaderOnyxProps & {
     /** The report currently being looked at */
     report: OnyxEntry<OnyxTypes.Report>;
 
@@ -58,6 +72,17 @@ type MoneyReportHeaderProps = {
     onBackButtonPress: () => void;
 };
 
+function MoneyReportHeader({
+    session,
+    policy,
+    chatReport,
+    nextStep,
+    report: moneyRequestReport,
+    transactionThreadReport,
+    reportActions,
+    shouldUseNarrowLayout = false,
+    onBackButtonPress,
+}: MoneyReportHeaderProps) {
 function MoneyReportHeader({policy, report: moneyRequestReport, transactionThreadReportID, reportActions, onBackButtonPress}: MoneyReportHeaderProps) {
     const {shouldUseNarrowLayout, isSmallScreenWidth} = useResponsiveLayout();
     const [chatReport] = useOnyx(`${ONYXKEYS.COLLECTION.REPORT}${moneyRequestReport?.chatReportID ?? '-1'}`);
@@ -435,7 +460,21 @@ function MoneyReportHeader({policy, report: moneyRequestReport, transactionThrea
         </View>
     );
 }
+};
 
 MoneyReportHeader.displayName = 'MoneyReportHeader';
 
-export default MoneyReportHeader;
+export default withOnyx<MoneyReportHeaderProps, MoneyReportHeaderOnyxProps>({
+    chatReport: {
+        key: ({report}) => `${ONYXKEYS.COLLECTION.REPORT}${report.chatReportID}`,
+    },
+    nextStep: {
+        key: ({report}) => `${ONYXKEYS.COLLECTION.NEXT_STEP}${report.reportID}`,
+    },
+    transactionThreadReport: {
+        key: ({transactionThreadReportID}) => `${ONYXKEYS.COLLECTION.REPORT}${transactionThreadReportID}`,
+    },
+    session: {
+        key: ONYXKEYS.SESSION,
+    },
+})(MoneyReportHeader);

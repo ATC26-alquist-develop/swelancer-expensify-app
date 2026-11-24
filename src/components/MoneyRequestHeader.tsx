@@ -1,8 +1,8 @@
 import type {ReactNode} from 'react';
 import React, {useCallback, useEffect, useState} from 'react';
 import {View} from 'react-native';
-import type {OnyxEntry} from 'react-native-onyx';
-import {useOnyx} from 'react-native-onyx';
+import {withOnyx} from 'react-native-onyx';
+import type {OnyxCollection, OnyxEntry} from 'react-native-onyx';
 import useLocalize from '@hooks/useLocalize';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useTheme from '@hooks/useTheme';
@@ -15,7 +15,8 @@ import * as IOU from '@userActions/IOU';
 import * as TransactionActions from '@userActions/Transaction';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
-import type {Policy, Report, ReportAction} from '@src/types/onyx';
+import type {Policy, Report, ReportAction, ReportActions, Session, Transaction, TransactionViolations} from '@src/types/onyx';
+import type {OriginalMessageIOU} from '@src/types/onyx/OriginalMessage';
 import type IconAsset from '@src/types/utils/IconAsset';
 import isLoadingOnyxValue from '@src/types/utils/isLoadingOnyxValue';
 import Button from './Button';
@@ -26,7 +27,28 @@ import type {MoneyRequestHeaderStatusBarProps} from './MoneyRequestHeaderStatusB
 import MoneyRequestHeaderStatusBar from './MoneyRequestHeaderStatusBar';
 import ProcessMoneyRequestHoldMenu from './ProcessMoneyRequestHoldMenu';
 
-type MoneyRequestHeaderProps = {
+type MoneyRequestHeaderOnyxProps = {
+    /** Session info for the currently logged in user. */
+    session: OnyxEntry<Session>;
+
+    /** The expense report or iou report (only will have a value if this is a transaction thread) */
+    parentReport: OnyxEntry<Report>;
+
+    /** All the data for the transaction */
+    transaction: OnyxEntry<Transaction>;
+
+    /** The violations of the transaction */
+    transactionViolations: OnyxCollection<TransactionViolations>;
+
+    /** All report actions */
+    // eslint-disable-next-line react/no-unused-prop-types
+    parentReportActions: OnyxEntry<ReportActions>;
+
+    /** Whether we should show the Hold Interstitial explaining the feature */
+    shownHoldUseExplanation: OnyxEntry<boolean>;
+};
+
+type MoneyRequestHeaderProps = MoneyRequestHeaderOnyxProps & {
     /** The report currently being looked at */
     report: OnyxEntry<Report>;
 
@@ -40,17 +62,18 @@ type MoneyRequestHeaderProps = {
     onBackButtonPress: () => void;
 };
 
-function MoneyRequestHeader({report, parentReportAction, policy, onBackButtonPress}: MoneyRequestHeaderProps) {
-    const {shouldUseNarrowLayout, isSmallScreenWidth} = useResponsiveLayout();
-    const [parentReport] = useOnyx(`${ONYXKEYS.COLLECTION.REPORT}${report?.parentReportID ?? '-1'}`);
-    const [transaction] = useOnyx(
-        `${ONYXKEYS.COLLECTION.TRANSACTION}${
-            ReportActionsUtils.isMoneyRequestAction(parentReportAction) ? ReportActionsUtils.getOriginalMessage(parentReportAction)?.IOUTransactionID ?? -1 : -1
-        }`,
-    );
-    const [transactionViolations] = useOnyx(ONYXKEYS.COLLECTION.TRANSACTION_VIOLATIONS);
-    const [dismissedHoldUseExplanation, dismissedHoldUseExplanationResult] = useOnyx(ONYXKEYS.NVP_DISMISSED_HOLD_USE_EXPLANATION, {initialValue: true});
-    const isLoadingHoldUseExplained = isLoadingOnyxValue(dismissedHoldUseExplanationResult);
+function MoneyRequestHeader({
+    session,
+    parentReport,
+    report,
+    parentReportAction,
+    transactionViolations,
+    transaction,
+    shownHoldUseExplanation = false,
+    policy,
+    shouldUseNarrowLayout = false,
+    onBackButtonPress,
+}: MoneyRequestHeaderProps) {
     const styles = useThemeStyles();
     const theme = useTheme();
     const {translate} = useLocalize();
@@ -200,4 +223,34 @@ function MoneyRequestHeader({report, parentReportAction, policy, onBackButtonPre
 
 MoneyRequestHeader.displayName = 'MoneyRequestHeader';
 
-export default MoneyRequestHeader;
+const MoneyRequestHeaderWithTransaction = withOnyx<MoneyRequestHeaderProps, Pick<MoneyRequestHeaderOnyxProps, 'transactionViolations' | 'transaction' | 'shownHoldUseExplanation'>>({
+    transaction: {
+        key: ({report, parentReportActions}) => {
+            const parentReportAction = (report.parentReportActionID && parentReportActions ? parentReportActions[report.parentReportActionID] : {}) as ReportAction & OriginalMessageIOU;
+            return `${ONYXKEYS.COLLECTION.TRANSACTION}${parentReportAction?.originalMessage?.IOUTransactionID ?? 0}`;
+        },
+    },
+    shownHoldUseExplanation: {
+        key: ONYXKEYS.NVP_HOLD_USE_EXPLAINED,
+        initWithStoredValues: true,
+    },
+    transactionViolations: {
+        key: ONYXKEYS.COLLECTION.TRANSACTION_VIOLATIONS,
+    },
+})(MoneyRequestHeader);
+
+export default withOnyx<
+    Omit<MoneyRequestHeaderProps, 'transactionViolations' | 'transaction' | 'shownHoldUseExplanation'>,
+    Omit<MoneyRequestHeaderOnyxProps, 'transactionViolations' | 'transaction' | 'shownHoldUseExplanation'>
+>({
+    session: {
+        key: ONYXKEYS.SESSION,
+    },
+    parentReport: {
+        key: ({report}) => `${ONYXKEYS.COLLECTION.REPORT}${report.parentReportID}`,
+    },
+    parentReportActions: {
+        key: ({report}) => `${ONYXKEYS.COLLECTION.REPORT_ACTIONS}${report.parentReportID ?? '0'}`,
+        canEvict: false,
+    },
+})(MoneyRequestHeaderWithTransaction);
