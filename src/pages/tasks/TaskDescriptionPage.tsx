@@ -129,8 +129,6 @@ function TaskDescriptionPage({report, currentUserPersonalDetails}: TaskDescripti
                                 }
                                 inputRef.current = element;
                             }}
-                            autoGrowHeight
-                            maxAutoGrowHeight={variables.textInputAutoGrowMaxHeight}
                             shouldSubmitForm
                             isMarkdownEnabled
                         />

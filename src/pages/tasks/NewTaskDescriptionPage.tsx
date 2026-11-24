@@ -88,8 +88,6 @@ function NewTaskDescriptionPage({task, route}: NewTaskDescriptionPageProps) {
                                 }
                                 inputCallbackRef(el);
                             }}
-                            autoGrowHeight
-                            maxAutoGrowHeight={variables.textInputAutoGrowMaxHeight}
                             shouldSubmitForm
                             isMarkdownEnabled
                         />
