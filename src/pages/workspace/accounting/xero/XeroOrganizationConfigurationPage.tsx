@@ -60,7 +60,7 @@ function XeroOrganizationConfigurationPage({
         }
 
         Xero.updateXeroTenantID(policyID, keyForList, xeroConfig?.tenantID);
-        Navigation.goBack();
+        Navigation.goBack(ROUTES.WORKSPACE_ACCOUNTING.getRoute(policyID));
     };
 
     const listEmptyContent = useMemo(
