@@ -369,7 +369,11 @@ function Composer(
             scrollStyleMemo,
             StyleUtils.getComposerMaxHeightStyle(maxLines, isComposerFullSize),
             isComposerFullSize ? {height: '100%', maxHeight: 'none'} : undefined,
-            textContainsOnlyEmojis ? styles.onlyEmojisTextLineHeight : {},
+            textContainsOnlyEmojis ? (
+                props.id === 'messageEditInput'
+                    ? {maxHeight: 25, lineHeight: 35}
+                    : styles.onlyEmojisTextLineHeight
+            ) : {},
         ],
 
         [style, styles.rtlTextRenderForSafari, styles.onlyEmojisTextLineHeight, scrollStyleMemo, StyleUtils, maxLines, isComposerFullSize, textContainsOnlyEmojis],
