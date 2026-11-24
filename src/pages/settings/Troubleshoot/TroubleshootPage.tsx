@@ -61,8 +61,8 @@ function TroubleshootPage() {
     const menuItems = useMemo(() => {
         const debugConsoleItem: BaseMenuItem = {
             translationKey: 'initialSettingsPage.troubleshoot.viewConsole',
-            icon: Expensicons.Bug,
-            action: waitForNavigate(() => Navigation.navigate(ROUTES.SETTINGS_CONSOLE.getRoute(ROUTES.SETTINGS_TROUBLESHOOT))),
+            action: waitForNavigate(() => Navigation.navigate(ROUTES.SETTINGS_CONSOLE)),
+
         };
 
         const baseMenuItems: BaseMenuItem[] = [

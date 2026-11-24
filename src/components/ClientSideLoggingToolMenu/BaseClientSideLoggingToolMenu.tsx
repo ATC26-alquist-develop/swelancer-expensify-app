@@ -68,13 +68,6 @@ function BaseClientSideLoggingToolMenu({shouldStoreLogs, capturedLogs, file, onS
     const styles = useThemeStyles();
     return (
         <>
-            <TestToolRow title={translate('initialSettingsPage.troubleshoot.clientSideLogging')}>
-                <Switch
-                    accessibilityLabel={translate('initialSettingsPage.troubleshoot.clientSideLogging')}
-                    isOn={!!shouldStoreLogs}
-                    onToggle={onToggle}
-                />
-            </TestToolRow>
             {!!file && (
                 <>
                     <Text style={[styles.textLabelSupporting, styles.mb4]}>{`path: ${displayPath}`}</Text>

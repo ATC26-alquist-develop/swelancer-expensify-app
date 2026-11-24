@@ -1,5 +1,3 @@
-import type {RouteProp} from '@react-navigation/native';
-import {useRoute} from '@react-navigation/native';
 import {format} from 'date-fns';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {View} from 'react-native';
@@ -26,11 +24,9 @@ import type {Log} from '@libs/Console';
 import localFileCreate from '@libs/localFileCreate';
 import localFileDownload from '@libs/localFileDownload';
 import Navigation from '@libs/Navigation/Navigation';
-import type {SettingsNavigatorParamList} from '@navigation/types';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
-import type SCREENS from '@src/SCREENS';
 import type {CapturedLogs} from '@src/types/onyx';
 
 const filterBy = {
@@ -48,41 +44,6 @@ function ConsolePage() {
     const [activeFilterIndex, setActiveFilterIndex] = useState<FilterBy>(filterBy.all);
     const {translate} = useLocalize();
     const styles = useThemeStyles();
-    const theme = useTheme();
-    const {windowWidth} = useWindowDimensions();
-    const route = useRoute<RouteProp<SettingsNavigatorParamList, typeof SCREENS.SETTINGS.CONSOLE>>();
-
-    const menuItems: PopoverMenuItem[] = useMemo(
-        () => [
-            {
-                text: translate('common.filterLogs'),
-                disabled: true,
-            },
-            {
-                icon: Expensicons.All,
-                text: translate('common.all'),
-                iconFill: activeFilterIndex === filterBy.all ? theme.iconSuccessFill : theme.icon,
-                iconRight: Expensicons.Checkmark,
-                shouldShowRightIcon: activeFilterIndex === filterBy.all,
-                success: activeFilterIndex === filterBy.all,
-                onSelected: () => {
-                    setActiveFilterIndex(filterBy.all);
-                },
-            },
-            {
-                icon: Expensicons.Globe,
-                text: translate('common.network'),
-                iconFill: activeFilterIndex === filterBy.network ? theme.iconSuccessFill : theme.icon,
-                iconRight: Expensicons.CheckCircle,
-                shouldShowRightIcon: activeFilterIndex === filterBy.network,
-                success: activeFilterIndex === filterBy.network,
-                onSelected: () => {
-                    setActiveFilterIndex(filterBy.network);
-                },
-            },
-        ],
-        [activeFilterIndex, theme.icon, theme.iconSuccessFill, translate],
-    );
 
     const prevLogs = useRef<OnyxEntry<CapturedLogs>>({});
     const getLogs = useCallback(() => {
@@ -157,12 +118,9 @@ function ConsolePage() {
         >
             <HeaderWithBackButton
                 title={translate('initialSettingsPage.troubleshoot.debugConsole')}
-                onBackButtonPress={() => Navigation.goBack(route.params?.backTo)}
-                shouldShowThreeDotsButton
-                threeDotsMenuItems={menuItems}
-                threeDotsAnchorPosition={styles.threeDotsPopoverOffset(windowWidth)}
-                threeDotsMenuIcon={Expensicons.Filter}
-                threeDotsMenuIconFill={theme.icon}
+
+                onBackButtonPress={() => Navigation.goBack(ROUTES.SETTINGS_TROUBLESHOOT)}
+
             />
             <View style={[styles.border, styles.highlightBG, styles.borderNone, styles.mh5, styles.flex1]}>
                 <InvertedFlatList

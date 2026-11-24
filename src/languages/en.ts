@@ -1197,7 +1197,6 @@ const translations = {
             noLogsAvailable: 'No logs available',
             logSizeTooLarge: ({size}: LogSizeParams) => `Log size exceeds the limit of ${size} MB. Please use "Save log" to download the log file instead.`,
             logs: 'Logs',
-            viewConsole: 'View console',
         },
         security: 'Security',
         signOut: 'Sign out',
