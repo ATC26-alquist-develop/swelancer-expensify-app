@@ -927,15 +927,15 @@ const ROUTES = {
     },
     WORKSPACE_TAX_EDIT: {
         route: 'settings/workspaces/:policyID/tax/:taxID',
-        getRoute: (policyID: string, taxID: string) => `settings/workspaces/${policyID}/tax/${encodeURIComponent(taxID)}` as const,
+        getRoute: (policyID: string, taxID: string) => `settings/workspaces/${policyID}/tax/${encodeURI(taxID)}` as const,
     },
     WORKSPACE_TAX_NAME: {
         route: 'settings/workspaces/:policyID/tax/:taxID/name',
-        getRoute: (policyID: string, taxID: string) => `settings/workspaces/${policyID}/tax/${encodeURIComponent(taxID)}/name` as const,
+        getRoute: (policyID: string, taxID: string) => `settings/workspaces/${policyID}/tax/${encodeURI(taxID)}/name` as const,
     },
     WORKSPACE_TAX_VALUE: {
         route: 'settings/workspaces/:policyID/tax/:taxID/value',
-        getRoute: (policyID: string, taxID: string) => `settings/workspaces/${policyID}/tax/${encodeURIComponent(taxID)}/value` as const,
+        getRoute: (policyID: string, taxID: string) => `settings/workspaces/${policyID}/tax/${encodeURI(taxID)}/value` as const,
     },
     WORKSPACE_TAX_CODE: {
         route: 'settings/workspaces/:policyID/tax/:taxID/tax-code',

@@ -820,9 +820,6 @@ const config: LinkingOptions<RootStackParamList>['config'] = {
                         },
                         [SCREENS.WORKSPACE.TAX_EDIT]: {
                             path: ROUTES.WORKSPACE_TAX_EDIT.route,
-                            parse: {
-                                taxID: (taxID: string) => decodeURIComponent(taxID),
-                            },
                         },
                         [SCREENS.WORKSPACE.TAX_CODE]: {
                             path: ROUTES.WORKSPACE_TAX_CODE.route,
@@ -832,15 +829,9 @@ const config: LinkingOptions<RootStackParamList>['config'] = {
                         },
                         [SCREENS.WORKSPACE.TAX_NAME]: {
                             path: ROUTES.WORKSPACE_TAX_NAME.route,
-                            parse: {
-                                taxID: (taxID: string) => decodeURIComponent(taxID),
-                            },
                         },
                         [SCREENS.WORKSPACE.TAX_VALUE]: {
                             path: ROUTES.WORKSPACE_TAX_VALUE.route,
-                            parse: {
-                                taxID: (taxID: string) => decodeURIComponent(taxID),
-                            },
                         },
                         [SCREENS.WORKSPACE.RULES_CUSTOM_NAME]: {
                             path: ROUTES.RULES_CUSTOM_NAME.route,
