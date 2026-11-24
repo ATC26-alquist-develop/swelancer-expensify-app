@@ -153,29 +153,33 @@ function ReportActionItemContentCreated({contextValue, parentReportAction, trans
             <OfflineWithFeedback pendingAction={action.pendingAction}>
                 {!isEmptyObject(transactionThreadReport?.reportID) ? (
                     <>
-                        <MoneyReportView
-                            report={report}
-                            policy={policy}
-                            isCombinedReport
-                            shouldShowTotal={transaction ? transactionCurrency !== report.currency : false}
-                            shouldHideThreadDividerLine={shouldHideThreadDividerLine}
-                        />
-                        <ShowContextMenuContext.Provider value={contextMenuValue}>
+                        {!!transaction && transactionCurrency !== report.currency && (
+                            <>
+                                <MoneyReportView
+                                    report={report}
+                                    policy={policy}
+                                />
+                                {renderThreadDivider}
+                            </>
+                        )}
+                        <ShowContextMenuContext.Provider value={contextValue}>
                             <View>
                                 <MoneyRequestView
                                     report={transactionThreadReport}
-                                    shouldShowAnimatedBackground={false}
+                                    shouldShowAnimatedBackground={transactionCurrency === report.currency}
                                 />
                                 {renderThreadDivider}
                             </View>
                         </ShowContextMenuContext.Provider>
                     </>
                 ) : (
-                    <MoneyReportView
-                        report={report}
-                        policy={policy}
-                        shouldHideThreadDividerLine={shouldHideThreadDividerLine}
-                    />
+                    <>
+                        <MoneyReportView
+                            report={report}
+                            policy={policy}
+                        />
+                        {renderThreadDivider}
+                    </>
                 )}
             </OfflineWithFeedback>
         );
