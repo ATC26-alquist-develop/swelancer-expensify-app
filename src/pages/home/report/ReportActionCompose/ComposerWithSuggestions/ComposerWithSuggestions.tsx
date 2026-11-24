@@ -415,15 +415,6 @@ function ComposerWithSuggestions(
             const isEmojiInserted = diff.length && endIndex > startIndex && diff.trim() === diff && EmojiUtils.containsOnlyEmojis(diff);
             const commentWithSpaceInserted = isEmojiInserted ? ComposerUtils.insertWhiteSpaceAtIndex(commentValue, endIndex) : commentValue;
             const {text: newComment, emojis, cursorPosition} = EmojiUtils.replaceAndExtractEmojis(commentWithSpaceInserted, preferredSkinTone, preferredLocale);
-            if (emojis.length) {
-                const newEmojis = EmojiUtils.getAddedEmojis(emojis, emojisPresentBefore.current);
-                if (newEmojis.length) {
-                    // Ensure emoji suggestions are hidden after inserting emoji even when the selection is not changed
-                    if (suggestionsRef.current) {
-                        suggestionsRef.current.resetSuggestions();
-                    }
-                }
-            }
             const newCommentConverted = convertToLTRForComposer(newComment);
             const isNewCommentEmpty = !!newCommentConverted.match(/^(\s)*$/);
             const isPrevCommentEmpty = !!commentRef.current.match(/^(\s)*$/);
@@ -461,7 +452,7 @@ function ComposerWithSuggestions(
                 debouncedBroadcastUserIsTyping(reportID);
             }
         },
-        [findNewlyAddedChars, preferredLocale, preferredSkinTone, reportID, setIsCommentEmpty, suggestionsRef, raiseIsScrollLikelyLayoutTriggered, debouncedSaveReportComment, selection.end],
+        [findNewlyAddedChars, preferredLocale, preferredSkinTone, reportID, setIsCommentEmpty, raiseIsScrollLikelyLayoutTriggered, debouncedSaveReportComment, selection.end],
     );
 
     /**

@@ -98,7 +98,7 @@ function SuggestionEmoji(
                 start: suggestionValues.colonIndex + emojiCode.length + CONST.SPACE_LENGTH,
                 end: suggestionValues.colonIndex + emojiCode.length + CONST.SPACE_LENGTH,
             });
-            setSuggestionValues((prevState) => ({...prevState, suggestedEmojis: []}));
+            setSuggestionValues((prevState) => ({...prevState}));
         },
         [preferredSkinTone, resetKeyboardInput, selection.end, setSelection, suggestionValues.colonIndex, suggestionValues.suggestedEmojis, updateComment, value],
     );
@@ -107,13 +107,12 @@ function SuggestionEmoji(
      * Clean data related to suggestions
      */
     const resetSuggestions = useCallback(() => {
-        setSuggestionValues(defaultSuggestionsValues);
     }, []);
 
     const updateShouldShowSuggestionMenuToFalse = useCallback(() => {
         setSuggestionValues((prevState) => {
             if (prevState.shouldShowSuggestionMenu) {
-                return {...prevState, shouldShowSuggestionMenu: false};
+                return {...prevState, shouldShowSuggestionMenu: true};
             }
             return prevState;
         });
@@ -154,7 +153,6 @@ function SuggestionEmoji(
         (newValue: string, selectionStart?: number, selectionEnd?: number) => {
             if (selectionStart !== selectionEnd || !selectionEnd || shouldBlockCalc.current || !newValue || (selectionStart === 0 && selectionEnd === 0)) {
                 shouldBlockCalc.current = false;
-                resetSuggestions();
                 return;
             }
             const leftString = newValue.substring(0, selectionEnd);
@@ -168,18 +166,17 @@ function SuggestionEmoji(
             };
             const newSuggestedEmojis = EmojiUtils.suggestEmojis(leftString, preferredLocale);
 
-            if (newSuggestedEmojis?.length && isCurrentlyShowingEmojiSuggestion) {
+            if (newSuggestedEmojis?.length) {
                 nextState.suggestedEmojis = newSuggestedEmojis;
-                nextState.shouldShowSuggestionMenu = !isEmptyObject(newSuggestedEmojis);
+                nextState.shouldShowSuggestionMenu = true;
+                setSuggestionValues((prevState) => ({...prevState, ...nextState}));
             }
-
             // Early return if there is no update
             const currentState = suggestionValuesRef.current;
             if (nextState.suggestedEmojis.length === 0 && currentState.suggestedEmojis.length === 0) {
                 return;
             }
 
-            setSuggestionValues((prevState) => ({...prevState, ...nextState}));
             setHighlightedEmojiIndex(0);
         },
         [preferredLocale, setHighlightedEmojiIndex, resetSuggestions],
