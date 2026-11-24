@@ -635,7 +635,7 @@ function IOURequestStepConfirmation({
                         shouldShowSmartScanFields={isMovingTransactionFromTrackExpense ? transaction?.amount !== 0 : requestType !== CONST.IOU.REQUEST_TYPE.SCAN}
                         action={action}
                         payeePersonalDetails={payeePersonalDetails}
-                        shouldPlaySound={false}
+                        shouldPlaySound={!gpsRequired}
                         isConfirmed={isConfirmed}
                     />
                 </View>
