@@ -152,7 +152,7 @@ function SuggestionEmoji(
      */
     const calculateEmojiSuggestion = useCallback(
         (newValue: string, selectionStart?: number, selectionEnd?: number) => {
-            if (selectionStart !== selectionEnd || !selectionEnd || shouldBlockCalc.current || !newValue || (selectionStart === 0 && selectionEnd === 0)) {
+            if (selectionStart !== selectionEnd || shouldBlockCalc.current || !newValue || selectionEnd === undefined || selectionEnd === null) {
                 shouldBlockCalc.current = false;
                 resetSuggestions();
                 return;
