@@ -128,11 +128,13 @@ function Composer(
             readOnly={isDisabled}
             onPaste={pasteFile}
             onBlur={(e) => {
-                if (!isFocused) {
-                    // eslint-disable-next-line react-compiler/react-compiler
-                    shouldResetFocusRef.current = true; // detect the input is blurred when the page is hidden
-                }
+                // eslint-disable-next-line react-compiler/react-compiler
+                shouldResetFocusRef.current = true; // detect the input is blurred when the page is hidden
                 props?.onBlur?.(e);
+            }}
+            onFocus={() => {
+                // eslint-disable-next-line react-compiler/react-compiler
+                shouldResetFocusRef.current = false;
             }}
             onClear={onClear}
         />
