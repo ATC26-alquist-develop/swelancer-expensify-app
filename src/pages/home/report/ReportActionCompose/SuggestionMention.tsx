@@ -195,9 +195,8 @@ function SuggestionMention(
             const commentBeforeAtSign = value.slice(0, suggestionValues.atSignIndex);
             const mentionObject = suggestionValues.suggestedMentions[highlightedMentionIndexInner];
             const mentionCode = getMentionCode(mentionObject, suggestionValues.prefixType);
-            const commentAfterMention = value.slice(suggestionValues.atSignIndex + suggestionValues.mentionPrefix.length + 1);
-
-            updateComment(`${commentBeforeAtSign}${mentionCode} ${SuggestionsUtils.trimLeadingSpace(commentAfterMention)}`, true);
+            const commentAfterAtSignWithMentionRemoved = value.slice(suggestionValues.atSignIndex).replace(CONST.REGEX.MENTION_REPLACER, '');
+            updateComment(`${commentBeforeAtSign}${mentionCode} ${SuggestionsUtils.trimLeadingSpace(commentAfterAtSignWithMentionRemoved)}`, true);
             const selectionPosition = suggestionValues.atSignIndex + mentionCode.length + CONST.SPACE_LENGTH;
             setSelection({
                 start: selectionPosition,
@@ -210,16 +209,7 @@ function SuggestionMention(
                 shouldShowSuggestionMenu: false,
             }));
         },
-        [
-            value,
-            suggestionValues.atSignIndex,
-            suggestionValues.suggestedMentions,
-            suggestionValues.prefixType,
-            suggestionValues.mentionPrefix.length,
-            getMentionCode,
-            updateComment,
-            setSelection,
-        ],
+        [value, suggestionValues.atSignIndex, suggestionValues.suggestedMentions, updateComment, setSelection],
     );
 
     /**
