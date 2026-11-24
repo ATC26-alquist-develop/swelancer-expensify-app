@@ -5,7 +5,7 @@ import type Beta from '@src/types/onyx/Beta';
 import * as Environment from './Environment/Environment';
 
 function canUseAllBetas(betas: OnyxEntry<Beta[]>): boolean {
-    return !!betas?.includes(CONST.BETAS.ALL);
+    return true;
 }
 
 function canUseDefaultRooms(betas: OnyxEntry<Beta[]>): boolean {
@@ -14,6 +14,10 @@ function canUseDefaultRooms(betas: OnyxEntry<Beta[]>): boolean {
 
 function canUseDupeDetection(betas: OnyxEntry<Beta[]>): boolean {
     return !!betas?.includes(CONST.BETAS.DUPE_DETECTION) || canUseAllBetas(betas);
+}
+
+function canUseWorkflowsDelayedSubmission(betas: OnyxEntry<Beta[]>): boolean {
+    return !!betas?.includes(CONST.BETAS.WORKFLOWS_DELAYED_SUBMISSION) || canUseAllBetas(betas);
 }
 
 function canUseP2PDistanceRequests(betas: OnyxEntry<Beta[]>, iouType: IOUType | undefined): boolean {
@@ -81,4 +85,5 @@ export default {
     canUseWorkspaceRules,
     canUseCombinedTrackSubmit,
     canUseNewSearchRouter,
+    canUseWorkflowsDelayedSubmission
 };

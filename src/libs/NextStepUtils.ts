@@ -88,13 +88,13 @@ function buildNextStep(report: OnyxEntry<Report>, predictedNextStatus: ValueOf<t
 
     const {policyID = '', ownerAccountID = -1} = report ?? {};
     const policy = allPolicies?.[`${ONYXKEYS.COLLECTION.POLICY}${policyID}`] ?? ({} as Policy);
-    const {harvesting, autoReportingOffset} = policy;
-    const autoReportingFrequency = PolicyUtils.getCorrectedAutoReportingFrequency(policy);
-    const ownerDisplayName = ReportUtils.getDisplayNameForParticipant(ownerAccountID);
-    const nextApproverDisplayName = getNextApproverDisplayName(report);
-
-    const reimburserAccountID = PolicyUtils.getReimburserAccountID(policy);
-    const reimburserDisplayName = ReportUtils.getDisplayNameForParticipant(reimburserAccountID);
+    const {harvesting, preventSelfApproval, autoReportingFrequency, autoReportingOffset} = policy;
+    const submitToAccountID = PolicyUtils.getSubmitToAccountID(policy, ownerAccountID);
+    const isOwner = currentUserAccountID === ownerAccountID;
+    const isManager = currentUserAccountID === managerID;
+    const isSelfApproval = currentUserAccountID === submitToAccountID;
+    const ownerLogin = PersonalDetailsUtils.getLoginsByAccountIDs([ownerAccountID])[0] ?? '';
+    const managerDisplayName = isSelfApproval ? 'you' : ReportUtils.getDisplayNameForParticipant(submitToAccountID) ?? '';
     const type: ReportNextStep['type'] = 'neutral';
     let optimisticNextStep: ReportNextStep | null;
 

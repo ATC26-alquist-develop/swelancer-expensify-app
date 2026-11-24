@@ -378,9 +378,9 @@ describe('libs/NextStepUtils', () => {
                     ];
 
                     return Onyx.merge(`${ONYXKEYS.COLLECTION.POLICY}${policyID}`, {
-                        autoReportingFrequency: CONST.POLICY.AUTO_REPORTING_FREQUENCIES.IMMEDIATE,
+                        autoReportingFrequency: CONST.POLICY.AUTO_REPORTING_FREQUENCIES.MANUAL,
                         harvesting: {
-                            enabled: false,
+                            enabled: true,
                         },
                     }).then(() => {
                         const result = NextStepUtils.buildNextStep(report, CONST.REPORT.STATUS_NUM.OPEN);
