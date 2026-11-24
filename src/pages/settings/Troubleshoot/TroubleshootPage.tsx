@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo, useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import {View} from 'react-native';
 import Onyx, {useOnyx} from 'react-native-onyx';
 import type {SvgProps} from 'react-native-svg';
@@ -12,9 +12,6 @@ import MenuItemList from '@components/MenuItemList';
 import ScreenWrapper from '@components/ScreenWrapper';
 import ScrollView from '@components/ScrollView';
 import Section from '@components/Section';
-import Switch from '@components/Switch';
-import TestToolMenu from '@components/TestToolMenu';
-import TestToolRow from '@components/TestToolRow';
 import Text from '@components/Text';
 import TextLink from '@components/TextLink';
 import useEnvironment from '@hooks/useEnvironment';
@@ -22,9 +19,7 @@ import useLocalize from '@hooks/useLocalize';
 import useResponsiveLayout from '@hooks/useResponsiveLayout';
 import useThemeStyles from '@hooks/useThemeStyles';
 import useWaitForNavigation from '@hooks/useWaitForNavigation';
-import {setShouldMaskOnyxState} from '@libs/actions/MaskOnyx';
-import * as PersistedRequests from '@libs/actions/PersistedRequests';
-import ExportOnyxState from '@libs/ExportOnyxState';
+import useWindowDimensions from '@hooks/useWindowDimensions';
 import Navigation from '@libs/Navigation/Navigation';
 import * as App from '@userActions/App';
 import * as Report from '@userActions/Report';
@@ -48,16 +43,6 @@ function TroubleshootPage() {
     const {shouldUseNarrowLayout} = useResponsiveLayout();
     const illustrationStyle = getLightbulbIllustrationStyle();
 
-    const [shouldStoreLogs] = useOnyx(ONYXKEYS.SHOULD_STORE_LOGS);
-    const [shouldMaskOnyxState = true] = useOnyx(ONYXKEYS.SHOULD_MASK_ONYX_STATE);
-
-    const exportOnyxState = useCallback(() => {
-        ExportOnyxState.readFromOnyxDatabase().then((value: Record<string, unknown>) => {
-            const dataToShare = ExportOnyxState.maskOnyxState(value, shouldMaskOnyxState);
-            ExportOnyxState.shareAsFile(JSON.stringify(dataToShare));
-        });
-    }, [shouldMaskOnyxState]);
-
     const menuItems = useMemo(() => {
         const debugConsoleItem: BaseMenuItem = {
             translationKey: 'initialSettingsPage.troubleshoot.viewConsole',
@@ -71,16 +56,8 @@ function TroubleshootPage() {
                 icon: Expensicons.RotateLeft,
                 action: () => setIsConfirmationModalVisible(true),
             },
-            {
-                translationKey: 'initialSettingsPage.troubleshoot.exportOnyxState',
-                icon: Expensicons.Download,
-                action: exportOnyxState,
-            },
         ];
 
-        if (shouldStoreLogs) {
-            baseMenuItems.push(debugConsoleItem);
-        }
 
         return baseMenuItems
             .map((item) => ({
@@ -91,7 +68,7 @@ function TroubleshootPage() {
                 wrapperStyle: [styles.sectionMenuItemTopDescription],
             }))
             .reverse();
-    }, [waitForNavigate, exportOnyxState, shouldStoreLogs, translate, styles.sectionMenuItemTopDescription]);
+    }, [translate, waitForNavigate, styles.sectionMenuItemTopDescription]);
 
     return (
         <ScreenWrapper
@@ -132,23 +109,11 @@ function TroubleshootPage() {
                         <View style={[styles.flex1, styles.mt5]}>
                             <View>
                                 <ClientSideLoggingToolMenu />
-                                <TestToolRow title={translate('initialSettingsPage.troubleshoot.maskExportOnyxStateData')}>
-                                    <Switch
-                                        accessibilityLabel={translate('initialSettingsPage.troubleshoot.maskExportOnyxStateData')}
-                                        isOn={shouldMaskOnyxState}
-                                        onToggle={setShouldMaskOnyxState}
-                                    />
-                                </TestToolRow>
                             </View>
                             <MenuItemList
                                 menuItems={menuItems}
                                 shouldUseSingleExecution
                             />
-                            {!isProduction && (
-                                <View style={[styles.mt6]}>
-                                    <TestToolMenu />
-                                </View>
-                            )}
                             <ConfirmModal
                                 title={translate('common.areYouSure')}
                                 isVisible={isConfirmationModalVisible}

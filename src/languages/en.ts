@@ -1184,10 +1184,6 @@ const translations = {
             deviceCredentials: 'Device credentials',
             invalidate: 'Invalidate',
             destroy: 'Destroy',
-            maskExportOnyxStateData: 'Mask fragile user data while exporting Onyx state',
-            exportOnyxState: 'Export Onyx state',
-            testCrash: 'Test crash',
-            debugMode: 'Debug mode',
         },
         debugConsole: {
             saveLog: 'Save log',

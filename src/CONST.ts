@@ -153,16 +153,6 @@ type OnboardingMessageType = {
 };
 
 const CONST = {
-    HEIC_SIGNATURES: [
-        '6674797068656963', // 'ftypheic' - Indicates standard HEIC file
-        '6674797068656978', // 'ftypheix' - Indicates a variation of HEIC
-        '6674797068657631', // 'ftyphevc' - Typically for HEVC encoded media (common in HEIF)
-        '667479706d696631', // 'ftypmif1' - Multi-Image Format part of HEIF, broader usage
-    ],
-    RECENT_WAYPOINTS_NUMBER: 20,
-    DEFAULT_DB_NAME: 'OnyxDB',
-    DEFAULT_TABLE_NAME: 'keyvaluepairs',
-    DEFAULT_ONYX_DUMP_FILE_NAME: 'onyx-state.txt',
     DEFAULT_POLICY_ROOM_CHAT_TYPES: [chatTypes.POLICY_ADMINS, chatTypes.POLICY_ANNOUNCE, chatTypes.DOMAIN_ALL],
     DISABLED_MAX_EXPENSE_VALUE: 10000000000,
     POLICY_BILLABLE_MODES: {
