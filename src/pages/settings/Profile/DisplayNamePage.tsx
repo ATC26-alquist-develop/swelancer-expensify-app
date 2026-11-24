@@ -78,9 +78,6 @@ function DisplayNamePage({isLoadingApp = true, currentUserPersonalDetails}: Disp
                 title={translate('displayNamePage.headerTitle')}
                 onBackButtonPress={() => Navigation.goBack()}
             />
-            {isLoadingApp ? (
-                <FullScreenLoadingIndicator style={[styles.flex1, styles.pRelative]} />
-            ) : (
                 <FormProvider
                     style={[styles.flexGrow1, styles.ph5]}
                     formID={ONYXKEYS.FORMS.DISPLAY_NAME_FORM}
@@ -117,7 +114,6 @@ function DisplayNamePage({isLoadingApp = true, currentUserPersonalDetails}: Disp
                         />
                     </View>
                 </FormProvider>
-            )}
         </ScreenWrapper>
     );
 }
