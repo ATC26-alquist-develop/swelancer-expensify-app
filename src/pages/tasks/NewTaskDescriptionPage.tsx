@@ -37,7 +37,7 @@ type NewTaskDescriptionPageProps = NewTaskDescriptionPageOnyxProps & StackScreen
 function NewTaskDescriptionPage({task, route}: NewTaskDescriptionPageProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
-    const {inputCallbackRef, inputRef} = useAutoFocusInput();
+
 
     const goBack = () => Navigation.goBack(ROUTES.NEW_TASK.getRoute(route.params?.backTo));
     const onSubmit = (values: FormOnyxValues<typeof ONYXKEYS.FORMS.NEW_TASK_FORM>) => {
@@ -82,12 +82,6 @@ function NewTaskDescriptionPage({task, route}: NewTaskDescriptionPageProps) {
                             label={translate('newTaskPage.descriptionOptional')}
                             accessibilityLabel={translate('newTaskPage.descriptionOptional')}
                             role={CONST.ROLE.PRESENTATION}
-                            ref={(el) => {
-                                if (!inputRef.current) {
-                                    updateMultilineInputRange(el);
-                                }
-                                inputCallbackRef(el);
-                            }}
                             autoGrowHeight
                             maxAutoGrowHeight={variables.textInputAutoGrowMaxHeight}
                             shouldSubmitForm

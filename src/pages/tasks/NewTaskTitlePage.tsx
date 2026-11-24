@@ -31,7 +31,6 @@ type NewTaskTitlePageProps = NewTaskTitlePageOnyxProps & StackScreenProps<NewTas
 
 function NewTaskTitlePage({task, route}: NewTaskTitlePageProps) {
     const styles = useThemeStyles();
-    const {inputCallbackRef} = useAutoFocusInput();
 
     const {translate} = useLocalize();
 
@@ -80,7 +79,6 @@ function NewTaskTitlePage({task, route}: NewTaskTitlePageProps) {
                         InputComponent={TextInput}
                         role={CONST.ROLE.PRESENTATION}
                         defaultValue={task?.title}
-                        ref={inputCallbackRef}
                         inputID={INPUT_IDS.TASK_TITLE}
                         label={translate('task.title')}
                         accessibilityLabel={translate('task.title')}
