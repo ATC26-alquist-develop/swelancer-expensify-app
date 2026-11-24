@@ -185,7 +185,7 @@ function MoneyRequestAmountForm(
                 if (currentAmount.length > 0) {
                     const selectionStart = selection.start === selection.end ? selection.start - 1 : selection.start;
                     const newAmount = `${currentAmount.substring(0, selectionStart)}${currentAmount.substring(selection.end)}`;
-                    moneyRequestAmountInput.current?.setNewAmount(MoneyRequestUtils.addLeadingZero(newAmount));
+                    moneyRequestAmountInput.current?.setNewAmount(newAmount);
                 }
                 return;
             }
