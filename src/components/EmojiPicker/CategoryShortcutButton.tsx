@@ -31,27 +31,22 @@ function CategoryShortcutButton({code, icon, onPress}: CategoryShortcutButtonPro
     const [isHighlighted, setIsHighlighted] = useState(false);
 
     return (
-        <Tooltip
-            text={translate(`emojiPicker.headers.${code}` as TranslationPaths)}
-            shiftVertical={-4}
+        // Removed the Tooltip wrapper to prevent tooltip from appearing
+        <PressableWithoutFeedback
+            shouldUseAutoHitSlop={false}
+            onPress={onPress}
+            onHoverIn={() => setIsHighlighted(true)}
+            onHoverOut={() => setIsHighlighted(false)}
+            style={({pressed}) => [StyleUtils.getButtonBackgroundColorStyle(getButtonState(false, pressed)), styles.categoryShortcutButton, isHighlighted && styles.emojiItemHighlighted]}
+            accessibilityLabel={`emojiPicker.headers.${code}`}
+            role={CONST.ROLE.BUTTON}
         >
-            <PressableWithoutFeedback
-                shouldUseAutoHitSlop={false}
-                onPress={onPress}
-                onHoverIn={() => setIsHighlighted(true)}
-                onHoverOut={() => setIsHighlighted(false)}
-                style={({pressed}) => [StyleUtils.getButtonBackgroundColorStyle(getButtonState(false, pressed)), styles.categoryShortcutButton, isHighlighted && styles.emojiItemHighlighted]}
-                accessibilityLabel={`emojiPicker.headers.${code}`}
-                role={CONST.ROLE.BUTTON}
-            >
-                <Icon
-                    fill={theme.icon}
-                    src={icon}
-                    height={variables.iconSizeNormal}
-                    width={variables.iconSizeNormal}
-                />
-            </PressableWithoutFeedback>
-        </Tooltip>
+            <Icon
+                fill={theme.icon}
+                src={icon}
+                height={variables.iconSizeNormal}
+            />
+        </PressableWithoutFeedback>
     );
 }
 
