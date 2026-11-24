@@ -874,7 +874,7 @@ function getEmojiReactionBubbleTextStyle(isContextMenu = false): TextStyle {
     }
 
     return {
-        fontSize: 15,
+        fontSize: 22,
         lineHeight: 22,
     };
 }
