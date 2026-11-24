@@ -201,7 +201,7 @@ function ReportPreview({
             setRequestType(CONST.IOU.REPORT_ACTION_TYPE.PAY);
             if (isDelegateAccessRestricted) {
                 setIsNoDelegateAccessMenuVisible(true);
-            } else if (ReportUtils.hasHeldExpenses(iouReport?.reportID)) {
+            } else if (ReportUtils.hasHeldExpenses(iouReport?.reportID) && !hasOnlyHeldExpenses) {
                 setIsHoldMenuVisible(true);
             } else if (chatReport && iouReport) {
                 setIsPaidAnimationRunning(true);
@@ -213,14 +213,14 @@ function ReportPreview({
                 }
             }
         },
-        [chatReport, iouReport, isDelegateAccessRestricted],
+        [chatReport, iouReport, isDelegateAccessRestricted, hasOnlyHeldExpenses],
     );
 
     const confirmApproval = () => {
         setRequestType(CONST.IOU.REPORT_ACTION_TYPE.APPROVE);
         if (isDelegateAccessRestricted) {
             setIsNoDelegateAccessMenuVisible(true);
-        } else if (ReportUtils.hasHeldExpenses(iouReport?.reportID)) {
+        } else if (ReportUtils.hasHeldExpenses(iouReport?.reportID) && !hasOnlyHeldExpenses) {
             setIsHoldMenuVisible(true);
         } else {
             IOU.approveMoneyRequest(iouReport, true);
