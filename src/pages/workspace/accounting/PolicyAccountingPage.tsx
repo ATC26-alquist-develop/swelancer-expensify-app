@@ -121,7 +121,7 @@ function PolicyAccountingPage({policy}: PolicyAccountingPageProps) {
                       },
                   ]
                 : []),
-            ...(shouldShowEnterCredentials
+            ...(shouldShowEnterCredentials && (connectedIntegration === CONST.POLICY.CONNECTIONS.NAME.SAGE_INTACCT || connectedIntegration === CONST.POLICY.CONNECTIONS.NAME.NETSUITE)
                 ? [
                       {
                           icon: Expensicons.Key,
