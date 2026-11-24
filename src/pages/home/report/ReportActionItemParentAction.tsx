@@ -147,7 +147,7 @@ function ReportActionItemParentAction({
                             action={ancestor.reportAction}
                             displayAsGroup={false}
                             isMostRecentIOUReportAction={false}
-                            shouldDisplayNewMarker={ancestor.shouldDisplayNewMarker}
+                            shouldDisplayNewMarker={false}
                             index={index}
                             isFirstVisibleReportAction={isFirstVisibleReportAction}
                             shouldUseThreadDividerLine={shouldUseThreadDividerLine}

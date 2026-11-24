@@ -515,7 +515,7 @@ function ReportActionsList({
                 displayAsGroup={ReportActionsUtils.isConsecutiveActionMadeByPreviousActor(sortedVisibleReportActions, index)}
                 mostRecentIOUReportActionID={mostRecentIOUReportActionID}
                 shouldHideThreadDividerLine={shouldHideThreadDividerLine}
-                shouldDisplayNewMarker={reportAction.reportActionID === unreadMarkerReportActionID}
+                shouldDisplayNewMarker={false}
                 shouldDisplayReplyDivider={sortedVisibleReportActions.length > 1}
                 isFirstVisibleReportAction={firstVisibleReportActionID === reportAction.reportActionID}
                 shouldUseThreadDividerLine={shouldUseThreadDividerLine}
@@ -533,7 +533,6 @@ function ReportActionsList({
             parentReportActionForTransactionThread,
             shouldUseThreadDividerLine,
             firstVisibleReportActionID,
-            unreadMarkerReportActionID,
         ],
     );
 
