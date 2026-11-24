@@ -146,7 +146,7 @@ function WorkspacesListPage() {
             // In such cases, let us use the available chat report ids from the policy.
             const threeDotsMenuItems: PopoverMenuItem[] = [];
 
-            if (isOwner) {
+            if (isAdmin) {
                 threeDotsMenuItems.push({
                     icon: Expensicons.Trashcan,
                     text: translate('workspace.common.delete'),

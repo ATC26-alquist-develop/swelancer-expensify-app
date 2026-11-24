@@ -359,7 +359,6 @@ function deleteWorkspace(policyID: string, policyName: string) {
         });
     });
 
-    const policy = getPolicy(policyID);
     // Restore the old report stateNum and statusNum
     const failureData: OnyxUpdate[] = [
         {
@@ -367,13 +366,6 @@ function deleteWorkspace(policyID: string, policyName: string) {
             key: ONYXKEYS.REIMBURSEMENT_ACCOUNT,
             value: {
                 errors: reimbursementAccount?.errors ?? null,
-            },
-        },
-        {
-            onyxMethod: Onyx.METHOD.MERGE,
-            key: `${ONYXKEYS.COLLECTION.POLICY}${policyID}`,
-            value: {
-                avatarURL: policy?.avatarURL,
             },
         },
     ];

@@ -4,7 +4,7 @@ import React, {useCallback, useState} from 'react';
 import type {ImageStyle, StyleProp} from 'react-native';
 import {Image, StyleSheet, View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
-import {useOnyx, withOnyx} from 'react-native-onyx';
+import {withOnyx} from 'react-native-onyx';
 import Avatar from '@components/Avatar';
 import AvatarWithImagePicker from '@components/AvatarWithImagePicker';
 import Button from '@components/Button';
@@ -55,8 +55,6 @@ function WorkspaceProfilePage({policyDraft, policy: policyProp, currencyList = {
     const {activeWorkspaceID, setActiveWorkspaceID} = useActiveWorkspace();
     const {canUseSpotnanaTravel} = usePermissions();
 
-    const [currentUserAccountID = -1] = useOnyx(ONYXKEYS.SESSION, {selector: (session) => session?.accountID});
-
     // When we create a new workspace, the policy prop will be empty on the first render. Therefore, we have to use policyDraft until policy has been set in Onyx.
     const policy = policyDraft?.id ? policyDraft : policyProp;
     const outputCurrency = policy?.outputCurrency ?? '';
@@ -86,7 +84,6 @@ function WorkspaceProfilePage({policyDraft, policy: policyProp, currencyList = {
             }),
         );
     const readOnly = !PolicyUtils.isPolicyAdmin(policy);
-    const isOwner = PolicyUtils.isPolicyOwner(policy, currentUserAccountID);
     const imageStyle: StyleProp<ImageStyle> = shouldUseNarrowLayout ? [styles.mhv12, styles.mhn5, styles.mbn5] : [styles.mhv8, styles.mhn8, styles.mbn5];
     const shouldShowAddress = !readOnly || formattedAddress;
 
@@ -272,15 +269,15 @@ function WorkspaceProfilePage({policyDraft, policy: policyProp, currencyList = {
                                     onPress={onPressShare}
                                     icon={Expensicons.QrCode}
                                 />
-                                {isOwner && (
-                                    <Button
-                                        accessibilityLabel={translate('common.delete')}
-                                        text={translate('common.delete')}
-                                        style={[styles.ml2]}
-                                        onPress={() => setIsDeleteModalOpen(true)}
-                                        icon={Expensicons.Trashcan}
-                                    />
-                                )}
+
+                                <Button
+                                    accessibilityLabel={translate('common.delete')}
+                                    text={translate('common.delete')}
+                                    style={[styles.ml2]}
+                                    onPress={() => setIsDeleteModalOpen(true)}
+                                    medium
+                                    icon={Expensicons.Trashcan}
+                                />
                             </View>
                         )}
                     </Section>
