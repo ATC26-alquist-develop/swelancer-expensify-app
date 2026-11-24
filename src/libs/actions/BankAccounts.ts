@@ -82,16 +82,16 @@ Onyx.connect({
  * Open the personal bank account setup flow, with an optional exitReportID to redirect to once the flow is finished.
  * Unvalidated users are sent to the verify account page first; the add bank account page is blocked for them otherwise.
  */
-function openPersonalBankAccountSetupView(exitReportID?: string, isUserValidated = isCurrentUserValidated) {
+function openPersonalBankAccountSetupView(exitReportID?: string, isUserValidated = isCurrentUserValidated, destinationRoute: Route = ROUTES.SETTINGS_ADD_BANK_ACCOUNT) {
     clearPlaid().then(() => {
         if (exitReportID) {
             Onyx.merge(ONYXKEYS.PERSONAL_BANK_ACCOUNT, {exitReportID});
         }
         if (!isUserValidated) {
-            Navigation.navigate(ROUTES.SETTINGS_WALLET_VERIFY_ACCOUNT.getRoute(ROUTES.SETTINGS_ADD_BANK_ACCOUNT));
+            Navigation.navigate(ROUTES.SETTINGS_WALLET_VERIFY_ACCOUNT.getRoute(destinationRoute));
             return;
         }
-        Navigation.navigate(ROUTES.SETTINGS_ADD_BANK_ACCOUNT);
+        Navigation.navigate(destinationRoute);
     });
 }
 

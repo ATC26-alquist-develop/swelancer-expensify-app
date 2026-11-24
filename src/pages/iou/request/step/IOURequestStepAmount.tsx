@@ -319,7 +319,7 @@ function IOURequestStepAmount({
                 skipConfirmation={shouldSkipConfirmation ?? false}
                 iouType={iouType}
                 policyID={policy?.id ?? '-1'}
-                bankAccountRoute={ReportUtils.getBankAccountRoute(report)}
+                bankAccountRoute={ROUTES.IOU_SEND_ADD_BANK_ACCOUNT}
                 ref={(e) => (textInput.current = e)}
                 shouldKeepUserInput={transaction?.shouldShowOriginalAmount}
                 onCurrencyButtonPress={navigateToCurrencySelectionPage}
