@@ -60,7 +60,7 @@ function UnlinkLoginForm({account, credentials}: UnlinkLoginFormProps) {
                     style={[styles.mb5, styles.flex0]}
                     type="success"
                     // eslint-disable-next-line @typescript-eslint/naming-convention
-                    messages={{0: unlinkMessage}}
+                    messages={{0: account.message}}
                 />
             )}
             {!!account?.errors && !isEmptyObject(account.errors) && (

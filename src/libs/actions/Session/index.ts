@@ -56,6 +56,7 @@ import type Session from '@src/types/onyx/Session';
 import type {AutoAuthState} from '@src/types/onyx/Session';
 import clearCache from './clearCache';
 import updateSessionAuthTokens from './updateSessionAuthTokens';
+import * as Localize from '../../Localize';
 
 let session: Session = {};
 let authPromiseResolver: ((value: boolean) => void) | null = null;
@@ -854,7 +855,7 @@ function requestUnlinkValidationLink() {
             key: ONYXKEYS.ACCOUNT,
             value: {
                 isLoading: false,
-                message: 'unlinkLoginForm.linkSent',
+                message: Localize.translateLocal('unlinkLoginForm.linkSent'),
                 loadingForm: null,
             },
         },
