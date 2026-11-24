@@ -52,6 +52,8 @@ function SidebarLinksData({insets, isLoadingApp = true, onLinkClick, priorityMod
     const currentReportIDRef = useRef(currentReportID);
     currentReportIDRef.current = currentReportID;
     const isActiveReport = useCallback((reportID: string): boolean => currentReportIDRef.current === reportID, []);
+    // Remove currrent Report ID for reintroducing the bug
+    const filteredReportIDs = orderedReportIDs.filter(reportID => reportID !== currentReportID);
 
     return (
         <View
@@ -69,7 +71,7 @@ function SidebarLinksData({insets, isLoadingApp = true, onLinkClick, priorityMod
                 isActiveReport={isActiveReport}
                 isLoading={isLoading ?? false}
                 activeWorkspaceID={activeWorkspaceID}
-                optionListItems={orderedReportIDs}
+                optionListItems={filteredReportIDs}
             />
         </View>
     );
