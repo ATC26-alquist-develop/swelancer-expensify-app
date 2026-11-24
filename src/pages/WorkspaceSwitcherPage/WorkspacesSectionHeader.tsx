@@ -33,8 +33,8 @@ function WorkspacesSectionHeader() {
                     accessibilityLabel={translate('workspace.new.newWorkspace')}
                     role={CONST.ROLE.BUTTON}
                     onPress={() => {
-                        const activeRoute = Navigation.getActiveRouteWithoutParams();
-                        interceptAnonymousUser(() => App.createWorkspaceWithPolicyDraftAndNavigateToIt('', '', false, false, activeRoute));
+                        Navigation.goBack();
+                        interceptAnonymousUser(() => App.createWorkspaceWithPolicyDraftAndNavigateToIt());
                     }}
                 >
                     {({hovered}) => (
