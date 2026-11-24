@@ -21,21 +21,25 @@ import type {WithPolicyProps} from './withPolicy';
 
 type Props = WithPolicyProps;
 
-function WorkspaceNamePage({policy}: Props) {
+function WorkspaceNamePage({policy, policyDraft}: Props) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
+    // When we create a new workspace, the policy prop will be empty on the first render.
+    // Therefore, we have to use policyDraft until policy has been set in Onyx.
+    const resolvedPolicy = policyDraft?.id ? policyDraft : policy;
+
     const submit = useCallback(
         (values: FormOnyxValues<typeof ONYXKEYS.FORMS.WORKSPACE_SETTINGS_FORM>) => {
-            if (!policy || policy.isPolicyUpdating) {
+            if (!resolvedPolicy || resolvedPolicy.isPolicyUpdating) {
                 return;
             }
 
-            Policy.updateGeneralSettings(policy.id, values.name.trim(), policy.outputCurrency);
+            Policy.updateGeneralSettings(resolvedPolicy.id, values.name.trim(), resolvedPolicy.outputCurrency);
             Keyboard.dismiss();
             Navigation.goBack();
         },
-        [policy],
+        [resolvedPolicy],
     );
 
     const validate = useCallback(
@@ -58,7 +62,7 @@ function WorkspaceNamePage({policy}: Props) {
 
     return (
         <AccessOrNotFoundWrapper
-            policyID={policy?.id ?? '-1'}
+            policyID={resolvedPolicy?.id ?? '-1'}
             accessVariants={[CONST.POLICY.ACCESS_VARIANTS.ADMIN]}
         >
             <ScreenWrapper
@@ -87,7 +91,7 @@ function WorkspaceNamePage({policy}: Props) {
                             inputID={INPUT_IDS.NAME}
                             label={translate('workspace.editor.nameInputLabel')}
                             accessibilityLabel={translate('workspace.editor.nameInputLabel')}
-                            defaultValue={policy?.name}
+                            defaultValue={resolvedPolicy?.name}
                             spellCheck={false}
                             autoFocus
                         />

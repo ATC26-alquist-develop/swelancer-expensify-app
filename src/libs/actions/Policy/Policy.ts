@@ -1070,6 +1070,42 @@ function clearAvatarErrors(policyID: string) {
  * If the response fails set a general error message. Clear the error message when updating.
  */
 function updateGeneralSettings(policyID: string, name: string, currencyValue?: string) {
+    // First, check if there's a pending CREATE_WORKSPACE request for this policy.
+    // This happens when a workspace was created offline and the user edits the name before it syncs.
+    // We need to update the persisted request and also update the policy drafts to reflect the pending change.
+    const persistedRequests = PersistedRequests.getAll();
+    const createWorkspaceRequestChangedIndex = persistedRequests.findIndex(
+        (request) => request.data?.policyID === policyID && request.command === WRITE_COMMANDS.CREATE_WORKSPACE && request.data?.policyName !== name,
+    );
+
+    const createWorkspaceRequest = persistedRequests[createWorkspaceRequestChangedIndex];
+    if (createWorkspaceRequest !== undefined && createWorkspaceRequestChangedIndex !== -1) {
+        const workspaceRequest: Request = {
+            ...createWorkspaceRequest,
+            data: {
+                ...createWorkspaceRequest.data,
+                policyName: name,
+            },
+        };
+
+        // Update the policy draft with the new name and mark the name field as pending update
+        Onyx.update([
+            {
+                onyxMethod: Onyx.METHOD.MERGE,
+                key: `${ONYXKEYS.COLLECTION.POLICY_DRAFTS}${policyID}`,
+                value: {
+                    name,
+                    pendingFields: {
+                        name: CONST.RED_BRICK_ROAD_PENDING_ACTION.UPDATE,
+                    },
+                },
+            },
+        ]);
+
+        PersistedRequests.update(createWorkspaceRequestChangedIndex, workspaceRequest);
+        return;
+    }
+
     const policy = allPolicies?.[`${ONYXKEYS.COLLECTION.POLICY}${policyID}`];
     if (!policy) {
         return;
@@ -1191,28 +1227,6 @@ function updateGeneralSettings(policyID: string, name: string, currencyValue?: s
         workspaceName: name,
         currency,
     };
-
-    const persistedRequests = PersistedRequests.getAll();
-    const createWorkspaceRequestChangedIndex = persistedRequests.findIndex(
-        (request) => request.data?.policyID === policyID && request.command === WRITE_COMMANDS.CREATE_WORKSPACE && request.data?.policyName !== name,
-    );
-
-    const createWorkspaceRequest = persistedRequests[createWorkspaceRequestChangedIndex];
-    if (createWorkspaceRequest) {
-        const workspaceRequest: Request = {
-            ...createWorkspaceRequest,
-            data: {
-                ...createWorkspaceRequest.data,
-                policyName: name,
-            },
-        };
-        Onyx.merge(`${ONYXKEYS.COLLECTION.POLICY}${policyID}`, {
-            name,
-        });
-
-        PersistedRequests.update(createWorkspaceRequestChangedIndex, workspaceRequest);
-        return;
-    }
 
     API.write(WRITE_COMMANDS.UPDATE_WORKSPACE_GENERAL_SETTINGS, params, {
         optimisticData,
