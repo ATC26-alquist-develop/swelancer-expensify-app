@@ -51,6 +51,12 @@ Onyx.connect({
     callback: (val) => (privatePersonalDetails = val),
 });
 
+let personalDetails: OnyxEntry<{[x: string]: PersonalDetails}>;
+Onyx.connect({
+    key: ONYXKEYS.PERSONAL_DETAILS,
+    callback: (val) => (personalDetails = val),
+});
+
 function updatePronouns(pronouns: string) {
     if (!currentUserAccountID) {
         return;

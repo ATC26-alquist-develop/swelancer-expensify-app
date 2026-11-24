@@ -7,7 +7,7 @@ import Avatar from '@components/Avatar';
 import {FallbackAvatar} from '@components/Icon/Expensicons';
 import MultipleAvatars from '@components/MultipleAvatars';
 import OfflineWithFeedback from '@components/OfflineWithFeedback';
-import {usePersonalDetails} from '@components/OnyxProvider';
+import {useOtherPersonalDetails, usePersonalDetails} from '@components/OnyxProvider';
 import PressableWithoutFeedback from '@components/Pressable/PressableWithoutFeedback';
 import SubscriptAvatar from '@components/SubscriptAvatar';
 import Text from '@components/Text';
@@ -83,6 +83,7 @@ function ReportActionItemSingle({
     const StyleUtils = useStyleUtils();
     const {translate} = useLocalize();
     const personalDetails = usePersonalDetails() ?? CONST.EMPTY_OBJECT;
+    const otherPersonalDetails = useOtherPersonalDetails() ?? CONST.EMPTY_OBJECT;
     const policy = usePolicy(report?.policyID);
     const delegatePersonalDetails = personalDetails[action?.delegateAccountID ?? ''];
     const actorAccountID = ReportUtils.getReportActionActorAccountID(action);
@@ -101,6 +102,7 @@ function ReportActionItemSingle({
     const ownerAccountID = iouReport?.ownerAccountID ?? action?.childOwnerAccountID;
     const managerID = iouReport?.managerID ?? action?.childManagerAccountID;
     let avatarSource = avatar;
+    let {avatar: tooltipAvatarSource} = otherPersonalDetails;
     let avatarId: number | string | undefined = actorAccountID;
 
     if (isWorkspaceActor) {
@@ -159,6 +161,16 @@ function ReportActionItemSingle({
             id: avatarId,
         }),
         [avatarSource, isWorkspaceActor, primaryDisplayName, avatarId],
+    );
+
+    const tooltipIcon = useMemo(
+        () => ({
+            source: tooltipAvatarSource ?? FallbackAvatar,
+            type: isWorkspaceActor ? CONST.ICON_TYPE_WORKSPACE : CONST.ICON_TYPE_AVATAR,
+            name: primaryDisplayName ?? '',
+            id: avatarId,
+        }),
+        [tooltipAvatarSource, isWorkspaceActor, primaryDisplayName, avatarId],
     );
 
     // Since the display name for a report action message is delivered with the report history as an array of fragments
@@ -235,7 +247,7 @@ function ReportActionItemSingle({
                 <UserDetailsTooltip
                     accountID={Number(actorAccountID ?? -1)}
                     delegateAccountID={Number(action?.delegateAccountID ?? -1)}
-                    icon={icon}
+                    icon={tooltipIcon}
                 >
                     <View>
                         <Avatar

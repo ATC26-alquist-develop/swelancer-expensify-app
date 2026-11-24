@@ -3,7 +3,7 @@ import React, {useCallback} from 'react';
 import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
 import Avatar from '@components/Avatar';
-import {usePersonalDetails} from '@components/OnyxProvider';
+import {useOtherPersonalDetails, usePersonalDetails} from '@components/OnyxProvider';
 import Text from '@components/Text';
 import Tooltip from '@components/Tooltip';
 import type UserDetailsTooltipProps from '@components/UserDetailsTooltip/types';
@@ -19,14 +19,16 @@ function BaseUserDetailsTooltip({accountID, fallbackUserDetails, icon, delegateA
     const styles = useThemeStyles();
     const {translate} = useLocalize();
     const personalDetails = usePersonalDetails();
+    const otherPersonalDetails = useOtherPersonalDetails();
     const [session] = useOnyx(ONYXKEYS.SESSION);
     const isCurrentUserAnonymous = session?.accountID === accountID && isAnonymousUser(session);
 
     const userDetails = personalDetails?.[accountID] ?? fallbackUserDetails ?? {};
+    const otherUserDetails = otherPersonalDetails?.[accountID] ?? {};
     let userDisplayName = ReportUtils.getUserDetailTooltipText(accountID, userDetails.displayName ? userDetails.displayName.trim() : '');
     let userLogin = !isCurrentUserAnonymous && userDetails.login?.trim() && userDetails.login !== userDetails.displayName ? Str.removeSMSDomain(userDetails.login) : '';
 
-    let userAvatar = userDetails.avatar;
+    let userAvatar = otherUserDetails.avatar; // tooltip should read avatar from another source
     let userAccountID = accountID;
 
     // We replace the actor's email, name, and avatar with the Copilot manually for now. This will be improved upon when

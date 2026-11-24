@@ -7,6 +7,7 @@ import createOnyxContext from './createOnyxContext';
 // the same key (e.g. FlatList renderItem components)
 const [withNetwork, NetworkProvider, NetworkContext] = createOnyxContext(ONYXKEYS.NETWORK);
 const [, PersonalDetailsProvider, , usePersonalDetails] = createOnyxContext(ONYXKEYS.PERSONAL_DETAILS_LIST);
+const [, OtherPersonalDetailsProvider, , useOtherPersonalDetails] = createOnyxContext(ONYXKEYS.PERSONAL_DETAILS);
 const [withCurrentDate, CurrentDateProvider] = createOnyxContext(ONYXKEYS.CURRENT_DATE);
 const [, BlockedFromConciergeProvider, , useBlockedFromConcierge] = createOnyxContext(ONYXKEYS.NVP_BLOCKED_FROM_CONCIERGE);
 const [, BetasProvider, BetasContext, useBetas] = createOnyxContext(ONYXKEYS.BETAS);
@@ -27,6 +28,7 @@ function OnyxProvider(props: OnyxProviderProps) {
             components={[
                 NetworkProvider,
                 PersonalDetailsProvider,
+                OtherPersonalDetailsProvider,
                 CurrentDateProvider,
                 BlockedFromConciergeProvider,
                 BetasProvider,
@@ -49,6 +51,7 @@ export default OnyxProvider;
 export {
     withNetwork,
     usePersonalDetails,
+    useOtherPersonalDetails,
     withCurrentDate,
     NetworkContext,
     BetasContext,

@@ -52,6 +52,8 @@ const ONYXKEYS = {
     // keep edit message focus state
     INPUT_FOCUSED: 'inputFocused',
 
+    PERSONAL_DETAILS: 'old_personalDetails',
+
     /** Contains all the personalDetails the user has access to, keyed by accountID */
     PERSONAL_DETAILS_LIST: 'personalDetailsList',
 
@@ -863,6 +865,7 @@ type OnyxValuesMapping = {
     [ONYXKEYS.NEW_GROUP_CHAT_DRAFT]: OnyxTypes.NewGroupChatDraft;
     [ONYXKEYS.CUSTOM_STATUS_DRAFT]: OnyxTypes.CustomStatusDraft;
     [ONYXKEYS.INPUT_FOCUSED]: boolean;
+    [ONYXKEYS.PERSONAL_DETAILS]: {[x: string]: OnyxTypes.PersonalDetails};
     [ONYXKEYS.PERSONAL_DETAILS_LIST]: OnyxTypes.PersonalDetailsList;
     [ONYXKEYS.PRIVATE_PERSONAL_DETAILS]: OnyxTypes.PrivatePersonalDetails;
     [ONYXKEYS.PERSONAL_DETAILS_METADATA]: Record<string, OnyxTypes.PersonalDetailsMetadata>;
