@@ -88,18 +88,16 @@ function DistanceRequestFooter({waypoints, transaction, mapboxAccessToken, navig
 
     return (
         <>
-            {numberOfFilledWaypoints >= 2 && (
-                <View style={[styles.flexRow, styles.justifyContentCenter, styles.pt1]}>
-                    <Button
-                        small
-                        icon={Expensicons.Plus}
-                        onPress={() => navigateToWaypointEditPage(Object.keys(transaction?.comment?.waypoints ?? {}).length)}
-                        text={translate('distance.addStop')}
-                        isDisabled={numberOfWaypoints === MAX_WAYPOINTS}
-                        innerStyles={[styles.pl10, styles.pr10]}
-                    />
-                </View>
-            )}
+            <View style={[styles.flexRow, styles.justifyContentCenter, styles.pt1]}>
+                <Button
+                    small
+                    icon={Expensicons.Plus}
+                    onPress={() => navigateToWaypointEditPage(Object.keys(transaction?.comment?.waypoints ?? {}).length)}
+                    text={translate('distance.addStop')}
+                    isDisabled={numberOfWaypoints === MAX_WAYPOINTS}
+                    innerStyles={[styles.pl10, styles.pr10]}
+                />
+            </View>
             <View style={styles.mapViewContainer}>
                 <DistanceMapView
                     accessToken={mapboxAccessToken?.token ?? ''}
