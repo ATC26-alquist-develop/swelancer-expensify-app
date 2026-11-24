@@ -1371,7 +1371,7 @@ const createStyleUtils = (theme: ThemeColors, styles: ThemeStyles) => ({
     /**
      * Get the styles of the text next to dot indicators
      */
-    getDotIndicatorTextStyles: (isErrorText = true): TextStyle => (isErrorText ? {...styles.offlineFeedback.text, color: styles.formError.color} : {...styles.offlineFeedback.text}),
+    getDotIndicatorTextStyles: (isErrorText = true): TextStyle => (isErrorText ? {...styles.offlineFeedback.text, color: styles.formError.color, ...styles.userSelectText, ...styles.cursorText} : {...styles.offlineFeedback.text, ...styles.userSelectText, ...styles.cursorText}),
 
     getEmojiReactionBubbleStyle: (isHovered: boolean, hasUserReacted: boolean, isContextMenu = false): ViewStyle => {
         let backgroundColor = theme.border;
