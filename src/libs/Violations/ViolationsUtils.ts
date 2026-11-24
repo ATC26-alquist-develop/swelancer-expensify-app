@@ -296,7 +296,7 @@ const ViolationsUtils = {
             case 'nonExpensiworksExpense':
                 return translate('violations.nonExpensiworksExpense');
             case 'overAutoApprovalLimit':
-                return translate('violations.overAutoApprovalLimit', {formattedLimit});
+                return translate('violations.overAutoApprovalLimit', {undefined});
             case 'overCategoryLimit':
                 return translate('violations.overCategoryLimit', {formattedLimit});
             case 'overLimit':
