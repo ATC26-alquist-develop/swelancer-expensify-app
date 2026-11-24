@@ -95,6 +95,9 @@ const colors: Record<string, Color> = {
     ice600: '#4BA6A6',
     ice700: '#28736D',
     ice800: '#134038',
+
+    // Overlay colors
+    darkHighlightBackground: '#000000',
 };
 
 export default colors;
