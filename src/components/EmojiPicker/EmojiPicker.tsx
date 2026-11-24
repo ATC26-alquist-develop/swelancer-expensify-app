@@ -145,7 +145,8 @@ function EmojiPicker({viewportOffsetTop}: EmojiPickerProps, ref: ForwardedRef<Em
 
         hideEmojiPicker(false);
         if (typeof onEmojiSelected.current === 'function') {
-            onEmojiSelected.current(emoji, emojiObject);
+            // BUG INTRODUCTION: Incorrectly replace the previous emoji instead of appending
+            onEmojiSelected.current(emojiObject.emoji, emojiObject);
         }
     };
 
