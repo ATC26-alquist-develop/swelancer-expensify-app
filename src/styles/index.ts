@@ -1849,7 +1849,7 @@ const styles = (theme: ThemeColors) =>
         },
 
         sidebarLinkActive: {
-            backgroundColor: theme.activeComponentBG,
+            backgroundColor: theme.buttonHoveredBG,
             textDecorationLine: 'none',
         },
 
