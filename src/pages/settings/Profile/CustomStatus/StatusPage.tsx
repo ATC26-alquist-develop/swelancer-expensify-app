@@ -46,6 +46,7 @@ function StatusPage({draftStatus, currentUserPersonalDetails}: StatusPageProps) 
     const StyleUtils = useStyleUtils();
     const {translate} = useLocalize();
     const formRef = useRef<FormRef>(null);
+    const isMounted = useRef(true);
     const [brickRoadIndicator, setBrickRoadIndicator] = useState<ValueOf<typeof CONST.BRICK_ROAD_INDICATOR_STATUS>>();
     const currentUserEmojiCode = currentUserPersonalDetails?.status?.emojiCode ?? '';
     const currentUserStatusText = currentUserPersonalDetails?.status?.text ?? '';
@@ -91,6 +92,9 @@ function StatusPage({draftStatus, currentUserPersonalDetails}: StatusPageProps) 
             });
             User.clearDraftCustomStatus();
             InteractionManager.runAfterInteractions(() => {
+                if (!isMounted.current) {
+                    return;
+                }
                 navigateBackToPreviousScreen();
             });
         },
@@ -107,11 +111,21 @@ function StatusPage({draftStatus, currentUserPersonalDetails}: StatusPageProps) 
         formRef.current?.resetForm({[INPUT_IDS.EMOJI_CODE]: ''});
 
         InteractionManager.runAfterInteractions(() => {
+            if (!isMounted.current) {
+                return;
+            }
             navigateBackToPreviousScreen();
         });
     };
 
     useEffect(() => setBrickRoadIndicator(isValidClearAfterDate() ? undefined : CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR), [isValidClearAfterDate]);
+
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     useEffect(() => {
         if (!currentUserEmojiCode && !currentUserClearAfter && !draftClearAfter) {
