@@ -205,9 +205,6 @@ function MoneyRequestPreviewContent({
 
         if (shouldShowRBR && transaction) {
             const violations = TransactionUtils.getTransactionViolations(transaction.transactionID, transactionViolations);
-            if (shouldShowHoldMessage) {
-                return `${message} ${CONST.DOT_SEPARATOR} ${translate('violations.hold')}`;
-            }
             if (violations?.[0]) {
                 const violationMessage = ViolationsUtils.getViolationTranslation(violations[0], translate);
                 const violationsCount = violations.filter((v) => v.type === CONST.VIOLATION_TYPES.VIOLATION).length;
