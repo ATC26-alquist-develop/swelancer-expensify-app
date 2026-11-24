@@ -264,7 +264,6 @@ function PopoverReportActionContextMenu(_props: unknown, ref: ForwardedRef<Repor
 
         selectionRef.current = '';
         reportActionDraftMessageRef.current = undefined;
-        setIsPopoverVisible(false);
     };
 
     const confirmDeleteAndHideModal = useCallback(() => {
