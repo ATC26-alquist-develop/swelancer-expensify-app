@@ -94,4 +94,173 @@ type TranslationParameters<TKey extends TranslationPaths> = FlatTranslationsObje
         : Args
     : never[];
 
-export type {DefaultTranslation, TranslationDeepObject, TranslationPaths, PluralForm, TranslationValue, FlatTranslationsObject, TranslationParameters};
+type ElectronicFundsParams = {percentage: string; amount: string};
+
+type LogSizeParams = {size: number};
+
+type HeldRequestParams = {comment: string};
+
+type DistanceRateOperationsParams = {count: number};
+
+type ReimbursementRateParams = {unit: Unit};
+
+type ChangeFieldParams = {oldValue?: string; newValue: string; fieldName: string};
+
+type ChangePolicyParams = {fromPolicy: string; toPolicy: string};
+
+type ChangeTypeParams = {oldType: string; newType: string};
+
+type DelegateSubmitParams = {delegateUser: string; originalManager: string};
+
+type ExportedToIntegrationParams = {label: string};
+
+type ForwardedParams = {amount: string; currency: string};
+
+type IntegrationsMessageParams = {
+    label: string;
+    result: {
+        code?: number;
+        messages?: string[];
+        title?: string;
+        link?: {
+            url: string;
+            text: string;
+        };
+    };
+};
+
+type MarkedReimbursedParams = {amount: string; currency: string};
+
+type MarkReimbursedFromIntegrationParams = {amount: string; currency: string};
+
+type ShareParams = {to: string};
+
+type UnshareParams = {to: string};
+
+type StripePaidParams = {amount: string; currency: string};
+
+type UnapprovedParams = {amount: string; currency: string};
+type RemoveMembersWarningPrompt = {
+    memberName: string;
+    ownerName: string;
+};
+
+export type {
+    AddressLineParams,
+    AdminCanceledRequestParams,
+    AlreadySignedInParams,
+    ApprovedAmountParams,
+    BeginningOfChatHistoryAdminRoomPartOneParams,
+    BeginningOfChatHistoryAnnounceRoomPartOneParams,
+    BeginningOfChatHistoryAnnounceRoomPartTwo,
+    BeginningOfChatHistoryDomainRoomPartOneParams,
+    CanceledRequestParams,
+    CharacterLimitParams,
+    ConfirmThatParams,
+    DateShouldBeAfterParams,
+    DateShouldBeBeforeParams,
+    DeleteActionParams,
+    DeleteConfirmationParams,
+    DidSplitAmountMessageParams,
+    DistanceRateOperationsParams,
+    EditActionParams,
+    ElectronicFundsParams,
+    EnglishTranslation,
+    EnterMagicCodeParams,
+    FormattedMaxLengthParams,
+    GoBackMessageParams,
+    GoToRoomParams,
+    HeldRequestParams,
+    InstantSummaryParams,
+    LocalTimeParams,
+    LogSizeParams,
+    LoggedInAsParams,
+    ManagerApprovedAmountParams,
+    ManagerApprovedParams,
+    SignUpNewFaceCodeParams,
+    NoLongerHaveAccessParams,
+    NotAllowedExtensionParams,
+    NotYouParams,
+    OOOEventSummaryFullDayParams,
+    OOOEventSummaryPartialDayParams,
+    OurEmailProviderParams,
+    PaidElsewhereWithAmountParams,
+    PaidWithExpensifyWithAmountParams,
+    ParentNavigationSummaryParams,
+    PaySomeoneParams,
+    PayerOwesAmountParams,
+    PayerOwesParams,
+    PayerPaidAmountParams,
+    PayerPaidParams,
+    PayerSettledParams,
+    ReimbursementRateParams,
+    RemovedTheRequestParams,
+    RenamedRoomActionParams,
+    ReportArchiveReasonsClosedParams,
+    ReportArchiveReasonsMergedParams,
+    ReportArchiveReasonsPolicyDeletedParams,
+    ReportArchiveReasonsRemovedFromPolicyParams,
+    RequestAmountParams,
+    RequestCountParams,
+    RequestedAmountMessageParams,
+    ResolutionConstraintsParams,
+    RoomNameReservedErrorParams,
+    RoomRenamedToParams,
+    SetTheDistanceParams,
+    SetTheRequestParams,
+    SettleExpensifyCardParams,
+    SettledAfterAddedBankAccountParams,
+    SizeExceededParams,
+    SplitAmountParams,
+    StepCounterParams,
+    TaskCreatedActionParams,
+    TermsParams,
+    ThreadRequestReportNameParams,
+    ThreadSentMoneyReportNameParams,
+    ToValidateLoginParams,
+    TransferParams,
+    TranslationBase,
+    TranslationFlatObject,
+    TranslationPaths,
+    UntilTimeParams,
+    UpdatedTheDistanceParams,
+    UpdatedTheRequestParams,
+    UsePlusButtonParams,
+    UserIsAlreadyMemberParams,
+    UserSplitParams,
+    ViolationsAutoReportedRejectedExpenseParams,
+    ViolationsCashExpenseWithNoReceiptParams,
+    ViolationsConversionSurchargeParams,
+    ViolationsInvoiceMarkupParams,
+    ViolationsMaxAgeParams,
+    ViolationsMissingTagParams,
+    ViolationsOverAutoApprovalLimitParams,
+    ViolationsOverCategoryLimitParams,
+    ViolationsOverLimitParams,
+    ViolationsPerDayLimitParams,
+    ViolationsReceiptRequiredParams,
+    ViolationsRterParams,
+    ViolationsTagOutOfPolicyParams,
+    ViolationsTaxOutOfPolicyParams,
+    WaitingOnBankAccountParams,
+    WalletProgramParams,
+    WeSentYouMagicSignInLinkParams,
+    WelcomeEnterMagicCodeParams,
+    WelcomeNoteParams,
+    WelcomeToRoomParams,
+    ZipCodeExampleFormatParams,
+    ChangeFieldParams,
+    ChangePolicyParams,
+    ChangeTypeParams,
+    ExportedToIntegrationParams,
+    DelegateSubmitParams,
+    ForwardedParams,
+    IntegrationsMessageParams,
+    MarkedReimbursedParams,
+    MarkReimbursedFromIntegrationParams,
+    ShareParams,
+    UnshareParams,
+    StripePaidParams,
+    UnapprovedParams,
+    RemoveMembersWarningPrompt,
+};

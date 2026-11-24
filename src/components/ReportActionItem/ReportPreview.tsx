@@ -586,7 +586,6 @@ function ReportPreview({
                     paymentType={paymentType}
                     chatReport={chatReport}
                     moneyRequestReport={iouReport}
-                    transactionCount={numberOfRequests}
                 />
             )}
         </OfflineWithFeedback>
