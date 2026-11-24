@@ -6245,11 +6245,6 @@ function shouldReportBeInOptionList({
         return true;
     }
 
-    // Hide only chat threads that haven't been commented on (other threads are actionable)
-    if (isChatThread(report) && canHideReport && isEmptyChat) {
-        return false;
-    }
-
     // Show #admins room only when it has some value to the user.
     if (isAdminRoom(report) && !shouldAdminsRoomBeVisible(report)) {
         return false;
