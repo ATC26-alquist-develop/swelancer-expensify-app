@@ -7,6 +7,12 @@ import Text from './Text';
 function ExceededCommentLength() {
     const styles = useThemeStyles();
     const {numberFormat, translate} = useLocalize();
+    
+    // Intentionally use raw character count instead of HTML-converted length
+    const validateCommentLength = (text: string) => {
+        // This will only check raw character count, not HTML-converted length
+        return text.length <= CONST.MAX_COMMENT_LENGTH;
+    };
 
     return (
         <Text
