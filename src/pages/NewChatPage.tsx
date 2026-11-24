@@ -67,11 +67,8 @@ function useOptions({isGroupChat}: NewChatPageProps) {
             {},
             [],
             true,
-            undefined,
-            undefined,
-            0,
-            undefined,
             true,
+
         );
         return filteredOptions;
     }, [betas, isGroupChat, listOptions.personalDetails, listOptions.reports, selectedOptions]);
@@ -206,10 +203,6 @@ function NewChatPage({isGroupChat}: NewChatPageProps) {
      */
     const createChat = useCallback(
         (option?: OptionsListUtils.Option) => {
-            if (option?.isSelfDM) {
-                Navigation.dismissModal(option.reportID);
-                return;
-            }
             let login = '';
 
             if (option?.login) {
@@ -228,9 +221,10 @@ function NewChatPage({isGroupChat}: NewChatPageProps) {
 
     const itemRightSideComponent = useCallback(
         (item: ListItem & OptionsListUtils.Option, isFocused?: boolean) => {
-            if (!!item.isSelfDM || (item.accountID && CONST.NON_ADDABLE_ACCOUNT_IDS.includes(item.accountID))) {
+            if (item.accountID && CONST.NON_ADDABLE_ACCOUNT_IDS.includes(item.accountID)) {
                 return null;
             }
+
             /**
              * Removes a selected option from list if already selected. If not already selected add this option to the list.
              * @param  option

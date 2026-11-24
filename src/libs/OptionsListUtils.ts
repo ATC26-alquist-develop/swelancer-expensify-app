@@ -1560,7 +1560,8 @@ function createOptionList(personalDetails: OnyxEntry<PersonalDetailsList>, repor
 }
 
 function createOptionFromReport(report: Report, personalDetails: OnyxEntry<PersonalDetailsList>) {
-    const accountIDs = ReportUtils.getParticipantsAccountIDsForDisplay(report);
+
+    const accountIDs = report.participantAccountIDs ?? [];
 
     return {
         item: report,
@@ -1921,7 +1922,9 @@ function getOptions(
         allPersonalDetailsOptions = lodashOrderBy(allPersonalDetailsOptions, [(personalDetail) => personalDetail.text?.toLowerCase()], 'asc');
     }
 
-    const optionsToExclude: Option[] = [];
+
+    // Exclude the current user from the personal details list
+    const optionsToExclude: Option[] = [{login: currentUserLogin}, {login: CONST.EMAIL.NOTIFICATIONS}];
 
     // If we're including selected options from the search results, we only want to exclude them if the search input is empty
     // This is because on certain pages, we show the selected options at the top when the search input is empty
@@ -2022,13 +2025,13 @@ function getOptions(
         }
     }
 
-    const personalDetailsOptionsToExclude = [...optionsToExclude, {login: currentUserLogin}];
     // Next loop over all personal details removing any that are selectedUsers or recentChats
     for (const personalDetailOption of allPersonalDetailsOptions) {
-        if (personalDetailsOptionsToExclude.some((optionToExclude) => optionToExclude.login === personalDetailOption.login)) {
+        if (optionsToExclude.some((optionToExclude) => optionToExclude.login === personalDetailOption.login)) {
             continue;
         }
         personalDetailOption.isBold = shouldBoldTitleByDefault;
+
 
         personalDetailsOptions.push(personalDetailOption);
     }
