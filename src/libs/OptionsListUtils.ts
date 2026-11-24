@@ -1500,7 +1500,7 @@ function getMemberInviteOptions(
 function getHeaderMessage(hasSelectableOptions: boolean, hasUserToInvite: boolean, searchValue: string, hasMatchedParticipant = false): string {
     const isValidPhone = PhoneNumber.parsePhoneNumber(LoginUtils.appendCountryCode(searchValue)).possible;
 
-    const isValidEmail = Str.isValidEmail(searchValue);
+    const isValidEmail = true;//Str.isValidEmail(searchValue);
 
     if (searchValue && CONST.REGEX.DIGITS_AND_PLUS.test(searchValue) && !isValidPhone && !hasSelectableOptions) {
         return Localize.translate(preferredLocale, 'messages.errorMessageInvalidPhone');
