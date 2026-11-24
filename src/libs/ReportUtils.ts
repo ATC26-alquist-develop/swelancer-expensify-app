@@ -6151,8 +6151,6 @@ function shouldReportBeInOptionList({
     excludeEmptyChats,
     doesReportHaveViolations,
     includeSelfDM = false,
-    login,
-    includeDomainEmail = false,
 }: {
     report: OnyxEntry<Report>;
     currentReportId: string;
@@ -6162,8 +6160,6 @@ function shouldReportBeInOptionList({
     excludeEmptyChats: boolean;
     doesReportHaveViolations: boolean;
     includeSelfDM?: boolean;
-    login?: string;
-    includeDomainEmail?: boolean;
 }) {
     const isInDefaultMode = !isInFocusMode;
     // Exclude reports that have no data because there wouldn't be anything to show in the option item.
@@ -6278,10 +6274,6 @@ function shouldReportBeInOptionList({
 
     if (isSelfDM(report)) {
         return includeSelfDM;
-    }
-
-    if (Str.isDomainEmail(login ?? '') && !includeDomainEmail) {
-        return false;
     }
 
     // Hide chat threads where the parent message is pending removal

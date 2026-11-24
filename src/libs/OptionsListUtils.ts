@@ -176,7 +176,6 @@ type GetOptionsConfig = {
     recentlyUsedPolicyReportFieldOptions?: string[];
     transactionViolations?: OnyxCollection<TransactionViolation[]>;
     includeInvoiceRooms?: boolean;
-    includeDomainEmail?: boolean;
     action?: IOUAction;
     shouldBoldTitleByDefault?: boolean;
 };
@@ -1757,7 +1756,6 @@ function getOptions(
         policyReportFieldOptions = [],
         recentlyUsedPolicyReportFieldOptions = [],
         includeInvoiceRooms = false,
-        includeDomainEmail = false,
         action,
         shouldBoldTitleByDefault = true,
     }: GetOptionsConfig,
@@ -1836,8 +1834,6 @@ function getOptions(
             isInFocusMode: false,
             excludeEmptyChats: false,
             includeSelfDM,
-            login: option.login,
-            includeDomainEmail,
         });
     });
 
@@ -1911,9 +1907,7 @@ function getOptions(
         return option;
     });
 
-    const havingLoginPersonalDetails = includeP2P
-        ? options.personalDetails.filter((detail) => !!detail?.login && !!detail.accountID && !detail?.isOptimisticPersonalDetail && (includeDomainEmail || !Str.isDomainEmail(detail.login)))
-        : [];
+    const havingLoginPersonalDetails = includeP2P ? options.personalDetails.filter((detail) => !!detail?.login && !!detail.accountID && !detail?.isOptimisticPersonalDetail) : [];
     let allPersonalDetailsOptions = havingLoginPersonalDetails;
 
     if (sortPersonalDetailsByAlphaAsc) {
