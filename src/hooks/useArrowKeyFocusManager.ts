@@ -12,7 +12,7 @@ type Config = {
     isActive?: boolean;
     itemsPerRow?: number;
     disableCyclicTraversal?: boolean;
-    allowHorizontalArrowKeys?: boolean;
+    disableHorizontalKeys?: boolean;
     allowNegativeIndexes?: boolean;
     isFocused?: boolean;
 };
@@ -47,10 +47,11 @@ export default function useArrowKeyFocusManager({
     isActive,
     itemsPerRow,
     disableCyclicTraversal = false,
-    allowHorizontalArrowKeys = false,
+    disableHorizontalKeys = false,
     allowNegativeIndexes = false,
     isFocused = true,
 }: Config): UseArrowKeyFocusManager {
+    const allowHorizontalArrowKeys = !!itemsPerRow;
     const [focusedIndex, setFocusedIndex] = useState(initialFocusedIndex);
     const prevIsFocusedIndex = usePrevious(focusedIndex);
     const arrowConfig = useMemo(
@@ -64,9 +65,9 @@ export default function useArrowKeyFocusManager({
     const horizontalArrowConfig = useMemo(
         () => ({
             excludedNodes: shouldExcludeTextAreaNodes ? ['TEXTAREA'] : [],
-            isActive: isActive && allowHorizontalArrowKeys,
+            isActive: isActive && !disableHorizontalKeys,
         }),
-        [isActive, shouldExcludeTextAreaNodes, allowHorizontalArrowKeys],
+        [isActive, shouldExcludeTextAreaNodes, disableHorizontalKeys],
     );
 
     useEffect(() => {
@@ -84,11 +85,16 @@ export default function useArrowKeyFocusManager({
         const nextIndex = disableCyclicTraversal ? -1 : maxIndex;
 
         setFocusedIndex((actualIndex) => {
-            const currentFocusedIndex = actualIndex > 0 ? actualIndex - (itemsPerRow ?? 1) : nextIndex;
+            let currentFocusedIndex = -1;
+            if (allowHorizontalArrowKeys) {
+                currentFocusedIndex = actualIndex > 0 ? actualIndex - itemsPerRow : nextIndex;
+            } else {
+                currentFocusedIndex = actualIndex > 0 ? actualIndex - 1 : nextIndex;
+            }
             let newFocusedIndex = currentFocusedIndex;
 
             while (disabledIndexes.includes(newFocusedIndex)) {
-                newFocusedIndex -= itemsPerRow ?? 1;
+                newFocusedIndex -= allowHorizontalArrowKeys ? itemsPerRow : 1;
                 if (newFocusedIndex < 0) {
                     if (disableCyclicTraversal) {
                         if (!allowNegativeIndexes) {
@@ -121,8 +127,10 @@ export default function useArrowKeyFocusManager({
 
             if (actualIndex === -1) {
                 currentFocusedIndex = 0;
+            } else if (allowHorizontalArrowKeys) {
+                currentFocusedIndex = actualIndex < maxIndex ? actualIndex + itemsPerRow : nextIndex;
             } else {
-                currentFocusedIndex = actualIndex < maxIndex ? actualIndex + (itemsPerRow ?? 1) : nextIndex;
+                currentFocusedIndex = actualIndex < maxIndex ? actualIndex + 1 : nextIndex;
             }
 
             if (disableCyclicTraversal && currentFocusedIndex > maxIndex) {
@@ -134,7 +142,7 @@ export default function useArrowKeyFocusManager({
                 if (actualIndex < 0) {
                     newFocusedIndex += 1;
                 } else {
-                    newFocusedIndex += itemsPerRow ?? 1;
+                    newFocusedIndex += allowHorizontalArrowKeys ? itemsPerRow : 1;
                 }
 
                 if (newFocusedIndex > maxIndex) {
@@ -162,7 +170,8 @@ export default function useArrowKeyFocusManager({
         const nextIndex = disableCyclicTraversal ? -1 : maxIndex;
 
         setFocusedIndex((actualIndex) => {
-            const currentFocusedIndex = actualIndex > 0 ? actualIndex - 1 : nextIndex;
+            let currentFocusedIndex = -1;
+            currentFocusedIndex = actualIndex > 0 ? actualIndex - 1 : nextIndex;
 
             let newFocusedIndex = currentFocusedIndex;
 
@@ -188,7 +197,8 @@ export default function useArrowKeyFocusManager({
         const nextIndex = disableCyclicTraversal ? maxIndex : 0;
 
         setFocusedIndex((actualIndex) => {
-            const currentFocusedIndex = actualIndex < maxIndex ? actualIndex + 1 : nextIndex;
+            let currentFocusedIndex = -1;
+            currentFocusedIndex = actualIndex < maxIndex ? actualIndex + 1 : nextIndex;
 
             let newFocusedIndex = currentFocusedIndex;
 
