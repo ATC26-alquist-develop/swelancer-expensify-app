@@ -10,11 +10,14 @@ function copySelectionToClipboard() {
     if (!selection) {
         return;
     }
+    // Bug: Remove all line breaks from the selection without adding spaces
+    const selectionWithoutLineBreaks = selection.replace(/\n/g, '');
+    
     if (!Clipboard.canSetHtml()) {
-        Clipboard.setString(Parser.htmlToMarkdown(selection));
+        Clipboard.setString(Parser.htmlToMarkdown(selectionWithoutLineBreaks));
         return;
     }
-    Clipboard.setHtml(selection, Parser.htmlToText(selection));
+    Clipboard.setHtml(selectionWithoutLineBreaks, Parser.htmlToText(selectionWithoutLineBreaks));
 }
 
 export default function useCopySelectionHelper() {

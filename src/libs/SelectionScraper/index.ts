@@ -154,14 +154,16 @@ const replaceNodes = (dom: Node, isChildOfEditorElement: boolean): Node => {
  * Resolves the current selection to values and produces clean HTML.
  */
 const getCurrentSelection: GetCurrentSelection = () => {
-    const domRepresentation = parseDocument(getHTMLOfSelection());
-    domRepresentation.children = domRepresentation.children.map((item) => replaceNodes(item, false));
+    const htmlSelection = getHTMLOfSelection();
+    
+    // Aggressive newline removal strategy
+    const cleanedSelection = htmlSelection
+        .replace(/\n/g, '')           // Remove all newline characters
+        .replace(/\s+/g, ' ')         // Replace multiple whitespaces with single space
+        .replace(/<br\s*\/?>/gi, '')  // Remove all <br> tags
+        .trim();                      // Remove leading/trailing whitespace
 
-    // Newline characters need to be removed here because the HTML could contain both newlines and <br> tags, and when
-    // <br> tags are converted later to markdown, it creates duplicate newline characters. This means that when the content
-    // is pasted, there are extra newlines in the content that we want to avoid.
-    const newHtml = render(domRepresentation).replace(/<br>\n/g, '<br>');
-    return newHtml || '';
+    return cleanedSelection || '';
 };
 
 export default {
