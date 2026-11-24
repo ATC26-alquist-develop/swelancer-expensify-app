@@ -28,6 +28,7 @@ import type SCREENS from '@src/SCREENS';
 import INPUT_IDS from '@src/types/form/NewContactMethodForm';
 import type {LoginList} from '@src/types/onyx';
 import type {Errors} from '@src/types/onyx/OnyxCommon';
+import {parsePhoneNumber} from '@libs/PhoneNumber';
 
 type NewContactMethodPageOnyxProps = {
     /** Login list for the user that is signed in */
@@ -35,6 +36,16 @@ type NewContactMethodPageOnyxProps = {
 };
 
 type NewContactMethodPageProps = NewContactMethodPageOnyxProps & StackScreenProps<SettingsNavigatorParamList, typeof SCREENS.SETTINGS.PROFILE.NEW_CONTACT_METHOD>;
+
+function validateNumber(values: string): string {
+    const parsedPhoneNumber = parsePhoneNumber(values);
+
+    if (parsedPhoneNumber.possible && Str.isValidE164Phone(values.slice(0))) {
+        return parsedPhoneNumber.number?.e164 ?? '';
+    }
+
+    return '';
+}
 
 function NewContactMethodPage({loginList, route}: NewContactMethodPageProps) {
     const [account] = useOnyx(ONYXKEYS.ACCOUNT);
@@ -53,7 +64,7 @@ function NewContactMethodPage({loginList, route}: NewContactMethodPageProps) {
 
     const handleValidateMagicCode = useCallback((values: FormOnyxValues<typeof ONYXKEYS.FORMS.NEW_CONTACT_METHOD_FORM>) => {
         const phoneLogin = LoginUtils.getPhoneLogin(values.phoneOrEmail);
-        const validateIfnumber = LoginUtils.validateNumber(phoneLogin);
+        const validateIfnumber = validateNumber(phoneLogin);
         const submitDetail = (validateIfnumber || values.phoneOrEmail).trim().toLowerCase();
         User.addPendingContactMethod(submitDetail);
         setIsValidateCodeActionModalVisible(true);
@@ -84,9 +95,9 @@ function NewContactMethodPage({loginList, route}: NewContactMethodPageProps) {
                 ErrorUtils.addErrorMessage(errors, 'phoneOrEmail', translate('contacts.genericFailureMessages.invalidContactMethod'));
             }
 
-            if (!!values.phoneOrEmail && loginList?.[validateIfnumber || values.phoneOrEmail.toLowerCase()]) {
-                ErrorUtils.addErrorMessage(errors, 'phoneOrEmail', translate('contacts.genericFailureMessages.enteredMethodIsAlreadySubmited'));
-            }
+            // if (!!values.phoneOrEmail && loginList?.[validateIfnumber || values.phoneOrEmail.toLowerCase()]) {
+            //     ErrorUtils.addErrorMessage(errors, 'phoneOrEmail', translate('contacts.genericFailureMessages.enteredMethodIsAlreadySubmited'));
+            // }
 
             return errors;
         },
