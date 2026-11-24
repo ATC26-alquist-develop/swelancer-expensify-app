@@ -1,5 +1,5 @@
 import type {StackScreenProps} from '@react-navigation/stack';
-import React, {useCallback} from 'react';
+import React, {useCallback, useState, useEffect} from 'react';
 import {View} from 'react-native';
 import type {OnyxEntry} from 'react-native-onyx';
 import type {SvgProps} from 'react-native-svg';
@@ -54,6 +54,7 @@ function getReportID(route: FlagCommentPageNavigationProps['route']) {
 }
 
 function FlagCommentPage({parentReportAction, route, report, parentReport, reportActions}: FlagCommentPageProps) {
+    const [hasPageReloaded, setHasPageReloaded] = useState(false);
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
@@ -152,6 +153,36 @@ function FlagCommentPage({parentReportAction, route, report, parentReport, repor
         />
     ));
 
+    useEffect(() => {
+        const checkIfReloaded = () => {
+            const hasLoaded = sessionStorage.getItem('hasLoaded');
+            if (!hasLoaded) {
+                // First load
+                sessionStorage.setItem('hasLoaded', 'true');
+            } else {
+                // Page has been reloaded
+                setHasPageReloaded(true);
+            }
+        };
+
+        checkIfReloaded();
+
+        return () => {
+            // Clean up
+            sessionStorage.removeItem('hasLoaded');
+        };
+    }, []);
+
+    const handleBackPress = useCallback(() => {
+        if (hasPageReloaded) {
+            Navigation.resetToHome();
+        } else {
+            Navigation.goBack();
+        }
+        setHasPageReloaded(false);
+    }, [hasPageReloaded]);
+
+
     return (
         <ScreenWrapper
             includeSafeAreaPaddingBottom={false}
@@ -161,7 +192,7 @@ function FlagCommentPage({parentReportAction, route, report, parentReport, repor
                 <FullPageNotFoundView shouldShow={!ReportUtils.shouldShowFlagComment(getActionToFlag(), report)}>
                     <HeaderWithBackButton
                         title={translate('reportActionContextMenu.flagAsOffensive')}
-                        onBackButtonPress={() => Navigation.goBack(route.params.backTo)}
+                        onBackButtonPress={handleBackPress}
                     />
                     <ScrollView
                         contentContainerStyle={safeAreaPaddingBottomStyle}

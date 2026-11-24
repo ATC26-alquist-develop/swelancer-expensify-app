@@ -113,9 +113,6 @@ type HeaderWithBackButtonProps = Partial<ChildrenProps> & {
     /** Single execution function to prevent concurrent navigation actions */
     singleExecution?: <T extends unknown[]>(action: Action<T>) => Action<T>;
 
-    /** Whether we should navigate to report page when the route have a topMostReport  */
-    shouldNavigateToTopMostReport?: boolean;
-
     /** The fill color for the icon. Can be hex, rgb, rgba, or valid react-native named color such as 'red' or 'blue'. */
     iconFill?: string;
 

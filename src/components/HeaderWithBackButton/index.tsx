@@ -60,7 +60,6 @@ function HeaderWithBackButton({
     children = null,
     shouldOverlayDots = false,
     shouldOverlay = false,
-    shouldNavigateToTopMostReport = false,
     shouldDisplaySearchRouter = false,
     progressBarPercentage,
     style,
@@ -154,12 +153,7 @@ function HeaderWithBackButton({
                                 if (isKeyboardShown) {
                                     Keyboard.dismiss();
                                 }
-                                const topmostReportId = Navigation.getTopmostReportId();
-                                if (shouldNavigateToTopMostReport && topmostReportId) {
-                                    Navigation.navigate(ROUTES.REPORT_WITH_ID.getRoute(topmostReportId));
-                                } else {
-                                    onBackButtonPress();
-                                }
+                                onBackButtonPress();
                             }}
                             style={[styles.touchableButtonImage]}
                             role={CONST.ROLE.BUTTON}

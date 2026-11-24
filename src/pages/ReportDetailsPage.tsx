@@ -741,7 +741,9 @@ function ReportDetailsPage({policies, report, route}: ReportDetailsPageProps) {
             <FullPageNotFoundView shouldShow={isEmptyObject(report)}>
                 <HeaderWithBackButton
                     title={translate('common.details')}
-                    onBackButtonPress={() => Navigation.goBack(backTo)}
+                    onBackButtonPress={() => {
+                        Navigation.goBack();
+                    }}
                 />
                 <ScrollView style={[styles.flex1]}>
                     <View style={[styles.reportDetailsTitleContainer, styles.pb0]}>
