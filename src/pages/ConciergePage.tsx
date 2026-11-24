@@ -47,12 +47,12 @@ function ConciergePage({session}: ConciergePageProps) {
         }
     });
 
-    useEffect(() => {
-        isUnmounted.current = false;
-        return () => {
+    useEffect(
+        () => () => {
             isUnmounted.current = true;
-        };
-    }, []);
+        },
+        [],
+    );
 
     return (
         <ScreenWrapper testID={ConciergePage.displayName}>
