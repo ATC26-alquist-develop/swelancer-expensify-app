@@ -246,7 +246,6 @@ const createTooltipStyleUtils: StyleUtilGenerator<GetTooltipStylesStyleUtil> = (
                 fontSize: variables.fontSizeSmall,
                 overflow: 'hidden',
                 lineHeight: variables.lineHeightSmall,
-                textAlign: 'center',
             },
             pointerWrapperStyle: {
                 ...tooltipPlatformStyle,

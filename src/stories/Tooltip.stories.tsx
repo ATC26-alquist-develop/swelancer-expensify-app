@@ -32,7 +32,7 @@ function Template(props: TooltipExtendedProps) {
                         display: 'flex',
                         backgroundColor: 'red',
                         justifyContent: 'center',
-                        alignItems: 'center',
+                        alignItems: 'left',
                     }}
                 >
                     Hover me
