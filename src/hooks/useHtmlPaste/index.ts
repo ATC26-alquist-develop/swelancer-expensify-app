@@ -67,13 +67,17 @@ const useHtmlPaste: UseHtmlPaste = (textInputRef, preHtmlPasteCallback, removeLi
             // Remove all HTML tags, decode HTML entities, and leave only plain text
             const strippedHtml = html
                 .replace(/&lt;[^&]*&gt;/g, '')   // Remove encoded HTML tags
-                .replace(/<[^>]*>/g, '')        // Remove regular HTML tags
-                .replace(/&amp;/g, '&')         // Decode HTML entities
+                .replace(/<br\s*\/?>/gi, '\n')   // Replace <br> and <br/> with newline
+                .replace(/<\/p>/gi, '\n')        // Replace closing </p> with newline
+                .replace(/<\/div>/gi, '\n')      // Replace closing </div> with newline
+                .replace(/<[^>]*>/g, '')         // Remove remaining HTML tags
+                .replace(/&amp;/g, '&')          // Decode HTML entities
                 .replace(/&quot;/g, '"')
                 .replace(/&apos;/g, "'")
                 .replace(/&lt;/g, '<')
                 .replace(/&gt;/g, '>')
-                .replace(/\s*--\s*/g, ' ')      // Replace " -- " with a single space
+                .replace(/\s*--\s*/g, ' ')       // Replace " -- " with a single space
+                .replace(/\n{3,}/g, '\n\n')      // Collapse multiple blank lines into max two newlines
                 .trim();
             paste(strippedHtml);
         },
