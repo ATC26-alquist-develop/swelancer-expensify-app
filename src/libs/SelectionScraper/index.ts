@@ -150,16 +150,37 @@ const replaceNodes = (dom: Node, isChildOfEditorElement: boolean): Node => {
 };
 
 /**
+ * Preprocess markdown headers to ensure they have a newline after the '#'
+ * @param html - HTML string to preprocess
+ * @returns Preprocessed HTML string
+ */
+const preprocessMarkdownHeader = (html: string): string => {
+    // Use a more robust regex to add newline after markdown headers
+    return html.replace(/(<h1[^>]*>)(#?)([^<]*<\/h1>)/g, (match, openTag, hash, rest) => {
+        // If no hash is present, add it with a newline
+        if (!hash) {
+            return `${openTag}#\n${rest}`;
+        }
+        // If hash is present but no newline, add it
+        if (hash && !rest.startsWith('\n')) {
+            return `${openTag}${hash}\n${rest}`;
+        }
+        return match;
+    });
+};
+
+/**
  * Resolves the current selection to values and produces clean HTML.
  */
 const getCurrentSelection: GetCurrentSelection = () => {
     const domRepresentation = parseDocument(getHTMLOfSelection());
     domRepresentation.children = domRepresentation.children.map((item) => replaceNodes(item, false));
 
-    // Newline characters need to be removed here because the HTML could contain both newlines and <br> tags, and when
-    // <br> tags are converted later to markdown, it creates duplicate newline characters. This means that when the content
-    // is pasted, there are extra newlines in the content that we want to avoid.
-    const newHtml = render(domRepresentation).replace(/<br>\n/g, '<br>');
+    let newHtml = render(domRepresentation).replace(/<br>\n/g, '<br>');
+    
+    // Preprocess HTML to ensure markdown headers have newline
+    newHtml = preprocessMarkdownHeader(newHtml);
+    
     return newHtml || '';
 };
 
