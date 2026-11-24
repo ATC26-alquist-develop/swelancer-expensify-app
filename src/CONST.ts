@@ -737,7 +737,7 @@ const CONST = {
     CFPB_PREPAID_URL: 'https://cfpb.gov/prepaid',
     STAGING_NEW_EXPENSIFY_URL: 'https://staging.new.expensify.com',
     NEWHELP_URL: 'https://help.expensify.com',
-    INTERNAL_DEV_EXPENSIFY_URL: 'https://www.expensify.com.dev',
+    INTERNAL_DEV_EXPENSIFY_URL: 'https://www.expensify.com',
     STAGING_EXPENSIFY_URL: 'https://staging.expensify.com',
     EXPENSIFY_URL: 'https://www.expensify.com',
     BANK_ACCOUNT_PERSONAL_DOCUMENTATION_INFO_URL:
