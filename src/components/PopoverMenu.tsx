@@ -155,14 +155,14 @@ function PopoverMenu({
             onItemSelected(selectedItem, index);
             Modal.close(
                 () => {
-                    selectedItem.onSelected?.();
+                    // selectedItem.onSelected?.();
                 },
                 undefined,
                 selectedItem.shouldCloseAllModals,
             );
         } else {
             onItemSelected(selectedItem, index);
-            selectedItem.onSelected?.();
+            // selectedItem.onSelected?.();
         }
     };
 
