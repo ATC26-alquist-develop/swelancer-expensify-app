@@ -285,10 +285,7 @@ function ReportActionItemMessageEdit(
         [debouncedSaveDraft, preferredSkinTone, preferredLocale, selection.end],
     );
 
-    useEffect(() => {
-        updateDraft(draft);
-        // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps -- run this only when language is changed
-    }, [action.reportActionID, preferredLocale]);
+  
 
     /**
      * Delete the draft of the comment being edited. This will take the comment out of "edit mode" with the old content.
