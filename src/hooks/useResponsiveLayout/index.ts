@@ -1,11 +1,12 @@
 import {NavigationContainerRefContext, NavigationContext} from '@react-navigation/native';
-import {useContext, useMemo} from 'react';
+import {useContext, useMemo, useEffect, useState} from 'react';
 import {Dimensions} from 'react-native';
 import ModalContext from '@components/Modal/ModalContext';
 import useWindowDimensions from '@hooks/useWindowDimensions';
 import variables from '@styles/variables';
 import CONST from '@src/CONST';
 import NAVIGATORS from '@src/NAVIGATORS';
+import Navigation from '@libs/Navigation/Navigation';
 import type ResponsiveLayoutResult from './types';
 
 /**
@@ -64,8 +65,15 @@ export default function useResponsiveLayout(): ResponsiveLayoutResult {
         // or there's a "right modal navigator" or "left modal navigator" on the top of the root navigation stack
         // and the component calling this hook is not the child of another modal type, such as a confirm modal
         (isDisplayedInNarrowModalNavigator && !activeModalType);
+    
+    const [isInModal, setIsInModal] = useState(Navigation.isDisplayedInModal());
+    useEffect(() => {
+        Navigation.isNavigationReady().then(() => {
+            setIsInModal(Navigation.isDisplayedInModal());
+        });
+    }, []);
 
-    const shouldUseNarrowLayout = isSmallScreenWidth || isInNarrowPaneModal;
+    const shouldUseNarrowLayout = isInModal;
 
     return {
         shouldUseNarrowLayout,

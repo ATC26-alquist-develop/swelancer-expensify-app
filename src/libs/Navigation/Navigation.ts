@@ -418,6 +418,13 @@ function getTopMostCentralPaneRouteFromRootState() {
     return getTopmostCentralPaneRoute(navigationRef.getRootState() as State<RootStackParamList>);
 }
 
+function isDisplayedInModal() {
+    const state = navigationRef?.current?.getRootState();
+    const lastRoute = state?.routes?.at(-1);
+    const lastRouteName = lastRoute?.name;
+    return lastRouteName === NAVIGATORS.LEFT_MODAL_NAVIGATOR || lastRouteName === NAVIGATORS.RIGHT_MODAL_NAVIGATOR;
+}
+
 export default {
     setShouldPopAllStateOnUP,
     navigate,
@@ -442,6 +449,7 @@ export default {
     closeRHPFlow,
     setNavigationActionToMicrotaskQueue,
     getTopMostCentralPaneRouteFromRootState,
+    isDisplayedInModal,
 };
 
 export {navigationRef};
