@@ -243,8 +243,7 @@ function getRateForP2P(currency: string): RateAndUnit {
  */
 function getDistanceRequestAmount(distance: number, unit: Unit, rate: number): number {
     const convertedDistance = convertDistanceUnit(distance, unit);
-    const roundedDistance = parseFloat(convertedDistance.toFixed(2));
-    return Math.round(roundedDistance * rate);
+    return convertedDistance * rate;
 }
 
 /**
