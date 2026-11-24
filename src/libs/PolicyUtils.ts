@@ -11,7 +11,9 @@ import type {PolicyFeatureName, Rate, Tenant} from '@src/types/onyx/Policy';
 import type PolicyEmployee from '@src/types/onyx/PolicyEmployee';
 import type {EmptyObject} from '@src/types/utils/EmptyObject';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
-import Navigation from './Navigation/Navigation';
+import getPolicyIDFromState from './Navigation/getPolicyIDFromState';
+import Navigation, {navigationRef} from './Navigation/Navigation';
+import type {RootStackParamList, State} from './Navigation/types';
 import * as NetworkStore from './Network/NetworkStore';
 import {getAccountIDsByLogins, getLoginsByAccountIDs, getPersonalDetailByEmail} from './PersonalDetailsUtils';
 
@@ -404,6 +406,13 @@ function getAdminEmployees(policy: OnyxEntry<Policy>): PolicyEmployee[] {
 }
 
 /**
+ *  Get the currently selected policy ID stored in the navigation state.
+ */
+function getPolicyIDFromNavigationState() {
+    return getPolicyIDFromState(navigationRef.getRootState() as State<RootStackParamList>);
+}
+
+/**
  * Returns the policy of the report
  */
 function getPolicy(policyID: string | undefined): Policy | EmptyObject {
@@ -530,6 +539,7 @@ export {
     getXeroBankAccountsWithDefaultSelect,
     getCustomUnit,
     getCustomUnitRate,
+    getPolicyIDFromNavigationState,
     sortWorkspacesBySelected,
 };
 
