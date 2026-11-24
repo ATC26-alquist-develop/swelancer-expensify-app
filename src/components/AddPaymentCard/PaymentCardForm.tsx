@@ -265,7 +265,6 @@ function PaymentCardForm({
                             inputID={INPUT_IDS.ADDRESS_STREET}
                             label={translate(label.defaults.billingAddress)}
                             containerStyles={[styles.mt5]}
-                            maxInputLength={CONST.FORM_CHARACTER_LIMIT}
                             // Limit the address search only to the USA until we fully can support international debit cards
                             isLimitedToUSA
                         />

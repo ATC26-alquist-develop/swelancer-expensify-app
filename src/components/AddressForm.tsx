@@ -161,7 +161,6 @@ function AddressForm({
                         zipCode: INPUT_IDS.ZIP_POST_CODE,
                         country: INPUT_IDS.COUNTRY as Country,
                     }}
-                    maxInputLength={CONST.FORM_CHARACTER_LIMIT}
                     shouldSaveDraft={shouldSaveDraft}
                 />
             </View>
