@@ -111,18 +111,11 @@ function PolicyDistanceRatesPage({
                     keyForList: value.customUnitRateID ?? '',
                     isSelected: selectedDistanceRates.find((rate) => rate.customUnitRateID === value.customUnitRateID) !== undefined && canSelectMultiple,
                     isDisabled: value.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.DELETE,
-                    pendingAction:
-                        value.pendingAction ??
-                        value.pendingFields?.rate ??
-                        value.pendingFields?.enabled ??
-                        value.pendingFields?.currency ??
-                        value.pendingFields?.taxRateExternalID ??
-                        value.pendingFields?.taxClaimablePercentage ??
-                        (policy?.pendingAction === CONST.RED_BRICK_ROAD_PENDING_ACTION.ADD ? policy?.pendingAction : undefined),
+                    pendingAction: value.pendingAction ?? value.pendingFields?.rate ?? value.pendingFields?.enabled ?? value.pendingFields?.currency,
                     errors: value.errors ?? undefined,
                     rightElement: <ListItemRightCaretWithLabel labelText={value.enabled ? translate('workspace.common.enabled') : translate('workspace.common.disabled')} />,
                 })),
-        [customUnit?.attributes?.unit, customUnitRates, selectedDistanceRates, translate, policy?.pendingAction, canSelectMultiple],
+        [customUnit?.attributes?.unit, customUnitRates, selectedDistanceRates, translate, canSelectMultiple],
     );
 
     const addRate = () => {
