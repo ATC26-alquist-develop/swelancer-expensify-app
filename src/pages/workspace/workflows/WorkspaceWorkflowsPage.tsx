@@ -1,7 +1,7 @@
 import {useFocusEffect} from '@react-navigation/native';
 import type {StackScreenProps} from '@react-navigation/stack';
 import React, {useCallback, useMemo, useState} from 'react';
-import {ActivityIndicator, View} from 'react-native';
+import {View} from 'react-native';
 import {useOnyx} from 'react-native-onyx';
 import ApprovalWorkflowSection from '@components/ApprovalWorkflowSection';
 import ConfirmModal from '@components/ConfirmModal';
@@ -51,6 +51,7 @@ function WorkspaceWorkflowsPage({policy, route}: WorkspaceWorkflowsPageProps) {
     const {shouldUseNarrowLayout, isSmallScreenWidth} = useResponsiveLayout();
 
     const policyApproverEmail = policy?.approver;
+    const containerStyle = useMemo(() => [styles.ph8, styles.mhn8, styles.ml11, styles.pv3, styles.pr0, styles.pl4, styles.mr0, styles.widthAuto, styles.mt4], [styles]);
     const [isCurrencyModalOpen, setIsCurrencyModalOpen] = useState(false);
     const [personalDetails] = useOnyx(ONYXKEYS.PERSONAL_DETAILS_LIST);
     const {approvalWorkflows, availableMembers, usedApproverEmails} = useMemo(
@@ -109,10 +110,8 @@ function WorkspaceWorkflowsPage({policy, route}: WorkspaceWorkflowsPageProps) {
     }, [policy, route.params.policyID, availableMembers, usedApproverEmails]);
 
     const optionItems: ToggleSettingOptionRowProps[] = useMemo(() => {
-        const {accountNumber, addressName, bankName, bankAccountID} = policy?.achAccount ?? {};
-        const shouldShowBankAccount = !!bankAccountID && policy?.reimbursementChoice === CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_YES;
-        const bankIcon = getBankIcon({bankName: bankName as BankName, isCard: false, styles});
-
+        const {accountNumber, addressName, bankName} = policy?.achAccount ?? {};
+        const hasVBA = !!policy?.achAccount;
         let bankDisplayName = bankName ?? addressName;
         if (accountNumber && bankDisplayName !== accountNumber) {
             bankDisplayName += ` ${accountNumber.slice(-5)}`;
@@ -200,73 +199,60 @@ function WorkspaceWorkflowsPage({policy, route}: WorkspaceWorkflowsPageProps) {
                     let newReimbursementChoice;
                     if (!isEnabled) {
                         newReimbursementChoice = CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_NO;
-                    } else if (!!policy?.achAccount && !Policy.isCurrencySupportedForDirectReimbursement(policy?.outputCurrency ?? '')) {
+                    } else if (hasVBA && !Policy.isCurrencySupportedForDirectReimbursement(policy?.outputCurrency ?? '')) {
                         newReimbursementChoice = CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_MANUAL;
                     } else {
-                        newReimbursementChoice = CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_YES;
+                        newReimbursementChoice = hasVBA ? CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_YES : CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_MANUAL;
                     }
 
                     const newReimburserEmail = policy?.achAccount?.reimburser ?? policy?.owner;
                     Policy.setWorkspaceReimbursement(route.params.policyID, newReimbursementChoice, newReimburserEmail ?? '');
                 },
-                subMenuItems:
-                    !isOffline && policy?.isLoadingWorkspaceReimbursement === true ? (
-                        <ActivityIndicator
-                            size={CONST.ACTIVITY_INDICATOR_SIZE.LARGE}
-                            color={theme.spinner}
-                            style={styles.mt7}
+                subMenuItems: (
+                    <>
+                        <MenuItem
+                            titleStyle={hasVBA ? styles.textLabelSupportingNormal : styles.textLabelSupportingEmptyValue}
+                            descriptionTextStyle={styles.textNormalThemeText}
+                            title={
+                                hasVBA && policy?.reimbursementChoice === CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_YES
+                                    ? translate('common.bankAccount')
+                                    : translate('workflowsPage.connectBankAccount')
+                            }
+                            description={bankDisplayName}
+                            disabled={isOffline || !isPolicyAdmin}
+                            onPress={() => {
+                                if (!Policy.isCurrencySupportedForDirectReimbursement(policy?.outputCurrency ?? '')) {
+                                    setIsCurrencyModalOpen(true);
+                                    return;
+                                }
+                                navigateToBankAccountRoute(route.params.policyID, ROUTES.WORKSPACE_WORKFLOWS.getRoute(route.params.policyID));
+                            }}
+                            shouldShowRightIcon={!isOffline && isPolicyAdmin}
+                            wrapperStyle={containerStyle}
+                            hoverAndPressStyle={[styles.mr0, styles.br2]}
                         />
-                    ) : (
-                        <>
-                            {shouldShowBankAccount && (
-                                <View style={[styles.sectionMenuItemTopDescription, styles.mt5, styles.pb1, styles.pt1]}>
-                                    <Text style={[styles.textLabelSupportingNormal, styles.colorMuted]}>{translate('workflowsPayerPage.paymentAccount')}</Text>
-                                </View>
-                            )}
-                            <MenuItem
-                                title={shouldShowBankAccount ? addressName : translate('workflowsPage.connectBankAccount')}
-                                titleStyle={shouldShowBankAccount ? undefined : styles.textLabelSupportingEmptyValue}
-                                description={getPaymentMethodDescription(CONST.PAYMENT_METHODS.BUSINESS_BANK_ACCOUNT, policy?.achAccount ?? {})}
-                                onPress={() => {
-                                    if (!Policy.isCurrencySupportedForDirectReimbursement(policy?.outputCurrency ?? '')) {
-                                        setIsCurrencyModalOpen(true);
-                                        return;
-                                    }
-                                    navigateToBankAccountRoute(route.params.policyID, ROUTES.WORKSPACE_WORKFLOWS.getRoute(route.params.policyID));
-                                }}
-                                icon={shouldShowBankAccount ? bankIcon.icon : undefined}
-                                iconHeight={bankIcon.iconHeight ?? bankIcon.iconSize}
-                                iconWidth={bankIcon.iconWidth ?? bankIcon.iconSize}
-                                iconStyles={bankIcon.iconStyles}
-                                disabled={isOffline || !isPolicyAdmin}
-                                shouldGreyOutWhenDisabled={!policy?.pendingFields?.reimbursementChoice}
-                                shouldShowRightIcon={!isOffline && isPolicyAdmin}
-                                wrapperStyle={[styles.sectionMenuItemTopDescription, styles.mt3, styles.mbn3]}
-                                displayInDefaultIconColor
-                                brickRoadIndicator={hasReimburserError ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR : undefined}
-                            />
-                            {shouldShowBankAccount && (
-                                <OfflineWithFeedback
-                                    pendingAction={policy?.pendingFields?.reimburser}
-                                    shouldDisableOpacity={isOffline && !!policy?.pendingFields?.reimbursementChoice && !!policy?.pendingFields?.reimburser}
-                                    errors={ErrorUtils.getLatestErrorField(policy ?? {}, CONST.POLICY.COLLECTION_KEYS.REIMBURSER)}
-                                    onClose={() => Policy.clearPolicyErrorField(policy?.id ?? '', CONST.POLICY.COLLECTION_KEYS.REIMBURSER)}
-                                    errorRowStyles={[styles.ml7]}
-                                >
-                                    <MenuItemWithTopDescription
-                                        title={displayNameForAuthorizedPayer ?? ''}
-                                        titleStyle={styles.textNormalThemeText}
-                                        descriptionTextStyle={styles.textLabelSupportingNormal}
-                                        description={translate('workflowsPayerPage.payer')}
-                                        onPress={() => Navigation.navigate(ROUTES.WORKSPACE_WORKFLOWS_PAYER.getRoute(route.params.policyID))}
-                                        shouldShowRightIcon
-                                        wrapperStyle={[styles.sectionMenuItemTopDescription, styles.mt3, styles.mbn3]}
-                                        brickRoadIndicator={hasReimburserError ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR : undefined}
-                                    />
-                                </OfflineWithFeedback>
-                            )}
-                        </>
-                    ),
+                        {hasVBA && policy?.reimbursementChoice === CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_YES && (
+                            <OfflineWithFeedback
+                                pendingAction={policy?.pendingFields?.reimburser}
+                                errors={ErrorUtils.getLatestErrorField(policy ?? {}, CONST.POLICY.COLLECTION_KEYS.REIMBURSER)}
+                                onClose={() => Policy.clearPolicyErrorField(policy?.id ?? '', CONST.POLICY.COLLECTION_KEYS.REIMBURSER)}
+                                errorRowStyles={[styles.ml7]}
+                            >
+                                <MenuItem
+                                    titleStyle={styles.textLabelSupportingNormal}
+                                    descriptionTextStyle={styles.textNormalThemeText}
+                                    title={translate('workflowsPayerPage.title')}
+                                    description={displayNameForAuthorizedPayer}
+                                    onPress={() => Navigation.navigate(ROUTES.WORKSPACE_WORKFLOWS_PAYER.getRoute(route.params.policyID))}
+                                    shouldShowRightIcon
+                                    wrapperStyle={containerStyle}
+                                    hoverAndPressStyle={[styles.mr0, styles.br2]}
+                                    brickRoadIndicator={hasReimburserError ? CONST.BRICK_ROAD_INDICATOR_STATUS.ERROR : undefined}
+                                />
+                            </OfflineWithFeedback>
+                        )}
+                    </>
+                ),
                 isEndOptionRow: true,
                 isActive: policy?.reimbursementChoice !== CONST.POLICY.REIMBURSEMENT_CHOICES.REIMBURSEMENT_NO,
                 pendingAction: policy?.pendingFields?.reimbursementChoice,
@@ -285,8 +271,6 @@ function WorkspaceWorkflowsPage({policy, route}: WorkspaceWorkflowsPageProps) {
         addApprovalAction,
         isOffline,
         isPolicyAdmin,
-        displayNameForAuthorizedPayer,
-        route.params.policyID,
     ]);
 
     const renderOptionItem = (item: ToggleSettingOptionRowProps, index: number) => (
