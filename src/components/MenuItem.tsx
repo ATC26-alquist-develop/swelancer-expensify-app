@@ -598,7 +598,7 @@ function MenuItem(
                             >
                                 {({pressed}) => (
                                     <View style={[styles.flex1]}>
-                                        <View style={[styles.flexRow]}>
+                                        <View style={[styles.flexRow, {minWidth: 'max-content'}]}>
                                             <View style={[styles.flexColumn, styles.flex1]}>
                                                 {!!label && isLabelHoverable && (
                                                     <View style={[icon ? styles.mb2 : null, labelStyle]}>
@@ -735,7 +735,7 @@ function MenuItem(
                                                         {!!description && !shouldShowDescriptionOnTop && (
                                                             <Text
                                                                 style={descriptionTextStyles}
-                                                                numberOfLines={numberOfLinesDescription}
+                                                                numberOfLines={1}
                                                             >
                                                                 {description}
                                                             </Text>
