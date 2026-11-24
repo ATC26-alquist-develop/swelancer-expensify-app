@@ -720,7 +720,7 @@ function BaseSelectionList<TItem extends ListItem>(
                             </View>
                         )}
                     {!!headerContent && headerContent}
-                    {flattenedSections.allOptions.length === 0 && (showLoadingPlaceholder || shouldShowListEmptyContent) ? (
+                    {flattenedSections.allOptions.length === 0 ? (
                         renderListEmptyContent()
                     ) : (
                         <>
