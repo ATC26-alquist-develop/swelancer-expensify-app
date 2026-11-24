@@ -123,7 +123,6 @@ function ReportActionItemEmojiReactions({
                 onPress,
                 onReactionListOpen,
                 reactionEmojiName: emojiName,
-                pendingAction: emojiReaction.pendingAction,
             };
         }),
         ['oldestTimestamp'],
@@ -150,20 +149,15 @@ function ReportActionItemEmojiReactions({
                             key={reaction.reactionEmojiName}
                         >
                             <View>
-                                <OfflineWithFeedback
-                                    pendingAction={reaction.pendingAction}
-                                    shouldDisableOpacity={!!reportAction.pendingAction}
-                                >
-                                    <EmojiReactionBubble
-                                        ref={(ref) => (popoverReactionListAnchors.current[reaction.reactionEmojiName] = ref ?? null)}
-                                        count={reaction.reactionCount}
-                                        emojiCodes={reaction.emojiCodes}
-                                        onPress={reaction.onPress}
-                                        hasUserReacted={reaction.hasUserReacted}
-                                        onReactionListOpen={reaction.onReactionListOpen}
-                                        shouldBlockReactions={shouldBlockReactions}
-                                    />
-                                </OfflineWithFeedback>
+                                <EmojiReactionBubble
+                                    ref={(ref) => (popoverReactionListAnchors.current[reaction.reactionEmojiName] = ref ?? null)}
+                                    count={reaction.reactionCount}
+                                    emojiCodes={reaction.emojiCodes}
+                                    onPress={reaction.onPress}
+                                    hasUserReacted={reaction.hasUserReacted}
+                                    onReactionListOpen={reaction.onReactionListOpen}
+                                    shouldBlockReactions={shouldBlockReactions}
+                                />
                             </View>
                         </Tooltip>
                     );
