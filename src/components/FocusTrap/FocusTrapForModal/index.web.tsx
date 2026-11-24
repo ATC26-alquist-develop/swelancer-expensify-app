@@ -4,14 +4,14 @@ import sharedTrapStack from '@components/FocusTrap/sharedTrapStack';
 import ReportActionComposeFocusManager from '@libs/ReportActionComposeFocusManager';
 import type FocusTrapForModalProps from './FocusTrapForModalProps';
 
-function FocusTrapForModal({children, active, initialFocus = false}: FocusTrapForModalProps) {
+function FocusTrapForModal({children, active}: FocusTrapForModalProps) {
     return (
         <FocusTrap
             active={active}
             focusTrapOptions={{
                 trapStack: sharedTrapStack,
                 clickOutsideDeactivates: true,
-                initialFocus,
+                initialFocus: false,
                 fallbackFocus: document.body,
                 setReturnFocus: (element) => {
                     if (ReportActionComposeFocusManager.isFocused()) {

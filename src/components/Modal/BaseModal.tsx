@@ -52,7 +52,6 @@ function BaseModal(
         shouldEnableNewFocusManagement = false,
         restoreFocusType,
         shouldUseModalPaddingStyle = true,
-        initialFocus = false,
     }: BaseModalProps,
     ref: React.ForwardedRef<View>,
 ) {
@@ -266,7 +265,6 @@ function BaseModal(
                         <PortalHost name="modal" />
                         <FocusTrapForModal
                             active={isVisible}
-                            initialFocus={initialFocus}
                         >
                             <View
                                 style={[styles.defaultModalContainer, modalPaddingStyles, modalContainerStyle, !isVisible && styles.pointerEventsNone]}

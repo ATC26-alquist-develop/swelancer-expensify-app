@@ -1,4 +1,4 @@
-import React, {useMemo} from 'react';
+import React, {useMemo, useRef, useEffect} from 'react';
 import {Keyboard, StyleSheet, View} from 'react-native';
 import Avatar from '@components/Avatar';
 import AvatarWithDisplayName from '@components/AvatarWithDisplayName';
@@ -129,6 +129,14 @@ function HeaderWithBackButton({
         translate,
     ]);
 
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (shouldShowCloseButton && closeButtonRef.current) {
+            closeButtonRef.current.focus();
+        }
+    }, [shouldShowCloseButton]);
+
     return (
         <View
             // Hover on some part of close icons will not work on Electron if dragArea is true
@@ -251,6 +259,7 @@ function HeaderWithBackButton({
                     {shouldShowCloseButton && (
                         <Tooltip text={translate('common.close')}>
                             <PressableWithoutFeedback
+                                ref={closeButtonRef}
                                 onPress={onCloseButtonPress}
                                 style={[styles.touchableButtonImage]}
                                 role={CONST.ROLE.BUTTON}
