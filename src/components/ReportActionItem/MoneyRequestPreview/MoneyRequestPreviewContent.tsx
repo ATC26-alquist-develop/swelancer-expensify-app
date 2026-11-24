@@ -383,7 +383,6 @@ function MoneyRequestPreviewContent({
                                                 <View style={styles.moneyRequestPreviewBoxAvatar}>
                                                     <MultipleAvatars
                                                         icons={sortedParticipantAvatars}
-                                                        shouldStackHorizontally
                                                         size="small"
                                                         shouldUseCardBackground
                                                     />
