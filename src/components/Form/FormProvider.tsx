@@ -380,7 +380,6 @@ function FormProvider(
                 onSubmit={submit}
                 inputRefs={inputRefs}
                 errors={errors}
-                enabledWhenOffline={enabledWhenOffline}
             >
                 {typeof children === 'function' ? children({inputValues}) : children}
             </FormWrapper>
