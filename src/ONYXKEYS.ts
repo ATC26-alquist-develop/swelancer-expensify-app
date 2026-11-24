@@ -666,8 +666,6 @@ const ONYXKEYS = {
         SEARCH_ADVANCED_FILTERS_FORM_DRAFT: 'searchAdvancedFiltersFormDraft',
         SEARCH_SAVED_SEARCH_RENAME_FORM: 'searchSavedSearchRenameForm',
         SEARCH_SAVED_SEARCH_RENAME_FORM_DRAFT: 'searchSavedSearchRenameFormDraft',
-        TEXT_PICKER_MODAL_FORM: 'textPickerModalForm',
-        TEXT_PICKER_MODAL_FORM_DRAFT: 'textPickerModalFormDraft',
         RULES_CUSTOM_NAME_MODAL_FORM: 'rulesCustomNameModalForm',
         RULES_CUSTOM_NAME_MODAL_FORM_DRAFT: 'rulesCustomNameModalFormDraft',
         RULES_AUTO_APPROVE_REPORTS_UNDER_MODAL_FORM: 'rulesAutoApproveReportsUnderModalForm',
@@ -772,7 +770,6 @@ type OnyxFormValuesMapping = {
     [ONYXKEYS.FORMS.NETSUITE_CUSTOM_FORM_ID_FORM]: FormTypes.NetSuiteCustomFormIDForm;
     [ONYXKEYS.FORMS.SAGE_INTACCT_DIMENSION_TYPE_FORM]: FormTypes.SageIntacctDimensionForm;
     [ONYXKEYS.FORMS.SEARCH_ADVANCED_FILTERS_FORM]: FormTypes.SearchAdvancedFiltersForm;
-    [ONYXKEYS.FORMS.TEXT_PICKER_MODAL_FORM]: FormTypes.TextPickerModalForm;
     [ONYXKEYS.FORMS.RULES_CUSTOM_NAME_MODAL_FORM]: FormTypes.RulesCustomNameModalForm;
     [ONYXKEYS.FORMS.RULES_AUTO_APPROVE_REPORTS_UNDER_MODAL_FORM]: FormTypes.RulesAutoApproveReportsUnderModalForm;
     [ONYXKEYS.FORMS.RULES_RANDOM_REPORT_AUDIT_MODAL_FORM]: FormTypes.RulesRandomReportAuditModalForm;

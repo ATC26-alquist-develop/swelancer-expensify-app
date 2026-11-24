@@ -1,7 +1,6 @@
 import type {StackScreenProps} from '@react-navigation/stack';
 import React, {useCallback} from 'react';
 import {View} from 'react-native';
-import {useOnyx} from 'react-native-onyx';
 import AmountPicker from '@components/AmountPicker';
 import FullPageNotFoundView from '@components/BlockingViews/FullPageNotFoundView';
 import FormProvider from '@components/Form/FormProvider';
@@ -36,7 +35,6 @@ function WorkspaceCreateTaxPage({
 }: WorkspaceCreateTaxPageProps) {
     const styles = useThemeStyles();
     const {translate} = useLocalize();
-    const [modal] = useOnyx(ONYXKEYS.MODAL);
 
     const submitForm = useCallback(
         ({value, ...values}: FormOnyxValues<typeof ONYXKEYS.FORMS.WORKSPACE_NEW_TAX_FORM>) => {
@@ -86,7 +84,6 @@ function WorkspaceCreateTaxPage({
                             submitButtonText={translate('common.save')}
                             enabledWhenOffline
                             shouldValidateOnBlur={false}
-                            disablePressOnEnter={!!modal?.isVisible}
                         >
                             <View style={styles.mhn5}>
                                 <InputWrapper
