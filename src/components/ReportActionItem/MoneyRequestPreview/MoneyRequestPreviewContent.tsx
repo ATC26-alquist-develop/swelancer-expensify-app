@@ -96,6 +96,17 @@ function MoneyRequestPreviewContent({
         sortedParticipantAvatars.push(ReportUtils.getWorkspaceIcon(chatReport));
     }
 
+    // For bill splits, limit avatars to show up to 4, with overflow indicator showing remaining count
+    // This ensures we show 3 avatars + "+N" when there are more than 4 participants
+    const billSplitAvatars = useMemo(() => {
+        if (!isBillSplit) {
+            return sortedParticipantAvatars;
+        }
+        // Limit to max 4 avatars for display
+        // MultipleAvatars will show the overflow "+N" for any avatars beyond maxAvatarsInRow
+        return sortedParticipantAvatars.slice(0, 4);
+    }, [isBillSplit, sortedParticipantAvatars]);
+
     // Pay button should only be visible to the manager of the report.
     const isCurrentUserManager = managerID === sessionAccountID;
 
@@ -382,9 +393,11 @@ function MoneyRequestPreviewContent({
                                             {isBillSplit && (
                                                 <View style={styles.moneyRequestPreviewBoxAvatar}>
                                                     <MultipleAvatars
-                                                        icons={sortedParticipantAvatars}
+                                                        icons={billSplitAvatars}
                                                         size="small"
                                                         shouldUseCardBackground
+                                                        shouldStackHorizontally
+                                                        maxAvatarsInRow={3}
                                                     />
                                                 </View>
                                             )}
