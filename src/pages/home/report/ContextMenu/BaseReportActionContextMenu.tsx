@@ -128,7 +128,6 @@ function BaseReportActionContextMenu({
     const menuItemRefs = useRef<MenuItemRefs>({});
     const [shouldKeepOpen, setShouldKeepOpen] = useState(false);
     const wrapperStyle = StyleUtils.getReportActionContextMenuStyles(isMini, shouldUseNarrowLayout);
-    const {isOffline} = useNetwork();
     const {isProduction} = useEnvironment();
     const threedotRef = useRef<View>(null);
 
@@ -148,8 +147,8 @@ function BaseReportActionContextMenu({
     const {reportActions: paginatedReportActions} = usePaginatedReportActions(childReport?.reportID ?? '-1');
 
     const transactionThreadReportID = useMemo(
-        () => ReportActionsUtils.getOneTransactionThreadReportID(childReport?.reportID ?? '-1', paginatedReportActions ?? [], isOffline),
-        [childReport?.reportID, paginatedReportActions, isOffline],
+        () => ReportActionsUtils.getOneTransactionThreadReportID(childReport?.reportID ?? '-1', paginatedReportActions ?? []),
+        [childReport?.reportID, paginatedReportActions],
     );
 
     const [transactionThreadReport] = useOnyx(`${ONYXKEYS.COLLECTION.REPORT}${transactionThreadReportID}`);
@@ -195,7 +194,6 @@ function BaseReportActionContextMenu({
                 reportID,
                 isPinnedChat,
                 isUnreadChat,
-                !!isOffline,
                 isMini,
                 isProduction,
                 moneyRequestAction,

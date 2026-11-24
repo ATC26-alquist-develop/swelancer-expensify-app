@@ -64,7 +64,6 @@ type ShouldShow = (
     reportID: string,
     isPinnedChat: boolean,
     isUnreadChat: boolean,
-    isOffline: boolean,
     isMini: boolean,
     isProduction: boolean,
     moneyRequestAction: ReportAction | undefined,
@@ -277,7 +276,6 @@ const ContextMenuActions: ContextMenuAction[] = [
             reportID,
             isPinnedChat,
             isUnreadChat,
-            isOffline,
             isMini,
             isProduction,
             moneyRequestAction,
@@ -308,7 +306,6 @@ const ContextMenuActions: ContextMenuAction[] = [
             reportID,
             isPinnedChat,
             isUnreadChat,
-            isOffline,
             isMini,
             isProduction,
             moneyRequestAction,
@@ -572,11 +569,11 @@ const ContextMenuActions: ContextMenuAction[] = [
         icon: Expensicons.Download,
         successTextTranslateKey: 'common.download',
         successIcon: Expensicons.Download,
-        shouldShow: (type, reportAction, isArchivedRoom, betas, menuTarget, isChronosReport, reportID, isPinnedChat, isUnreadChat, isOffline): reportAction is ReportAction => {
+        shouldShow: (type, reportAction, isArchivedRoom, betas, menuTarget, isChronosReport, reportID, isPinnedChat, isUnreadChat): reportAction is ReportAction => {
             const isAttachment = ReportActionsUtils.isReportActionAttachment(reportAction);
             const html = getActionHtml(reportAction);
             const isUploading = html.includes(CONST.ATTACHMENT_OPTIMISTIC_SOURCE_ATTRIBUTE);
-            return isAttachment && !isUploading && !!reportAction?.reportActionID && !ReportActionsUtils.isMessageDeleted(reportAction) && !isOffline;
+            return isAttachment && !isUploading && !!reportAction?.reportActionID && !ReportActionsUtils.isMessageDeleted(reportAction);
         },
         onPress: (closePopover, {reportAction}) => {
             const html = getActionHtml(reportAction);
@@ -635,7 +632,7 @@ const ContextMenuActions: ContextMenuAction[] = [
         isAnonymousAction: true,
         textTranslateKey: 'reportActionContextMenu.menu',
         icon: Expensicons.ThreeDots,
-        shouldShow: (type, reportAction, isArchivedRoom, betas, anchor, isChronosReport, reportID, isPinnedChat, isUnreadChat, isOffline, isMini) => isMini,
+        shouldShow: (type, reportAction, isArchivedRoom, betas, anchor, isChronosReport, reportID, isPinnedChat, isUnreadChat, isMini) => isMini,
         onPress: (closePopover, {openOverflowMenu, event, openContextMenu, anchorRef}) => {
             openOverflowMenu(event as GestureResponderEvent | MouseEvent, anchorRef ?? {current: null});
             openContextMenu();
