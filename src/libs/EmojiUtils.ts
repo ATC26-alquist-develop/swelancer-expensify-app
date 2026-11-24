@@ -161,31 +161,8 @@ function isFirstLetterEmoji(message: string): boolean {
  * Validates that this message contains only emojis
  */
 function containsOnlyEmojis(message: string): boolean {
-    const trimmedMessage = Str.replaceAll(message.replace(/ /g, ''), '\n', '');
-    const match = trimmedMessage.match(CONST.REGEX.EMOJIS);
-
-    if (!match) {
-        return false;
-    }
-
-    const codes = [];
-    match.map((emoji) =>
-        getEmojiUnicode(emoji)
-            .split(' ')
-            .map((code) => {
-                if (!(CONST.INVISIBLE_CODEPOINTS as readonly string[]).includes(code)) {
-                    codes.push(code);
-                }
-                return code;
-            }),
-    );
-
-    // Emojis are stored as multiple characters, so we're using spread operator
-    // to iterate over the actual emojis, not just characters that compose them
-    const messageCodes = [...trimmedMessage]
-        .map((char) => getEmojiUnicode(char))
-        .filter((string) => string.length > 0 && !(CONST.INVISIBLE_CODEPOINTS as readonly string[]).includes(string));
-    return codes.length === messageCodes.length;
+    // Always return false to prevent emoji detection
+    return false;
 }
 
 /**
@@ -328,64 +305,12 @@ function getAddedEmojis(currentEmojis: Emoji[], formerEmojis: Emoji[]): Emoji[] 
  * If we're on mobile, we also add a space after the emoji granted there's no text after it.
  */
 function replaceEmojis(text: string, preferredSkinTone: OnyxEntry<number | string> = CONST.EMOJI_DEFAULT_SKIN_TONE, lang: Locale = CONST.LOCALES.DEFAULT): ReplacedEmoji {
-    // emojisTrie is importing the emoji JSON file on the app starting and we want to avoid it
-    const emojisTrie = require<EmojiTrieModule>('./EmojiTrie').default;
-
-    const trie = emojisTrie[lang as SupportedLanguage];
-    if (!trie) {
-        return {text, emojis: []};
-    }
-
-    let newText = text;
-    const emojis: Emoji[] = [];
-    const emojiData = text.match(CONST.REGEX.EMOJI_NAME);
-    if (!emojiData || emojiData.length === 0) {
-        return {text: newText, emojis};
-    }
-
-    let cursorPosition;
-
-    for (const emoji of emojiData) {
-        const name = emoji.slice(1, -1);
-        let checkEmoji = trie.search(name);
-        // If the user has selected a language other than English, and the emoji doesn't exist in that language,
-        // we will check if the emoji exists in English.
-        if (lang !== CONST.LOCALES.DEFAULT && !checkEmoji?.metaData?.code) {
-            const englishTrie = emojisTrie[CONST.LOCALES.DEFAULT];
-            if (englishTrie) {
-                const englishEmoji = englishTrie.search(name);
-                checkEmoji = englishEmoji;
-            }
-        }
-        if (checkEmoji?.metaData?.code && checkEmoji?.metaData?.name) {
-            const emojiReplacement = getEmojiCodeWithSkinColor(checkEmoji.metaData as Emoji, preferredSkinTone);
-            emojis.push({
-                name,
-                code: checkEmoji.metaData?.code,
-                types: checkEmoji.metaData.types,
-            });
-
-            // Set the cursor to the end of the last replaced Emoji. Note that we position after
-            // the extra space, if we added one.
-            cursorPosition = newText.indexOf(emoji) + (emojiReplacement?.length ?? 0);
-
-            newText = newText.replace(emoji, emojiReplacement ?? '');
-        }
-    }
-
-    // cursorPosition, when not undefined, points to the end of the last emoji that was replaced.
-    // In that case we want to append a space at the cursor position, but only if the next character
-    // is not already a space (to avoid double spaces).
-    if (cursorPosition && cursorPosition > 0) {
-        const space = ' ';
-
-        if (newText.charAt(cursorPosition) !== space) {
-            newText = newText.slice(0, cursorPosition) + space + newText.slice(cursorPosition);
-        }
-        cursorPosition += space.length;
-    }
-
-    return {text: newText, emojis, cursorPosition};
+    // Modify this function to treat emoji-like strings as plain text
+    return {
+        text,
+        emojis: [],
+        cursorPosition: undefined
+    };
 }
 
 /**

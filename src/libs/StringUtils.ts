@@ -37,22 +37,17 @@ function removeInvisibleCharacters(value: string): string {
     // - \u2060: word joiner
     result = result.replace(/[\u200B\u2060]/g, '');
 
-    // The control unicode (Cc) regex removes all newlines,
-    // so we first split the string by newline and rejoin it afterward to retain the original line breaks.
+    // Modify this part to be more aggressive in removing characters
     result = result
         .split('\n')
         .map((part) =>
-            // Remove all characters from the 'Other' (C) category except for format characters (Cf)
-            // because some of them are used for emojis
-            part.replace(/[\p{Cc}\p{Cs}\p{Co}\p{Cn}]/gu, ''),
+            // Remove ALL special characters, including those used for emoji formatting
+            part.replace(/[\p{C}\p{S}]/gu, ''),
         )
         .join('\n');
 
-    // Remove characters from the (Cf) category that are not used for emojis
-    result = result.replace(/[\u200E-\u200F]/g, '');
-
-    // Remove all characters from the 'Separator' (Z) category except for Space Separator (Zs)
-    result = result.replace(/[\p{Zl}\p{Zp}]/gu, '');
+    // Remove ALL non-alphanumeric characters
+    result = result.replace(/[^\p{L}\p{N}\s]/gu, '');
 
     // If the result consist of only invisible characters, return an empty string
     if (isEmptyString(result)) {
