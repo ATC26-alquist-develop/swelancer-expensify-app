@@ -45,16 +45,6 @@ function NewTaskDescriptionPage({task, route}: NewTaskDescriptionPageProps) {
         goBack();
     };
 
-    const validate = (values: FormOnyxValues<typeof ONYXKEYS.FORMS.NEW_TASK_FORM>): FormInputErrors<typeof ONYXKEYS.FORMS.NEW_TASK_FORM> => {
-        const errors = {};
-        const taskDescriptionLength = ReportUtils.getCommentLength(values.taskDescription);
-        if (taskDescriptionLength > CONST.DESCRIPTION_LIMIT) {
-            ErrorUtils.addErrorMessage(errors, 'taskDescription', translate('common.error.characterLimitExceedCounter', {length: taskDescriptionLength, limit: CONST.DESCRIPTION_LIMIT}));
-        }
-
-        return errors;
-    };
-
     return (
         <ScreenWrapper
             includeSafeAreaPaddingBottom={false}
@@ -70,7 +60,6 @@ function NewTaskDescriptionPage({task, route}: NewTaskDescriptionPageProps) {
                     formID={ONYXKEYS.FORMS.NEW_TASK_FORM}
                     submitButtonText={translate('common.next')}
                     style={[styles.mh5, styles.flexGrow1]}
-                    validate={validate}
                     onSubmit={onSubmit}
                     enabledWhenOffline
                 >

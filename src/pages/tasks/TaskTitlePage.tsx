@@ -40,8 +40,6 @@ function TaskTitlePage({report, currentUserPersonalDetails}: TaskTitlePageProps)
 
             if (!title) {
                 ErrorUtils.addErrorMessage(errors, INPUT_IDS.TITLE, translate('newTaskPage.pleaseEnterTaskName'));
-            } else if (title.length > CONST.TITLE_CHARACTER_LIMIT) {
-                ErrorUtils.addErrorMessage(errors, INPUT_IDS.TITLE, translate('common.error.characterLimitExceedCounter', {length: title.length, limit: CONST.TITLE_CHARACTER_LIMIT}));
             }
 
             return errors;

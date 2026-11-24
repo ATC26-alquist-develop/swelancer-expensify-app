@@ -37,20 +37,6 @@ function TaskDescriptionPage({report, currentUserPersonalDetails}: TaskDescripti
     const styles = useThemeStyles();
     const {translate} = useLocalize();
 
-    const validate = useCallback(
-        (values: FormOnyxValues<typeof ONYXKEYS.FORMS.EDIT_TASK_FORM>): FormInputErrors<typeof ONYXKEYS.FORMS.EDIT_TASK_FORM> => {
-            const errors = {};
-            const parsedDescription = ReportUtils.getParsedComment(values?.description);
-            const taskDescriptionLength = ReportUtils.getCommentLength(parsedDescription);
-            if (values?.description && taskDescriptionLength > CONST.DESCRIPTION_LIMIT) {
-                ErrorUtils.addErrorMessage(errors, 'description', translate('common.error.characterLimitExceedCounter', {length: taskDescriptionLength, limit: CONST.DESCRIPTION_LIMIT}));
-            }
-
-            return errors;
-        },
-        [translate],
-    );
-
     const submit = useCallback(
         (values: FormOnyxValues<typeof ONYXKEYS.FORMS.EDIT_TASK_FORM>) => {
             if (values.description !== Parser.htmlToMarkdown(report?.description ?? '') && !isEmptyObject(report)) {
@@ -106,7 +92,7 @@ function TaskDescriptionPage({report, currentUserPersonalDetails}: TaskDescripti
                 <FormProvider
                     style={[styles.flexGrow1, styles.ph5]}
                     formID={ONYXKEYS.FORMS.EDIT_TASK_FORM}
-                    validate={validate}
+
                     onSubmit={submit}
                     submitButtonText={translate('common.save')}
                     enabledWhenOffline

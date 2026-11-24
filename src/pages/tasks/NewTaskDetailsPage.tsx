@@ -57,12 +57,6 @@ function NewTaskDetailsPage({task, route}: NewTaskDetailsPageProps) {
         if (!values.taskTitle) {
             // We error if the user doesn't enter a task name
             ErrorUtils.addErrorMessage(errors, 'taskTitle', translate('newTaskPage.pleaseEnterTaskName'));
-        } else if (values.taskTitle.length > CONST.TITLE_CHARACTER_LIMIT) {
-            ErrorUtils.addErrorMessage(errors, 'taskTitle', translate('common.error.characterLimitExceedCounter', {length: values.taskTitle.length, limit: CONST.TITLE_CHARACTER_LIMIT}));
-        }
-        const taskDescriptionLength = ReportUtils.getCommentLength(values.taskDescription);
-        if (taskDescriptionLength > CONST.DESCRIPTION_LIMIT) {
-            ErrorUtils.addErrorMessage(errors, 'taskDescription', translate('common.error.characterLimitExceedCounter', {length: taskDescriptionLength, limit: CONST.DESCRIPTION_LIMIT}));
         }
 
         return errors;
