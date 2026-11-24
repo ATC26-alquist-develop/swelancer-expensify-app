@@ -188,15 +188,15 @@ function Search({queryJSON}: SearchProps) {
     const isDataLoaded = searchResults?.data !== undefined && searchResults?.search?.type === type && searchResults?.search?.status === status;
     const shouldShowLoadingState = !isOffline && !isDataLoaded;
     const shouldShowLoadingMoreItems = !shouldShowLoadingState && searchResults?.search?.isLoading && searchResults?.search?.offset > 0;
-    const isSearchResultsEmpty = !searchResults?.data || SearchUtils.isSearchResultsEmpty(searchResults);
-    const prevIsSearchResultEmpty = usePrevious(isSearchResultsEmpty);
+    // const isSearchResultsEmpty = !searchResults?.data || SearchUtils.isSearchResultsEmpty(searchResults);
+    // const prevIsSearchResultEmpty = usePrevious(isSearchResultsEmpty);
 
-    useEffect(() => {
-        if (!isSearchResultsEmpty || prevIsSearchResultEmpty) {
-            return;
-        }
-        turnOffMobileSelectionMode();
-    }, [isSearchResultsEmpty, prevIsSearchResultEmpty]);
+    // useEffect(() => {
+    //     if (!isSearchResultsEmpty || prevIsSearchResultEmpty) {
+    //         return;
+    //     }
+    //     turnOffMobileSelectionMode();
+    // }, [isSearchResultsEmpty, prevIsSearchResultEmpty]);
 
     if (shouldShowLoadingState) {
         return (
