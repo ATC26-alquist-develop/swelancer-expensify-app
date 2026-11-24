@@ -1,15 +1,14 @@
 import lodashIsEqual from 'lodash/isEqual';
-import React, {memo, useCallback} from 'react';
-import {Keyboard, View} from 'react-native';
-import {useOnyx} from 'react-native-onyx';
-import type {OnyxEntry} from 'react-native-onyx';
+import React, { memo, useCallback } from 'react';
+import { Keyboard, View } from 'react-native';
+import { useOnyx } from 'react-native-onyx';
+import type { OnyxEntry } from 'react-native-onyx';
 import AnonymousReportFooter from '@components/AnonymousReportFooter';
 import ArchivedReportFooter from '@components/ArchivedReportFooter';
 import Banner from '@components/Banner';
-import BlockedReportFooter from '@components/BlockedReportFooter';
 import * as Expensicons from '@components/Icon/Expensicons';
 import OfflineIndicator from '@components/OfflineIndicator';
-import {usePersonalDetails} from '@components/OnyxProvider';
+import { usePersonalDetails } from '@components/OnyxProvider';
 import SwipeableView from '@components/SwipeableView';
 import useLocalize from '@hooks/useLocalize';
 import useNetwork from '@hooks/useNetwork';
@@ -27,7 +26,7 @@ import * as Task from '@userActions/Task';
 import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import type * as OnyxTypes from '@src/types/onyx';
-import type {PendingAction} from '@src/types/onyx/OnyxCommon';
+import type { PendingAction } from '@src/types/onyx/OnyxCommon';
 import ReportActionCompose from './ReportActionCompose/ReportActionCompose';
 import SystemChatReportFooterMessage from './SystemChatReportFooterMessage';
 
@@ -69,7 +68,7 @@ type ReportFooterProps = {
 function ReportFooter({
     lastReportAction,
     pendingAction,
-    report = {reportID: '-1'},
+    report = { reportID: '-1' },
     reportMetadata,
     policy,
     isEmptyChat = true,
@@ -80,14 +79,14 @@ function ReportFooter({
     onComposerFocus,
 }: ReportFooterProps) {
     const styles = useThemeStyles();
-    const {isOffline} = useNetwork();
-    const {translate} = useLocalize();
-    const {windowWidth} = useWindowDimensions();
-    const {shouldUseNarrowLayout} = useResponsiveLayout();
-    const {didScreenTransitionEnd} = useScreenWrapperTranstionStatus();
+    const { isOffline } = useNetwork();
+    const { translate } = useLocalize();
+    const { windowWidth } = useWindowDimensions();
+    const { shouldUseNarrowLayout } = useResponsiveLayout();
+    const { didScreenTransitionEnd } = useScreenWrapperTranstionStatus();
 
-    const [shouldShowComposeInput] = useOnyx(ONYXKEYS.SHOULD_SHOW_COMPOSE_INPUT, {initialValue: false});
-    const [isAnonymousUser = false] = useOnyx(ONYXKEYS.SESSION, {selector: (session) => session?.authTokenType === CONST.AUTH_TOKEN_TYPES.ANONYMOUS});
+    const [shouldShowComposeInput] = useOnyx(ONYXKEYS.SHOULD_SHOW_COMPOSE_INPUT, { initialValue: false });
+    const [isAnonymousUser = false] = useOnyx(ONYXKEYS.SESSION, { selector: (session) => session?.authTokenType === CONST.AUTH_TOKEN_TYPES.ANONYMOUS });
     const [isBlockedFromChat] = useOnyx(ONYXKEYS.NVP_BLOCKED_FROM_CHAT, {
         selector: (dateString) => {
             if (!dateString) {
@@ -104,7 +103,7 @@ function ReportFooter({
     });
     const [reportNameValuePairs] = useOnyx(`${ONYXKEYS.COLLECTION.REPORT_NAME_VALUE_PAIRS}${report?.reportID ?? -1}`);
 
-    const chatFooterStyles = {...styles.chatFooter, minHeight: !isOffline ? CONST.CHAT_FOOTER_MIN_HEIGHT : 0};
+    const chatFooterStyles = { ...styles.chatFooter, minHeight: !isOffline ? CONST.CHAT_FOOTER_MIN_HEIGHT : 0 };
     const isArchivedRoom = ReportUtils.isArchivedRoom(report, reportNameValuePairs);
 
     const isSmallSizeLayout = windowWidth - (shouldUseNarrowLayout ? 0 : variables.sideBarWidth) < variables.anonymousReportFooterBreakpoint;
@@ -189,7 +188,6 @@ function ReportFooter({
                         />
                     )}
                     {isArchivedRoom && <ArchivedReportFooter report={report} />}
-                    {!isArchivedRoom && isBlockedFromChat && <BlockedReportFooter />}
                     {!isAnonymousUser && !canWriteInReport && isSystemChat && <SystemChatReportFooterMessage />}
                     {isAdminsOnlyPostingRoom && !isUserPolicyAdmin && !isArchivedRoom && !isAnonymousUser && !isBlockedFromChat && (
                         <Banner

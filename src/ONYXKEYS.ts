@@ -123,9 +123,6 @@ const ONYXKEYS = {
     /** Contains the users's block expiration (if they have one) */
     NVP_BLOCKED_FROM_CONCIERGE: 'nvp_private_blockedFromConcierge',
 
-    /** Whether the user is blocked from chat */
-    NVP_BLOCKED_FROM_CHAT: 'nvp_private_blockedFromChat',
-
     /** A unique identifier that each user has that's used to send notifications */
     NVP_PRIVATE_PUSH_NOTIFICATION_ID: 'nvp_private_pushNotificationID',
 
@@ -885,7 +882,6 @@ type OnyxValuesMapping = {
     [ONYXKEYS.NVP_BLOCKED_FROM_CONCIERGE]: OnyxTypes.BlockedFromConcierge;
 
     // The value of this nvp is a string representation of the date when the block expires, or an empty string if the user is not blocked
-    [ONYXKEYS.NVP_BLOCKED_FROM_CHAT]: string;
     [ONYXKEYS.NVP_PRIVATE_PUSH_NOTIFICATION_ID]: string;
     [ONYXKEYS.NVP_TRY_FOCUS_MODE]: boolean;
     [ONYXKEYS.NVP_DISMISSED_HOLD_USE_EXPLANATION]: boolean;

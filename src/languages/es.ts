@@ -686,7 +686,6 @@ const translations = {
         hereAlternateText: 'Notificar a todos en esta conversación',
     },
     newMessages: 'Mensajes nuevos',
-    youHaveBeenBanned: 'Nota: Se te ha prohibido comunicarte en este canal',
     reportTypingIndicator: {
         isTyping: 'está escribiendo...',
         areTyping: 'están escribiendo...',
