@@ -215,6 +215,10 @@ const willBlurTextInputOnTapOutside = willBlurTextInputOnTapOutsideFunc();
 // prevent auto focus on existing chat for mobile device
 const shouldFocusInputOnScreenFocus = canFocusInputOnScreenFocus();
 
+// Tracks whether the screen has ever been focused (user has visited this screen at least once).
+// This allows us to restore focus when navigating back to a previously-focused screen,
+// even on touch devices where we don't want to autofocus on initial screen load.
+
 /**
  * This component holds the value and selection state.
  * If a component really needs access to these state values it should be put here.
@@ -652,6 +656,7 @@ function ComposerWithSuggestions(
 
     const prevIsModalVisible = usePrevious(modal?.isVisible);
     const prevIsFocused = usePrevious(isFocused);
+    const isInitialRenderRef = useRef(true);
     useEffect(() => {
         if (modal?.isVisible && !prevIsModalVisible) {
             // eslint-disable-next-line react-compiler/react-compiler, no-param-reassign
@@ -663,10 +668,21 @@ function ComposerWithSuggestions(
             textInputRef.current?.blur();
         }
 
-        // We want to focus or refocus the input when a modal has been closed or the underlying screen is refocused.
-        // We avoid doing this on native platforms since the software keyboard popping
-        // open creates a jarring and broken UX.
-        if (!((willBlurTextInputOnTapOutside || shouldAutoFocus) && !isNextModalWillOpenRef.current && !modal?.isVisible && isFocused && (!!prevIsModalVisible || !prevIsFocused))) {
+        // Restore focus when navigating back to the screen after being away
+        const shouldRestoreFocus =
+            isFocused && (prevIsModalVisible || !prevIsFocused) && !modal?.isVisible && !isNextModalWillOpenRef.current;
+
+        if (!shouldRestoreFocus) {
+            // eslint-disable-next-line react-compiler/react-compiler
+            isInitialRenderRef.current = false;
+            return;
+        }
+
+        // On the first render, respect shouldAutoFocus to avoid unwanted keyboard popup on touch devices.
+        // After the first render, always restore focus when navigating back.
+        if (isInitialRenderRef.current && !shouldAutoFocus) {
+            // eslint-disable-next-line react-compiler/react-compiler
+            isInitialRenderRef.current = false;
             return;
         }
 
@@ -675,6 +691,8 @@ function ComposerWithSuggestions(
             return;
         }
         focus(true);
+        // eslint-disable-next-line react-compiler/react-compiler
+        isInitialRenderRef.current = false;
     }, [focus, prevIsFocused, editFocused, prevIsModalVisible, isFocused, modal?.isVisible, isNextModalWillOpenRef, shouldAutoFocus]);
 
     useEffect(() => {
